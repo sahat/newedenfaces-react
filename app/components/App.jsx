@@ -1,17 +1,20 @@
 var React = require('react');
+var Router = require('react-router');
+
+var Navbar = require('./Navbar.jsx');
+var Footer = require('./Footer.jsx');
+
+var RouteHandler = Router.RouteHandler;
 
 var App = React.createClass({
   render: function() {
     return (
-      <div id='container'>
-        <nav>
-          <ul>
-            <li><a href=''>Feedback</a></li>
-            <li><a href=''>Options</a></li>
-            <li><a href=''>Login</a></li>
-            <li><a href=''>Register</a></li>
-          </ul>
-        </nav>
+      <div>
+        <Navbar />
+
+        <RouteHandler />
+
+        <Footer />
       </div>
     );
   }
