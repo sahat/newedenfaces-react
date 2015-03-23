@@ -1,3 +1,111 @@
+@import 'vendor/bootstrap/bootstrap';
+
+@body-bg: #f0f3f4;
+@text-color: #58666f;
+@font-family-base: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+@navbar-default-bg: #fff;
+@navbar-default-link-color: #353f44;
+@navbar-default-link-hover-bg: #f6f7f7;
+@navbar-default-link-active-bg: #f6f7f7;
+
+@btn-default-color: #58666e;
+@btn-default-border: #dee5e7;
+
+@btn-primary-color: #fff;
+@btn-primary-bg: #7266bb;
+@btn-primary-border: #7266bb;
+
+@btn-success-color: #fff;
+@btn-success-bg: #27d24b;
+@btn-success-border: #27d24b;
+
+@btn-info-color: #fff;
+@btn-info-bg: #23b7f5;
+@btn-info-border: #23b7f5;
+
+@btn-warning-color: #fff;
+@btn-warning-bg: #fac732;
+@btn-warning-border: #fac732;
+
+@btn-danger-color: #fff;
+@btn-danger-bg: #f15051;
+@btn-danger-border: #f15051;
+
 body {
-  transition: all 0.2s;
+  -webkit-font-smoothing: antialiased;
 }
+
+.btn {
+  font-weight: 500;
+  border-radius: 2px;
+  outline: 0 !important;
+}
+
+.btn-default {
+  box-shadow: 0 1px 1px rgba(91, 91, 91, 0.1);
+}
+
+.navbar {
+  border: 0;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
+}
+
+.navbar-default .navbar-brand {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.dropdown-menu {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+  display: block;
+}
+
+.dropdown-submenu > a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  border-right-width: 0;
+  border-left-color: #353f44;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+
+.dropdown-submenu.pull-left {
+  float: none;
+}
+
+.dropdown-submenu.pull-left > .dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+
+.form-control {
+  border-color: #cfdadc;
+  border-radius: 2px;
+
+  &:focus {
+    border-color: #24b7e4;
+    box-shadow: none;
+  }
+}
+
