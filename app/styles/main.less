@@ -109,6 +109,24 @@ body {
   }
 }
 
+.img-thumbnail {
+  cursor: pointer;
+  padding: 6px;
+  border-color: #dee5e7;
+  border-radius: 2px;
+  background-color: #fff;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: @btn-info-bg;
+  }
+  &:active {
+    position: relative;
+    top: 2px;
+  }
+}
+
 .animated {
   animation-fill-mode: both;
   animation-duration: 1s;
