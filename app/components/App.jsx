@@ -12,7 +12,9 @@ var App = React.createClass({
       <div>
         <Navbar />
 
-        <RouteHandler />
+        <div className="container">
+          <RouteHandler />
+        </div>
 
         <Footer />
       </div>
