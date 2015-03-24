@@ -1,4 +1,5 @@
 @import 'vendor/bootstrap/bootstrap';
+@import 'vendor/font-awesome/font-awesome';
 
 @body-bg: #f0f3f4;
 @text-color: #58666f;
@@ -52,6 +53,30 @@ body {
   font-weight: 500;
   border-radius: 2px;
   outline: 0 !important;
+}
+
+.btn-addon i {
+  position: relative;
+  float: left;
+  width: 34px;
+  height: 34px;
+  margin: -6px -12px;
+  margin-right: 12px;
+  line-height: 34px;
+  text-align: center;
+  background-color: rgba(0,0,0,0.1);
+  border-radius: 2px 0 0 2px;
+}
+
+.btn-addon i.pull-right {
+  margin-right: -12px;
+  margin-left: 12px;
+  border-radius: 0 2px 2px 0;
+}
+
+.btn-addon.btn-sm i.pull-right {
+  margin-right: -10px;
+  margin-left: 10px;
 }
 
 .btn-default {
@@ -207,7 +232,7 @@ label {
 .radio label:before {
   bottom: 2.5px;
   border-radius: 100px;
-  transition: border 0.3s 0s cubic-bezier(0.45, 0.04, 0.22, 1.30);
+  transition: border 0.2s 0s cubic-bezier(0.45, 0.04, 0.22, 1.30);
 }
 
 .radio input[type=radio]:checked + label:before {
@@ -224,6 +249,49 @@ label {
 
 .radio input[type=radio]:checked + label:before {
   border-color: #10cebd;
+}
+
+/* Pages Notification customizations */
+body > .pgn-wrapper[data-position="top"] {
+  top: 60px;
+  left: 70px;
+}
+body > .pgn-wrapper[data-position="bottom"] {
+  left: 70px;
+}
+body > .pgn-wrapper[data-position$='-left'] {
+  left: 90px;
+  right: auto;
+}
+body > .pgn-wrapper[data-position^='top-'] {
+  top: 80px;
+  bottom: auto;
+}
+.pgn-circle .alert .close {
+  margin-top: -4px;
+}
+body > .pgn-wrapper {
+  z-index: 900;
+}
+@media (max-width: 979px) {
+  body > .pgn-wrapper[data-position="top"] {
+    left: 0;
+  }
+  body > .pgn-wrapper[data-position="bottom"] {
+    left: 0;
+  }
+}
+@media (max-width: 767px) {
+  body > .pgn-wrapper[data-position$='-left'],
+  body > .pgn-wrapper[data-position$='-right'] {
+    left: 10px !important;
+    right: 10px !important;
+  }
+  body > .pgn-wrapper[data-position$='-right'] .alert,
+  body > .pgn-wrapper[data-position$='-left'] .alert {
+    max-width: 100%;
+    width: 100%;
+  }
 }
 
 .animated {
