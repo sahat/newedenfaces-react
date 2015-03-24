@@ -12,6 +12,7 @@ var AddCharacter = React.createClass({
                 <div className='form-group'>
                   <label>Character Name</label>
                   <input type='text' className='form-control' autoFocus />
+                  <span className="help-block"></span>
                 </div>
                 <div className='form-group'>
                   <div className='radio radio-inline'>
