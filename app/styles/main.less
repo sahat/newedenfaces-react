@@ -151,6 +151,60 @@ footer {
   background-color: #3b3f51;
 }
 
+.radio {
+  margin-bottom: 10px;
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.radio-inline + .radio-inline {
+  margin-top: 10px;
+}
+
+.radio label {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  padding-left: 5px;
+  margin-right: 10px;
+  font-size: 13px;
+
+}
+
+.radio label:before {
+  content: "";
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  margin-left: -20px;
+  position: absolute;
+  left: 0;
+  background-color: #fff;
+  border: 1px solid #d0d0d0;
+}
+
+
+.radio label:before {
+  bottom: 2.5px;
+  border-radius: 100px;
+  transition: border 0.3s 0s cubic-bezier(0.45, 0.04, 0.22, 1.30);
+}
+
+.radio input[type=radio]:checked + label:before {
+  border-width: 5px;
+}
+
+.radio input[type=radio] {
+  display: none;
+}
+
+.radio input[type=radio][disabled] + label {
+  opacity: 0.65;
+}
+
+.radio input[type=radio]:checked + label:before {
+  border-color: #10cebd;
+}
 
 .animated {
   animation-fill-mode: both;
