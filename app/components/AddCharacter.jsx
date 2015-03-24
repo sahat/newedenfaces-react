@@ -3,7 +3,7 @@ var React = require('react');
 var AddCharacter = React.createClass({
   render: function() {
     return (
-      <div className="row">
+      <div className="row flipInX animated">
         <div className="col-sm-8">
           <div className='panel panel-default'>
             <div className='panel-heading font-bold'>Add Character</div>
