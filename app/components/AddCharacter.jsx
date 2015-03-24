@@ -1,3 +1,13 @@
-/**
- * Created by sahat on 3/23/15.
- */
+var React = require('react');
+
+var AddCharacter = React.createClass({
+  render: function() {
+    return (
+      <div className="container">
+        AddCharacter Page
+      </div>
+    );
+  }
+});
+
+module.exports = AddCharacter;
