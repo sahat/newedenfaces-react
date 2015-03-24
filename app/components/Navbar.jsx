@@ -14,7 +14,20 @@ var Navbar = React.createClass({
             <span className='icon-bar'></span>
             <span className='icon-bar'></span>
           </button>
-          <a className='navbar-brand' href='#'>NEF</a>
+          <a className='navbar-brand' href='#'>
+            <span className='triangles'>
+              <div className='tri invert'></div>
+              <div className='tri invert'></div>
+              <div className='tri'></div>
+              <div className='tri invert'></div>
+              <div className='tri invert'></div>
+              <div className='tri'></div>
+              <div className='tri invert'></div>
+              <div className='tri'></div>
+              <div className='tri invert'></div>
+            </span>
+            NEF
+          </a>
         </div>
         <div id='navbar' className='navbar-collapse collapse'>
           <form className='navbar-form navbar-left' role='search'>
@@ -26,7 +39,7 @@ var Navbar = React.createClass({
             </div>
           </form>
           <ul className='nav navbar-nav'>
-            <li><Link to='/home'>Home</Link></li>
+            <li><Link to='/'>Home</Link></li>
             <li><Link to='/stats'>Stats</Link></li>
             <li className='dropdown'>
               <a href='#' className='dropdown-toggle' data-toggle='dropdown' role='button'>Top 100
@@ -147,7 +160,7 @@ var Navbar = React.createClass({
                 </li>
               </ul>
             </li>
-            <li><a href='#'>Add</a></li>
+            <li><Link to='/add'>Add</Link></li>
           </ul>
         </div>
       </nav>

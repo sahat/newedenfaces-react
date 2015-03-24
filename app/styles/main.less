@@ -64,6 +64,7 @@ body {
 }
 
 .navbar-default .navbar-brand {
+  margin-left: 40px;
   font-size: 20px;
   font-weight: 700;
 }
@@ -277,3 +278,89 @@ label {
   animation-name: flipInX;
 }
 
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  16.666% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+
+@tricolor: @link-color;
+@triw: 10px;
+@trih: @triw*0.9;
+
+.triangles {
+  position: absolute;
+  top: 25px;
+  left: 30px;
+  height: @trih * 3;
+  width: @triw * 3;
+  transform: translate(-50%, -50%);
+}
+
+.navbar-brand:hover .tri  {
+  animation-play-state: paused;
+}
+
+.tri {
+  position: absolute;
+  animation: pulse 750ms ease-in infinite;
+  border-top: @trih solid @tricolor;
+  border-left: @triw/2 solid transparent;
+  border-right: @triw/2 solid transparent;
+  border-bottom: 0;
+
+  &.invert {
+    border-top: 0;
+    border-bottom: @trih solid @tricolor;
+    border-left: @triw/2 solid transparent;
+    border-right: @triw/2 solid transparent;
+  }
+  &:nth-child(1) {
+    left: @triw;
+  }
+  &:nth-child(2) {
+    left: @triw/2;
+    top: @trih;
+    animation-delay: -125ms;
+  }
+  &:nth-child(3) {
+    left: @triw;
+    top: @trih;
+  }
+  &:nth-child(4) {
+    left: @triw*1.5;
+    top: @trih;
+    animation-delay: -625ms;
+  }
+  &:nth-child(5) {
+    top: @trih*2;
+    animation-delay: -250ms;
+  }
+  &:nth-child(6) {
+    top: @trih*2;
+    left: @triw/2;
+    animation-delay: -250ms;
+  }
+  &:nth-child(7) {
+    top: @trih*2;
+    left: @triw;
+    animation-delay: -375ms;
+  }
+  &:nth-child(8) {
+    top: @trih*2;
+    left: @triw*1.5;
+    animation-delay: -500ms;
+  }
+  &:nth-child(9) {
+    top: @trih*2;
+    left: @triw*2;
+    animation-delay: -500ms;
+  }
+}
