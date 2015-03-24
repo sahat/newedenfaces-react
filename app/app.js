@@ -15,17 +15,25 @@ var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 
 var routes = (
-  <Route path='/' handler={App}>
-    <Route name='home' path='/' handler={Home} />
-    <Route name='stats' handler={Stats} />
-    <Route name='top' handler={CharacterList}>
+  <Route handler={App}>
+    <Route path='/' handler={Home} />
+    <Route path='/stats' handler={Stats} />
+    <Route path='/top' handler={CharacterList}>
       <Route path=':race' handler={CharacterList}>
         <Route path=':bloodline' handler={CharacterList} />
       </Route>
     </Route>
-    <Route name='female' path='top/:race/:bloodline' handler={CharacterList} />
-    <Route name='male' path='top/:race/:bloodline' handler={CharacterList} />
-    <Route name='add' handler={AddCharacter} />
+    <Route path='/female' handler={CharacterList}>
+      <Route path=':race' handler={CharacterList}>
+        <Route path=':bloodline' handler={CharacterList} />
+      </Route>
+    </Route>
+    <Route path='/male' handler={CharacterList}>
+      <Route path=':race' handler={CharacterList}>
+        <Route path=':bloodline' handler={CharacterList} />
+      </Route>
+    </Route>
+    <Route path='/add' handler={AddCharacter} />
   </Route>
 );
 
