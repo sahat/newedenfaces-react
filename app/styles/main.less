@@ -34,6 +34,10 @@
 @btn-danger-bg: #f15051;
 @btn-danger-border: #f15051;
 
+@panel-default-border: #dee5e7;
+@panel-border-radius: 2px;
+@panel-default-heading-bg: #f6f8f8;
+
 html {
   position: relative;
   min-height: 100%;
@@ -97,6 +101,16 @@ body {
   margin-right: -10px;
 }
 
+.panel {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.panel-default > .panel-heading {
+  color: #333;
+  font-weight: 700;
+  border-color: #edf2f2;
+}
+
 .dropdown-submenu.pull-left {
   float: none;
 }
@@ -151,6 +165,14 @@ footer {
   background-color: #3b3f51;
 }
 
+.form-control {
+  box-shadow: none;
+}
+
+label {
+  font-weight: normal;
+}
+
 .radio {
   margin-bottom: 10px;
   margin-top: 10px;
@@ -180,7 +202,6 @@ footer {
   background-color: #fff;
   border: 1px solid #d0d0d0;
 }
-
 
 .radio label:before {
   bottom: 2.5px;
