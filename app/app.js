@@ -2,43 +2,33 @@ var React = require('react');
 var Router = require('react-router');
 
 var App = require('./components/App.jsx');
+var Home = require('./components/Home.jsx');
 var Navbar = require('./components/Navbar.jsx');
+var Footer = require('./components/Footer.jsx');
 var CharacterList = require('./components/CharacterList.jsx');
+var AddCharacter = require('./components/AddCharacter.jsx');
+var Stats = require('./components/Stats.jsx');
 
 var DefaultRoute = Router.DefaultRoute;
 var Link = Router.Link;
 var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 
-
-var App = React.createClass({
-  render: function() {
-    return (
-      <div>
-        <header>
-          <ul>
-            <li><Link to="app">app</Link></li>
-            <li><Link to="nav">nav</Link></li>
-            <li><Link to="top">top</Link></li>
-          </ul>
-          Logged in as Jane
-        </header>
-
-        {/* this is the important part */}
-        <RouteHandler/>
-      </div>
-    );
-  }
-});
-
 var routes = (
-  <Route name='app' path='/' handler={App}>
-    <Route name='nav' handler={Navbar}/>
-    <Route name='top' handler={CharacterList}/>
-    <DefaultRoute handler={App}/>
+  <Route path='/' handler={App}>
+    <Route name='home' path='/' handler={Home} />
+    <Route name='stats' handler={Stats} />
+    <Route name='top' handler={CharacterList}>
+      <Route path=':race' handler={CharacterList}>
+        <Route path=':bloodline' handler={CharacterList} />
+      </Route>
+    </Route>
+    <Route name='female' path='top/:race/:bloodline' handler={CharacterList} />
+    <Route name='male' path='top/:race/:bloodline' handler={CharacterList} />
+    <Route name='add' handler={AddCharacter} />
   </Route>
 );
 
-Router.run(routes, Router.HistoryLocation, function(Handler) {
-  React.render(<Handler/>, document.body);
+Router.run(routes, function(Handler) {
+  React.render(<Handler/>, document.getElementById('app'));
 });
