@@ -11,12 +11,13 @@ var AddCharacter = React.createClass({
   },
 
   handleNameChange: function(event) {
-    event.target.parentNode.classList.remove('has-error');
-    event.target.parentNode.classList.remove('has-success');
+    this.refs.nameFormGroup.getDOMNode().classList.remove('has-error');
+    this.refs.nameFormGroup.getDOMNode().classList.remove('has-success');
     this.setState({ name: event.target.value, helpBlock: '' });
   },
 
   handleGenderChange: function(event) {
+    this.refs.genderFormGroup.getDOMNode().classList.remove('has-error');
     this.setState({ gender: event.target.value })
   },
 
@@ -26,6 +27,17 @@ var AddCharacter = React.createClass({
     var name = this.state.name.trim();
     var gender = this.state.gender;
 
+    if (!name) {
+      this.refs.nameInput.getDOMNode().focus();
+      this.refs.nameFormGroup.getDOMNode().classList.add('has-error');
+      return;
+    }
+
+    if (!gender) {
+      this.refs.genderFormGroup.getDOMNode().classList.add('has-error');
+      return;
+    }
+
     var jqxhr = $.ajax({
       type: 'POST',
       url: '/api/characters',
@@ -33,12 +45,12 @@ var AddCharacter = React.createClass({
     });
 
     jqxhr.done(function() {
-      this.refs.name.getDOMNode().parentNode.classList.add('has-success');
+      this.refs.nameFormGroup.getDOMNode().classList.add('has-success');
       this.setState({ helpBlock: name + ' has been added successfully!' });
     }.bind(this));
 
     jqxhr.fail(function(jqXHR) {
-      this.refs.name.getDOMNode().parentNode.classList.add('has-error');
+      this.refs.nameFormGroup.getDOMNode().classList.add('has-error');
 
       switch(jqXHR.status) {
         case 409:
@@ -52,7 +64,7 @@ var AddCharacter = React.createClass({
 
     jqxhr.always(function() {
       this.setState({ name: '' });
-      this.refs.name.getDOMNode().focus();
+      this.refs.nameInput.getDOMNode().focus();
     }.bind(this));
   },
 
@@ -61,15 +73,15 @@ var AddCharacter = React.createClass({
       <div className="row flipInX animated">
         <div className="col-sm-8">
           <div className='panel panel-default'>
-            <div className='panel-heading font-bold'>Add Character</div>
+            <div className='panel-heading'>Add Character</div>
             <div className='panel-body'>
               <form onSubmit={this.handleSubmit}>
-                <div className='form-group'>
+                <div className='form-group' ref='nameFormGroup'>
                   <label className='control-label'>Character Name</label>
-                  <input type='text' className='form-control' ref='name' value={this.state.name} onChange={this.handleNameChange} autoFocus/>
+                  <input type='text' className='form-control' ref='nameInput' value={this.state.name} onChange={this.handleNameChange} autoFocus/>
                   <span className="help-block">{this.state.helpBlock}</span>
                 </div>
-                <div className='form-group'>
+                <div className='form-group ' ref='genderFormGroup'>
                   <div className='radio radio-inline'>
                     <input type='radio' name='gender' id='female' value='female' checked={this.state.gender === 'female'} onChange={this.handleGenderChange}/>
                     <label htmlFor='female'>Female</label>
