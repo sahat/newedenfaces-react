@@ -54,7 +54,7 @@ var AddCharacter = React.createClass({
 
       switch(jqXHR.status) {
         case 409:
-          this.setState({ helpBlock: name + ' has already been added to the database.' });
+          this.setState({ helpBlock: name + ' is already in the database.' });
           break;
         case 404:
           this.setState({ helpBlock: name + ' is not a registered citizen of New Eden.' });
