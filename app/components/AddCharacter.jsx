@@ -4,6 +4,7 @@ var AddCharacter = React.createClass({
 
   getInitialState: function() {
     return {
+      name: '',
       gender: '',
       helpBlock: ''
     }
@@ -34,22 +35,26 @@ var AddCharacter = React.createClass({
     });
 
     jqxhr.done(function() {
-      this.refs.name.getDOMNode().value = '';
-      this.refs.name.getDOMNode().focus();
       this.refs.name.getDOMNode().parentNode.classList.add('has-success');
       this.setState({ helpBlock: name + ' has been added successfully!' });
     }.bind(this));
 
     jqxhr.fail(function(jqXHR) {
-      this.refs.name.getDOMNode().value = '';
-      this.refs.name.getDOMNode().focus();
       this.refs.name.getDOMNode().parentNode.classList.add('has-error');
 
-      if (jqXHR.status === 409) {
-        this.setState({ helpBlock: name + ' has already been added to the database.' });
-      } else if (jqXHR.status === 404) {
-        this.setState({ helpBlock: name + ' is not a registered citizen of New Eden.' });
+      switch(jqXHR.status) {
+        case 409:
+          this.setState({ helpBlock: name + ' has already been added to the database.' });
+          break;
+        case 404:
+          this.setState({ helpBlock: name + ' is not a registered citizen of New Eden.' });
+          break;
       }
+    }.bind(this));
+
+    jqxhr.always(function() {
+      this.setState({ name: '' });
+      this.refs.name.getDOMNode().focus();
     }.bind(this));
   },
 
@@ -63,7 +68,7 @@ var AddCharacter = React.createClass({
               <form onSubmit={this.handleSubmit}>
                 <div className='form-group'>
                   <label className='control-label'>Character Name</label>
-                  <input type='text' className='form-control' ref='name' onChange={this.handleNameChange} autoFocus/>
+                  <input type='text' className='form-control' ref='name' value={this.state.name} onChange={this.handleNameChange} autoFocus/>
                   <span className="help-block">{this.state.helpBlock}</span>
                 </div>
                 <div className='form-group'>
