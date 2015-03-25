@@ -4,6 +4,7 @@ var AddCharacter = React.createClass({
 
   getInitialState: function() {
     return {
+      gender: '',
       helpBlock: ''
     }
   },
@@ -26,15 +27,29 @@ var AddCharacter = React.createClass({
     var name = this.state.name.trim();
     var gender = this.state.gender;
 
-    $.ajax({
+    var jqxhr = $.ajax({
       type: 'POST',
       url: '/api/characters',
       data: { name: name, gender: gender }
-    }).done(function() {
+    });
+
+    jqxhr.done(function() {
       this.refs.name.getDOMNode().value = '';
       this.refs.name.getDOMNode().focus();
       this.refs.name.getDOMNode().parentNode.classList.add('has-success');
       this.setState({ helpBlock: name + ' has been added successfully!' });
+    }.bind(this));
+
+    jqxhr.fail(function(jqXHR) {
+      this.refs.name.getDOMNode().value = '';
+      this.refs.name.getDOMNode().focus();
+      this.refs.name.getDOMNode().parentNode.classList.add('has-error');
+
+      if (jqXHR.status === 409) {
+        this.setState({ helpBlock: name + ' has already been added to the database.' });
+      } else if (jqXHR.status === 404) {
+        this.setState({ helpBlock: name + ' is not a registered citizen of New Eden.' });
+      }
     }.bind(this));
   },
 
@@ -53,15 +68,15 @@ var AddCharacter = React.createClass({
                 </div>
                 <div className='form-group'>
                   <div className='radio radio-inline'>
-                    <input type='radio' name='gender' id='female' value='female' onChange={this.handleGenderChange}/>
+                    <input type='radio' name='gender' id='female' value='female' checked={this.state.gender === 'female'} onChange={this.handleGenderChange}/>
                     <label htmlFor='female'>Female</label>
                   </div>
                   <div className='radio radio-inline'>
-                    <input type='radio' name='gender' id='male' value='male' onChange={this.handleGenderChange}/>
+                    <input type='radio' name='gender' id='male' value='male' checked={this.state.gender === 'male'} onChange={this.handleGenderChange}/>
                     <label htmlFor='male'>Male</label>
                   </div>
                 </div>
-                <button type='submit' className='btn btn-primary'>Success</button>
+                <button type='submit' className='btn btn-primary'>Submit</button>
               </form>
             </div>
           </div>
