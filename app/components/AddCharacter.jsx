@@ -63,7 +63,7 @@ var AddCharacter = React.createClass({
     }.bind(this));
 
     jqxhr.always(function() {
-      this.setState({ name: '' });
+      this.setState({ name: '', gender: '' });
       this.refs.nameInput.getDOMNode().focus();
     }.bind(this));
   },
