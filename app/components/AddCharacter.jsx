@@ -11,11 +11,9 @@ var AddCharacter = React.createClass({
   },
 
   handleNameChange: function(event) {
-    if (event.target.parentNode.classList.contains('has-success')) {
-      event.target.parentNode.classList.remove('has-success');
-      this.setState({ helpBlock: '' });
-    }
-    this.setState({ name: event.target.value })
+    event.target.parentNode.classList.remove('has-error');
+    event.target.parentNode.classList.remove('has-success');
+    this.setState({ name: event.target.value, helpBlock: '' });
   },
 
   handleGenderChange: function(event) {
