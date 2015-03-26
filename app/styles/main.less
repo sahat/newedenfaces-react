@@ -49,6 +49,20 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.table > thead > tr > th {
+  padding: 8px 15px;
+  border-bottom: 1px solid #eaeef0;
+}
+
+.table > tbody > tr > td {
+  padding: 8px 15px;
+  border-top: 1px solid #eaeef0;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #f9f9f9;
+}
+
 .btn {
   font-weight: 500;
   border-radius: 2px;
@@ -64,7 +78,7 @@ body {
   margin-right: 12px;
   line-height: 34px;
   text-align: center;
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0, 0, 0, 0.1);
   border-radius: 2px 0 0 2px;
 }
 
@@ -256,37 +270,46 @@ body > .pgn-wrapper[data-position="top"] {
   top: 60px;
   left: 70px;
 }
+
 body > .pgn-wrapper[data-position="bottom"] {
   left: 70px;
 }
+
 body > .pgn-wrapper[data-position$='-left'] {
   left: 90px;
   right: auto;
 }
+
 body > .pgn-wrapper[data-position^='top-'] {
   top: 80px;
   bottom: auto;
 }
+
 .pgn-circle .alert .close {
   margin-top: -4px;
 }
+
 body > .pgn-wrapper {
   z-index: 900;
 }
+
 @media (max-width: 979px) {
   body > .pgn-wrapper[data-position="top"] {
     left: 0;
   }
+
   body > .pgn-wrapper[data-position="bottom"] {
     left: 0;
   }
 }
+
 @media (max-width: 767px) {
   body > .pgn-wrapper[data-position$='-left'],
   body > .pgn-wrapper[data-position$='-right'] {
     left: 10px !important;
     right: 10px !important;
   }
+
   body > .pgn-wrapper[data-position$='-right'] .alert,
   body > .pgn-wrapper[data-position$='-left'] .alert {
     max-width: 100%;
@@ -346,6 +369,27 @@ body > .pgn-wrapper {
   animation-name: flipInX;
 }
 
+@keyframes flipOutX {
+  0% {
+    transform: perspective(400px);
+  }
+
+  30% {
+    transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
+    opacity: 0;
+  }
+}
+
+.flipOutX {
+  animation-name: flipOutX;
+  backface-visibility: visible !important;
+}
+
 @keyframes pulse {
   0% {
     opacity: 1;
@@ -357,7 +401,6 @@ body > .pgn-wrapper {
     opacity: 0;
   }
 }
-
 
 @tricolor: @link-color;
 @triw: 10px;
@@ -372,7 +415,7 @@ body > .pgn-wrapper {
   transform: translate(-50%, -50%);
 }
 
-.navbar-brand:hover .tri  {
+.navbar-brand:hover .tri {
   animation-play-state: paused;
 }
 
