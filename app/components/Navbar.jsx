@@ -4,6 +4,25 @@ var Router = require('react-router');
 var Link = Router.Link;
 
 var Navbar = React.createClass({
+
+  getInitialState: function() {
+    return {
+      ajaxAnimation: ''
+    }
+  },
+
+  componentDidMount: function() {
+    $(document).ajaxStart(function() {
+      this.setState({ ajaxAnimation: 'fadeIn' });
+    }.bind(this));
+
+    $(document).ajaxComplete(function() {
+      setTimeout(function() {
+        this.setState({ ajaxAnimation: 'fadeOut' });
+      }.bind(this), 750);
+    }.bind(this));
+  },
+
   render: function() {
     return (
       <nav className='navbar navbar-default navbar-static-top'>
@@ -15,7 +34,7 @@ var Navbar = React.createClass({
             <span className='icon-bar'></span>
           </button>
           <a className='navbar-brand' href='#'>
-            <span className='triangles'>
+            <span ref='triangles' className={'triangles animated ' + this.state.ajaxAnimation}>
               <div className='tri invert'></div>
               <div className='tri invert'></div>
               <div className='tri'></div>
