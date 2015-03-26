@@ -338,6 +338,32 @@ body > .pgn-wrapper {
   animation-name: fadeInUp;
 }
 
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fadeIn {
+  animation-name: fadeIn;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.fadeOut {
+  animation-name: fadeOut;
+}
+
 @keyframes flipInX {
   0% {
     transform: perspective(800px) rotate3d(1, 0, 0, 90deg);
@@ -413,6 +439,7 @@ body > .pgn-wrapper {
   height: @trih * 3;
   width: @triw * 3;
   transform: translate(-50%, -50%);
+  opacity: 0;
 }
 
 .navbar-brand:hover .tri {
