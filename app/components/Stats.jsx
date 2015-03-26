@@ -1,25 +1,25 @@
 var React = require('react');
 
 var Stats = React.createClass({
-  getDefaultProps: function() {
+  getInitialState: function() {
     return {
-      leadingRace: {
-        race: 'Caldari',
-        count: 0
-      },
-      leadingBloodline: {
-        race: 'Amarr',
-        count: 3
-      },
-      amarrCount: 1,
-      caldariCount: 2,
-      gallenteCount: 3,
-      minmatarCount: 4,
-      totalVotes: 111,
-      femaleCount: 2,
-      maleCount: 1,
-      totalCount: 99
+      leadingRace: { race: '', count: 0 },
+      leadingBloodline: { race: '', count: 0 },
+      amarrCount: 0,
+      caldariCount: 0,
+      gallenteCount: 0,
+      minmatarCount: 0,
+      totalVotes: 0,
+      femaleCount: 0,
+      maleCount: 0,
+      totalCount: 0
     }
+  },
+
+  componentDidMount: function() {
+    $.get('/api/stats', function(data) {
+      this.setState(data);
+    }.bind(this));
   },
 
   render: function() {
@@ -34,43 +34,43 @@ var Stats = React.createClass({
           <tbody>
           <tr>
             <td>Leading race in Top 100</td>
-            <td>{this.props.leadingRace.race} with {this.props.leadingRace.count} characters</td>
+            <td>{this.state.leadingRace.race} with {this.state.leadingRace.count} characters</td>
           </tr>
           <tr>
             <td>Leading bloodline in Top 100</td>
-            <td>{this.props.leadingBloodline.bloodline} with {this.props.leadingBloodline.count} characters</td>
+            <td>{this.state.leadingBloodline.bloodline} with {this.state.leadingBloodline.count} characters</td>
           </tr>
           <tr>
             <td>Amarr Characters</td>
-            <td>{this.props.amarrCount}</td>
+            <td>{this.state.amarrCount}</td>
           </tr>
           <tr>
             <td>Caldari Characters</td>
-            <td>{this.props.caldariCount}</td>
+            <td>{this.state.caldariCount}</td>
           </tr>
           <tr>
             <td>Gallente Characters</td>
-            <td>{this.props.gallenteCount}</td>
+            <td>{this.state.gallenteCount}</td>
           </tr>
           <tr>
             <td>Minmatar Characters</td>
-            <td>{this.props.minmatarCount}</td>
+            <td>{this.state.minmatarCount}</td>
           </tr>
           <tr>
             <td>Total votes cast</td>
-            <td>{this.props.totalVotes}</td>
+            <td>{this.state.totalVotes}</td>
           </tr>
           <tr>
             <td>Female characters</td>
-            <td>{this.props.femaleCount}</td>
+            <td>{this.state.femaleCount}</td>
           </tr>
           <tr>
             <td>Male characters</td>
-            <td>{this.props.maleCount}</td>
+            <td>{this.state.maleCount}</td>
           </tr>
           <tr>
             <td>Total number of characters</td>
-            <td>{this.props.totalCount}</td>
+            <td>{this.state.totalCount}</td>
           </tr>
           </tbody>
         </table>
