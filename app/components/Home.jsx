@@ -17,7 +17,7 @@ var Home = React.createClass({
   render: function() {
     var characterNodes = this.state.characters.map(function(character, index) {
       return (
-        <div className={index === 0 ? 'col-xs-6 col-sm-6 col-md-5 col-md-offset-1' : 'col-xs-6 col-sm-6 col-md-5'}>
+        <div key={character.characterId} className={index === 0 ? 'col-xs-6 col-sm-6 col-md-5 col-md-offset-1' : 'col-xs-6 col-sm-6 col-md-5'}>
           <div className='thumbnail fadeInUp animated'>
             <img src={'http://image.eveonline.com/Character/' + character.characterId + '_512.jpg'} />
             <div className='caption text-center'>
