@@ -101,8 +101,7 @@ var Navbar = React.createClass({
               </ul>
             </li>
             <li className='dropdown'>
-              <a href='#' className='dropdown-toggle' data-toggle='dropdown'>Female
-                <span className='caret'></span></Link>
+              <a href='#' className='dropdown-toggle' data-toggle='dropdown'>Female <span className='caret'></span></a>
               <ul className='dropdown-menu'>
                 <li><Link to='/female'>All</Link></li>
                 <li className='dropdown-submenu'>
@@ -140,7 +139,7 @@ var Navbar = React.createClass({
               </ul>
             </li>
             <li className='dropdown'>
-              <a href='#' className='dropdown-toggle' data-toggle='dropdown'>Male <span className='caret'></span></Link>
+              <a href='#' className='dropdown-toggle' data-toggle='dropdown'>Male <span className='caret'></span></a>
               <ul className='dropdown-menu'>
                 <li><Link to='/male'>All</Link></li>
                 <li className='dropdown-submenu'>
