@@ -2,20 +2,58 @@ var React = require('react');
 
 var CharacterList = React.createClass({
 
+  getInitialState: function() {
+    return {
+      characters: []
+    }
+  },
+
   contextTypes: {
     router: React.PropTypes.func.isRequired
   },
 
-  onChange: function() {
-    this.context.router.replaceWith('/');
+  componentDidMount: function() {
+    $.get('/api/characters/top', function(data) {
+      this.setState({ characters: data });
+    }.bind(this));
+    console.log(this.context.router.getCurrentParams());
   },
 
   render: function() {
+    console.log(this.state.characters);
+    var characterList = this.state.characters.map(function(character) {
+      return (
+      <div key={character.characterId} className="list-group-item clearfix">
+
+
+        <div key={character.characterId} className='media'>
+          <span className='position pull-left'>{character.position}</span>
+
+          <div className='pull-left thumb-lg'>
+            <a href={'/characters/' + character.characterId}>
+              <img className='media-object' src={'http://image.eveonline.com/Character/' + character.characterId + '_128.jpg'} />
+            </a>
+          </div>
+
+          <div className='media-body'>
+            <h5 className='media-heading'>
+              <a href='#characters/<%= model.characterId %>'>{character.name}</a>
+            </h5>
+            <small>Race: <strong>{character.race}</strong></small>
+            <br />
+            <small>Bloodline: <strong>{character.bloodline}</strong></small>
+            <br />
+            <small>Wins: <strong>{character.wins}</strong> Losses: <strong>{character.losses}</strong></small>
+          </div>
+        </div>
+
+      </div>
+    );
+  });
     console.log(this.context.router.getCurrentParams());
     return (
-      <div id='container'>
-        CHARACTR LIST
-        <h1>{this.context.router.getCurrentParams()}</h1>
+      <div className='list-group'>
+        {characterList}
       </div>
     );
   }
