@@ -16,41 +16,33 @@ var CharacterList = React.createClass({
     $.get('/api/characters/top', function(data) {
       this.setState({ characters: data });
     }.bind(this));
-    console.log(this.context.router.getCurrentParams());
   },
 
   render: function() {
-    console.log(this.state.characters);
     var characterList = this.state.characters.map(function(character, index) {
       return (
-      <div key={character.characterId} className="list-group-item clearfix">
-
-
-        <div key={character.characterId} className='media'>
-          <span className='position pull-left'>{index + 1}</span>
-
-          <div className='pull-left thumb-lg'>
-            <a href={'/characters/' + character.characterId}>
-              <img className='media-object' src={'http://image.eveonline.com/Character/' + character.characterId + '_128.jpg'} />
-            </a>
-          </div>
-
-          <div className='media-body'>
-            <h5 className='media-heading'>
-              <a href='#characters/<%= model.characterId %>'>{character.name}</a>
-            </h5>
-            <small>Race: <strong>{character.race}</strong></small>
-            <br />
-            <small>Bloodline: <strong>{character.bloodline}</strong></small>
-            <br />
-            <small>Wins: <strong>{character.wins}</strong> Losses: <strong>{character.losses}</strong></small>
+        <div key={character.characterId} className='list-group-item clearfix'>
+          <div className='media'>
+            <span className='position pull-left'>{index + 1}</span>
+            <div className='pull-left thumb-lg'>
+              <a href={'/characters/' + character.characterId}>
+                <img className='media-object' src={'http://image.eveonline.com/Character/' + character.characterId + '_128.jpg'}/>
+              </a>
+            </div>
+            <div className='media-body'>
+              <h4 className='media-heading'>
+                <a href={'/characters/' + character.characterId}>{character.name}</a>
+              </h4>
+              <small>Race: <strong>{character.race}</strong></small>
+              <br />
+              <small>Bloodline: <strong>{character.bloodline}</strong></small>
+              <br />
+              <small>Wins: <strong>{character.wins}</strong> Losses: <strong>{character.losses}</strong></small>
+            </div>
           </div>
         </div>
-
-      </div>
-    );
-  });
-    console.log(this.context.router.getCurrentParams());
+      );
+    });
 
     return (
       <div className='list-group'>
