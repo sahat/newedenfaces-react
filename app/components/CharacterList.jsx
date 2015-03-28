@@ -21,13 +21,13 @@ var CharacterList = React.createClass({
 
   render: function() {
     console.log(this.state.characters);
-    var characterList = this.state.characters.map(function(character) {
+    var characterList = this.state.characters.map(function(character, index) {
       return (
       <div key={character.characterId} className="list-group-item clearfix">
 
 
         <div key={character.characterId} className='media'>
-          <span className='position pull-left'>{character.position}</span>
+          <span className='position pull-left'>{index + 1}</span>
 
           <div className='pull-left thumb-lg'>
             <a href={'/characters/' + character.characterId}>
@@ -51,6 +51,7 @@ var CharacterList = React.createClass({
     );
   });
     console.log(this.context.router.getCurrentParams());
+
     return (
       <div className='list-group'>
         {characterList}
