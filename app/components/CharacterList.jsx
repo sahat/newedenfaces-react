@@ -1,6 +1,8 @@
 var React = require('react');
 var Router = require('react-router');
 
+var Link = Router.Link;
+
 var CharacterList = React.createClass({
 
   getInitialState: function() {
@@ -77,13 +79,13 @@ var CharacterList = React.createClass({
             <span className='position pull-left'>{index + 1}</span>
 
             <div className='pull-left thumb-lg'>
-              <a href={'/characters/' + character.characterId}>
+              <Link to={'/characters/' + character.characterId}>
                 <img className='media-object' src={'http://image.eveonline.com/Character/' + character.characterId + '_128.jpg'}/>
-              </a>
+              </Link>
             </div>
             <div className='media-body'>
               <h4 className='media-heading'>
-                <a href={'/characters/' + character.characterId}>{character.name}</a>
+                <Link to={'/characters/' + character.characterId}>{character.name}</Link>
               </h4>
               <small>Race: <strong>{character.race}</strong></small>
               <br />
