@@ -97,7 +97,7 @@ var Navbar = React.createClass({
                   </ul>
                 </li>
                 <li className='divider'></li>
-                <li><Link to='/hall-of-shame'>Hall of Shame</Link></li>
+                <li><Link to='/shame'>Hall of Shame</Link></li>
               </ul>
             </li>
             <li className='dropdown'>

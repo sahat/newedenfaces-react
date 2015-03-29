@@ -33,6 +33,7 @@ var routes = (
         <Route path=':bloodline' handler={CharacterList} />
       </Route>
     </Route>
+    <Route path='/shame' handler={CharacterList} />
     <Route path='/add' handler={AddCharacter} />
   </Route>
 );

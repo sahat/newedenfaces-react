@@ -34,30 +34,42 @@ var CharacterList = React.createClass({
     }.bind(this));
   },
 
+  fetchShame: function() {
+    $.get('/api/characters/shame', function(data) {
+      this.setState({ characters: data });
+    }.bind(this));
+  },
+
   componentDidMount: function() {
-    this.fetchCharacters();
-    this.setState({
-      path: this.context.router.getCurrentPath()
-    });
+    var currentPath = this.context.router.getCurrentPath();
+
+    if (currentPath.indexOf('shame') > -1) {
+      this.fetchShame();
+    } else {
+      this.fetchCharacters();
+    }
+
+    this.setState({ path: currentPath });
   },
 
 
   componentDidUpdate: function() {
     var currentPath = this.context.router.getCurrentPath();
 
-    if (this.state.path === currentPath) {
+    if (currentPath === this.state.path) {
       return;
     }
-    this.fetchCharacters();
-    this.setState({
-      path: currentPath
-    });
+
+    if (currentPath.indexOf('shame') > -1) {
+      this.fetchShame();
+    } else {
+      this.fetchCharacters();
+    }
+
+    this.setState({ path: currentPath });
   },
 
   render: function() {
-    console.log();
-    console.log(this.context.router.getCurrentParams());
-
     var characterList = this.state.characters.map(function(character, index) {
       return (
         <div key={character.characterId} className='list-group-item clearfix'>
