@@ -11,11 +11,7 @@ var App = React.createClass({
     return (
       <div>
         <Navbar />
-
-        <div className="container">
-          <RouteHandler />
-        </div>
-
+        <RouteHandler />
         <Footer />
       </div>
     );
