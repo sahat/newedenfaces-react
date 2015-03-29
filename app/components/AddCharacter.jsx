@@ -70,29 +70,31 @@ var AddCharacter = React.createClass({
 
   render: function() {
     return (
-      <div className="row flipInX animated">
-        <div className="col-sm-8">
-          <div className='panel panel-default'>
-            <div className='panel-heading'>Add Character</div>
-            <div className='panel-body'>
-              <form onSubmit={this.handleSubmit}>
-                <div className='form-group' ref='nameFormGroup'>
-                  <label className='control-label'>Character Name</label>
-                  <input type='text' className='form-control' ref='nameInput' value={this.state.name} onChange={this.handleNameChange} autoFocus/>
-                  <span className="help-block">{this.state.helpBlock}</span>
-                </div>
-                <div className='form-group ' ref='genderFormGroup'>
-                  <div className='radio radio-inline'>
-                    <input type='radio' name='gender' id='female' value='female' checked={this.state.gender === 'female'} onChange={this.handleGenderChange}/>
-                    <label htmlFor='female'>Female</label>
+      <div className="container">
+        <div className="row flipInX animated">
+          <div className="col-sm-8">
+            <div className='panel panel-default'>
+              <div className='panel-heading'>Add Character</div>
+              <div className='panel-body'>
+                <form onSubmit={this.handleSubmit}>
+                  <div className='form-group' ref='nameFormGroup'>
+                    <label className='control-label'>Character Name</label>
+                    <input type='text' className='form-control' ref='nameInput' value={this.state.name} onChange={this.handleNameChange} autoFocus/>
+                    <span className="help-block">{this.state.helpBlock}</span>
                   </div>
-                  <div className='radio radio-inline'>
-                    <input type='radio' name='gender' id='male' value='male' checked={this.state.gender === 'male'} onChange={this.handleGenderChange}/>
-                    <label htmlFor='male'>Male</label>
+                  <div className='form-group ' ref='genderFormGroup'>
+                    <div className='radio radio-inline'>
+                      <input type='radio' name='gender' id='female' value='female' checked={this.state.gender === 'female'} onChange={this.handleGenderChange}/>
+                      <label htmlFor='female'>Female</label>
+                    </div>
+                    <div className='radio radio-inline'>
+                      <input type='radio' name='gender' id='male' value='male' checked={this.state.gender === 'male'} onChange={this.handleGenderChange}/>
+                      <label htmlFor='male'>Male</label>
+                    </div>
                   </div>
-                </div>
-                <button type='submit' className='btn btn-primary'>Submit</button>
-              </form>
+                  <button type='submit' className='btn btn-primary'>Submit</button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
