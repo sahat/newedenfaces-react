@@ -1,4 +1,7 @@
 var React = require('react');
+var Router = require('react-router');
+
+var Link = Router.Link;
 
 var Home = React.createClass({
 
@@ -43,7 +46,7 @@ var Home = React.createClass({
                 <li><strong>Bloodline:</strong> {character.bloodline}</li>
               </ul>
               <h4>
-                <a href={'/characters/' + character.characterId}><strong>{character.name}</strong></a>
+                <Link to={'/characters/' + character.characterId}><strong>{character.name}</strong></Link>
               </h4>
             </div>
           </div>
