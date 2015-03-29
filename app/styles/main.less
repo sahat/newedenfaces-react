@@ -1,5 +1,4 @@
 @import 'vendor/bootstrap/bootstrap';
-@import 'vendor/font-awesome/font-awesome';
 
 @body-bg: #f0f3f4;
 @text-color: #58666f;
@@ -61,6 +60,40 @@ body {
 
 .table-striped > tbody > tr:nth-of-type(odd) {
   background-color: #f9f9f9;
+}
+
+.list-group {
+  border-radius: 2px;
+}
+
+.list-group .list-group-item {
+  margin-bottom: 5px;
+  border-radius: 3px;
+}
+
+.list-group-item:hover,
+.list-group-item:focus {
+  background-color: #f6f8f8;
+}
+
+.thumb-lg {
+  display: inline-block;
+  width: 96px;
+  margin-right: 15px;
+}
+
+.thumb-lg img {
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.position {
+  font-size: 40px;
+  font-weight: bold;
+  color: #ddd;
+  margin-right: 5px;
+  line-height: 96px;
 }
 
 .btn {
@@ -221,6 +254,11 @@ label {
 
 .radio-inline + .radio-inline {
   margin-top: 10px;
+}
+
+.radio-inline,
+.checkbox-inline {
+  cursor: default;
 }
 
 .radio label {
