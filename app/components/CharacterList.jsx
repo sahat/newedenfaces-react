@@ -5,14 +5,14 @@ var Link = Router.Link;
 
 var CharacterList = React.createClass({
 
+  contextTypes: {
+    router: React.PropTypes.func.isRequired
+  },
+
   getInitialState: function() {
     return {
       characters: []
     }
-  },
-
-  contextTypes: {
-    router: React.PropTypes.func.isRequired
   },
 
   fetchCharacters: function() {
@@ -99,8 +99,10 @@ var CharacterList = React.createClass({
     });
 
     return (
-      <div className='list-group'>
-        {characterList}
+      <div className='container'>
+        <div className='list-group'>
+          {characterList}
+        </div>
       </div>
     );
   }
