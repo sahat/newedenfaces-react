@@ -8,14 +8,14 @@ var Character = React.createClass({
 
   getInitialState: function() {
     return {
-      name: 'TBD',
       characterId: 0,
+      name: 'TBD',
       race: 'TBD',
       bloodline: 'TBD',
       gender: 'TBD',
-      wins: 10,
-      losses: 5,
-      winLossRatio: 54
+      wins: 0,
+      losses: 0,
+      winLossRatio: 0
     }
   },
 
@@ -101,6 +101,18 @@ var Character = React.createClass({
     return $.ajax({ url: '/api/characters/' + this.context.router.getCurrentParams().id })
   },
 
+  handleReportCharacter: function() {
+    $.ajax({
+      type: 'POST',
+      url: '/api/report',
+      data: { characterId: this.state.characterId }
+    })
+      .done(function() {
+        this.refs.reportButton.getDOMNode().disabled = true;
+        this.refs.reportButton.getDOMNode().innerText = 'Reported';
+      }.bind(this));
+  },
+
   render: function() {
     return (
       <div ref='container' className='container animated fadeIn'>
@@ -112,29 +124,38 @@ var Character = React.createClass({
         <div className='profile-info clearfix'>
           <h2>{this.state.name}</h2>
           <h4 className='lead'>Race: <strong>{this.state.race}</strong></h4>
-          <h4 className='lead'>Bloodline: <strong>{this.state.bloodline}</strong></h4>
+          <h4 className='lead'>Bloodline:
+            <strong>{this.state.bloodline}</strong></h4>
           <h4 className='lead'>Gender: <strong>{this.state.gender}</strong></h4>
 
-          <button className='btn btn-transparent'>Report Character</button>
+          <button ref='reportButton' className='btn btn-transparent' onClick={this.handleReportCharacter}>
+            Report Character
+          </button>
         </div>
         <div className='profile-stats clearfix'>
           <ul>
-            <li><span className='stats-number'>{this.state.winLossRatio}</span> Winning Percentage</li>
-            <li><span className='stats-number'>{this.state.wins}</span> Wins</li>
-            <li><span className='stats-number'>{this.state.losses}</span> Losses</li>
+            <li><span className='stats-number'>{this.state.winLossRatio}</span>
+              Winning Percentage
+            </li>
+            <li><span className='stats-number'>{this.state.wins}</span> Wins
+            </li>
+            <li><span className='stats-number'>{this.state.losses}</span> Losses
+            </li>
           </ul>
         </div>
         <div className='row'>
-        <div className='col-sm-12 text-center'>
-          <h4 className='lead'> Subscribe for weekly statistics on <strong>{this.state.name}</strong></h4>
-        </div>
+          <div className='col-sm-12 text-center'>
+            <h4 className='lead'> Subscribe for weekly statistics on
+              <strong>{this.state.name}</strong></h4>
+          </div>
         </div>
         <div className='row'>
           <div className='col-sm-6 col-sm-offset-3'>
             <div className='input-group'>
-              <input type='text' className='form-control' placeholder='Email' />
+              <input type='text' className='form-control' placeholder='Email'/>
               <span className='input-group-btn'>
-                <button className='btn btn-default' type='button'>Subscribe</button>
+                <button className='btn btn-default' type='button'>Subscribe
+                </button>
               </span>
             </div>
           </div>
