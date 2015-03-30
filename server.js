@@ -40,10 +40,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use(function(req, res, next) {
-  console.log(req.url);
-
-  if (req.url.indexOf('/api') > -1) {
-    console.log('api call');
+  if (/^\/?api/i.test(req.path)) {
     return next();
   }
 
@@ -336,14 +333,17 @@ app.get('/api/characters/wrong-gender', function(req, res, next) {
  * Return detailed character information
  */
 app.get('/api/characters/:id', function(req, res, next) {
-  Character.findOne({ characterId: req.params.id }, { lean: true }, function(err, character) {
-    if (err) return next(err);
-    if (character) {
-      character.winLossRatio = (character.wins / (character.wins + character.losses) * 100).toFixed(1);
-      res.send(character);
-    } else {
-      res.send(404, { message: 'Character Not Found' });
+  Character.findOne({ characterId: req.params.id }).lean().exec(function(err, character) {
+    if (err) {
+      return next(err);
     }
+
+    if (!character) {
+      return res.status(404).send({ message: 'Character Not Found' });
+    }
+
+    character.winLossRatio = (character.wins / (character.wins + character.losses) * 100).toFixed(1);
+    res.send(character);
   });
 });
 
