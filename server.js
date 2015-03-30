@@ -77,48 +77,49 @@ app.get('/api/characters', function(req, res, next) {
     });
 });
 
-/**
- * POST /api/report
- * Reports a character. Character is removed after 4 reports.
- */
-app.post('/api/report', function(req, res, next) {
-  var characterId = req.body.characterId;
-
-  Character.findOne({ characterId: characterId }, function(err, character) {
-    if (err) return next(err);
-    if (!character) {
-      return res.status(404).send({ message: 'Character Not Found' });
-    }
-
-    character.reports++;
-
-    if (character.reports > 4) {
-      character.remove();
-      return res.send({ message: 'Character has been deleted' });
-    }
-
-    character.save(function(err) {
-      if (err) return next(err);
-      res.send({ message: character.name + ' has been reported' });
-    });
-  });
-});
 
 /**
- * PUT /api/vote
- * @param winner
- * @param loser
- * Update winning and losing count for characters
+ * PUT /api/characters
+ * Update winning and losing count for both characters.
  */
 app.put('/api/characters', function(req, res, next) {
-  if (!req.body.winner || !req.body.loser) return res.send(400, { message: 'Voting requires two characters' });
-  if (req.body.winner === req.body.loser) return res.send(400, { message: 'Cannot vote for and against the same character' });
-  Character.findOne({ characterId: req.body.winner }, function(err, winner) {
-    if (err) return next(err);
-    Character.findOne({ characterId: req.body.loser }, function(err, loser) {
+  var winner = req.body.winner;
+  var loser = req.body.loser;
+
+  if (!winner || !loser) {
+    return res.status(400).send({ message: 'Voting requires two characters' });
+  }
+
+  if (winner === loser) {
+    return res.status(400).send({ message: 'Cannot vote for and against the same character' });
+  }
+
+  async.parallel([
+      function(callback) {
+        Character.findOne({ characterId: winner }, function(err, winner) {
+          callback(err, winner);
+        });
+      },
+      function(callback) {
+        Character.findOne({ characterId: loser }, function(err, loser) {
+          callback(err, loser);
+        });
+      }
+    ],
+    function(err, results) {
       if (err) return next(err);
-      if (!winner || !loser) return res.send(404, { message: 'One of the characters no longer exists' });
-      if (winner.voted || loser.voted) return res.send(200);
+
+      var winner = results[0];
+      var loser = results[1];
+
+      if (!winner || !loser) {
+        return res.status(404).send({ message: 'One of the characters no longer exists' });
+      }
+
+      if (winner.voted || loser.voted) {
+        return res.status(200).end();
+      }
+
       async.parallel([
         function(callback) {
           winner.wins++;
@@ -138,10 +139,9 @@ app.put('/api/characters', function(req, res, next) {
         }
       ], function(err) {
         if (err) return next(err);
-        res.send(200);
+        res.status(200).end();
       });
     });
-  });
 });
 
 /**
@@ -503,6 +503,35 @@ app.post('/api/gender', function(req, res, next) {
     });
   });
 });
+
+
+/**
+ * POST /api/report
+ * Reports a character. Character is removed after 4 reports.
+ */
+app.post('/api/report', function(req, res, next) {
+  var characterId = req.body.characterId;
+
+  Character.findOne({ characterId: characterId }, function(err, character) {
+    if (err) return next(err);
+    if (!character) {
+      return res.status(404).send({ message: 'Character Not Found' });
+    }
+
+    character.reports++;
+
+    if (character.reports > 4) {
+      character.remove();
+      return res.send({ message: 'Character has been deleted' });
+    }
+
+    character.save(function(err) {
+      if (err) return next(err);
+      res.send({ message: character.name + ' has been reported' });
+    });
+  });
+});
+
 
 app.use(function(req, res, next) {
   Router.run(reactRoutes, req.path, function(Handler) {
