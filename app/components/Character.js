@@ -8,6 +8,7 @@ var Character = React.createClass({
 
   getInitialState: function() {
     return {
+      name: 'TBD',
       characterId: 0,
       race: 'TBD',
       bloodline: 'TBD',
@@ -28,6 +29,7 @@ var Character = React.createClass({
 
         this.setState({
           characterId: data.characterId,
+          name: data.name,
           race: data.race,
           bloodline: data.bloodline,
           gender: data.gender.charAt(0).toUpperCase() + data.gender.substring(1),
@@ -73,6 +75,7 @@ var Character = React.createClass({
 
         this.setState({
           characterId: data.characterId,
+          name: data.name,
           race: data.race,
           bloodline: data.bloodline,
           gender: data.gender.charAt(0).toUpperCase() + data.gender.substring(1),
@@ -124,6 +127,23 @@ var Character = React.createClass({
             <li><span className='stats-number'>{this.state.losses}</span> Losses</li>
           </ul>
         </div>
+        <div className='row'>
+        <div className='col-sm-12 text-center'>
+          <h4 className='lead'> Subscribe for weekly statistics on <strong>{this.state.name}</strong></h4>
+        </div>
+        </div>
+        <div className='row'>
+          <div className='col-sm-6 col-sm-offset-3'>
+            <div className='input-group'>
+              <input type='text' className='form-control' placeholder='Email' />
+              <span className='input-group-btn'>
+                <button className='btn btn-default' type='button'>Subscribe</button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+
       </div>
     );
   }
