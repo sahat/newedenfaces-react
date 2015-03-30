@@ -11,6 +11,7 @@ var Navbar = React.createClass({
 
   getInitialState: function() {
     return {
+      totalCharacters: 0,
       onlineUsers: 0,
       searchQuery: '',
       ajaxAnimation: ''
@@ -33,6 +34,11 @@ var Navbar = React.createClass({
         this.setState({ ajaxAnimation: 'fadeOut' });
       }.bind(this), 750);
     }.bind(this));
+
+    $.ajax({ url: '/api/characters/all' })
+      .done(function(data) {
+        this.setState({ totalCharacters: data.count });
+      }.bind(this));
   },
 
   handleSearchChange: function(event) {
@@ -85,7 +91,7 @@ var Navbar = React.createClass({
         <div id='navbar' className='navbar-collapse collapse'>
           <form className='navbar-form navbar-left' onSubmit={this.handleSubmit}>
             <div className='input-group'>
-              <input type='text' className='form-control' placeholder='Search' value={this.state.searchQuery} onChange={this.handleSearchChange} />
+              <input type='text' className='form-control' placeholder={this.state.totalCharacters + ' characters'} value={this.state.searchQuery} onChange={this.handleSearchChange} />
               <span className='input-group-btn'>
                 <button className='btn btn-default' onClick={this.handleSubmit}><span className='glyphicon glyphicon-search'></span></button>
               </span>
