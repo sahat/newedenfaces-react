@@ -23,7 +23,6 @@
     "xml2js": "^0.4.6"
   },
   "devDependencies": {
-    "browser-sync": "^2.4.0",
     "browserify": "^9.0.3",
     "gulp": "^3.8.11",
     "gulp-autoprefixer": "^2.1.0",

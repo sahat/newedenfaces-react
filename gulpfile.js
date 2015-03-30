@@ -9,17 +9,8 @@ var watchify = require('watchify');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var plumber = require('gulp-plumber');
-var browserSync = require('browser-sync');
-var reload = browserSync.reload;
 
-gulp.task('browser-sync', function() {
-  browserSync({
-    proxy: 'localhost:3000',
-    files: ['public/**/*.{js,css}']
-  });
-});
-
-gulp.task('less', function () {
+gulp.task('less', function() {
   return gulp.src('./app/styles/main.less')
     .pipe(plumber())
     .pipe(less())
@@ -35,9 +26,9 @@ gulp.task('browserify', function() {
     return plumber()
       .pipe(bundler.bundle())
       .pipe(source('bundle.js'))
-      .pipe(gulp.dest('./public/js/'))
-      .pipe(reload({ stream: true }));
+      .pipe(gulp.dest('./public/js/'));
   }
+
   return rebundle();
 });
 
@@ -57,4 +48,4 @@ gulp.task('watch', function() {
   gulp.watch('./app/styles/**/*.less', ['less']);
 });
 
-gulp.task('default', ['less', 'browserify', 'browser-sync', 'watch']);
+gulp.task('default', ['less', 'browserify', 'watch']);
