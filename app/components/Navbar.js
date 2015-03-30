@@ -42,6 +42,8 @@ var Navbar = React.createClass({
   handleSubmit: function(event) {
     event.preventDefault();
 
+    if (!this.state.searchQuery) { return; }
+
     $.ajax({
       type: 'POST',
       url: '/api/characters/search',
