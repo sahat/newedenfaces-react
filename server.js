@@ -522,7 +522,7 @@ app.post('/api/report', function(req, res, next) {
 
     if (character.reports > 4) {
       character.remove();
-      return res.send({ message: 'Character has been deleted' });
+      return res.send({ message: character.name + ' has been deleted' });
     }
 
     character.save(function(err) {
