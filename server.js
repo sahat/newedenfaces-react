@@ -1,13 +1,12 @@
+var _ = require('underscore');
 var express = require('express');
 var path = require('path');
-var swig = require('swig');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var async = require('async');
 var mongoose = require('mongoose');
 var request = require('request');
 var xml2js = require('xml2js');
-var _ = require('underscore');
 var React = require('react');
 var Router = require('react-router');
 
@@ -17,7 +16,6 @@ require('node-jsx').install();
 
 var reactRoutes = require('./app/routes');
 
-
 mongoose.connect('localhost');
 
 var Character = mongoose.model('Character', {
@@ -25,7 +23,6 @@ var Character = mongoose.model('Character', {
   name: String,
   race: String,
   gender: String,
-  wrongGender: Boolean,
   bloodline: String,
   wins: { type: Number, default: 0 },
   losses: { type: Number, default: 0 },
@@ -34,29 +31,19 @@ var Character = mongoose.model('Character', {
   voted: { type: Boolean, default: false }
 });
 
-app.engine('html', swig.renderFile);
-app.set('view engine', 'html');
-app.set('views', __dirname + '/views');
 app.set('port', process.env.PORT || 3000);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-
-
-
-
-
-
 /**
  * GET /api/characters
- * Returns two random characters.
+ * Returns 2 random characters of the same gender that have not been voted yet.
  */
 app.get('/api/characters', function(req, res, next) {
-  var choices = { 0: 'female', 1: 'male' };
-  var randomGender = choices[Math.round(Math.random())];
+  var choices = ['female', 'male'];
+  var randomGender = _.sample(choices);
 
   Character
     .find({ random: { $near: [Math.random(), 0] } })
@@ -66,22 +53,21 @@ app.get('/api/characters', function(req, res, next) {
     .exec(function(err, characters) {
       if (err) return next(err);
 
-      // When there are no more character pairs given by randomGender,
-      // check if there are character pairs of the opposite gender
       if (characters.length < 2) {
-        var oppositeRandomGender = randomGender === 'female' ? 'male' : 'female';
+        var oppositeGender = _.first(_.without(choices, randomGender));
+
         Character
           .find({ random: { $near: [Math.random(), 0] } })
           .where('voted', false)
-          .where('gender', oppositeRandomGender)
+          .where('gender', oppositeGender)
           .limit(2)
           .exec(function(err, characters) {
             if (err) return next(err);
-            // When there are no character pairs left of either gender,
-            // reset voted flags, and start the next round
+
             if (characters.length < 2) {
               Character.update({}, { $set: { voted: false } }, { multi: true }, function(err) {
                 if (err) return next(err);
+
                 res.send([]);
               });
             } else {
@@ -303,17 +289,6 @@ app.post('/api/characters/search', function(req, res, next) {
     } else {
       res.send({});
     }
-  });
-});
-
-/**
- * GET /characters/wrong-gender
- * Display characters marked as Wrong Gender
- */
-app.get('/api/characters/wrong-gender', function(req, res, next) {
-  Character.where('wrongGender', true).exec(function(err, characters) {
-    if (err) return next(err);
-    res.send(characters);
   });
 });
 
@@ -562,7 +537,7 @@ var io = require('socket.io')(server);
 
 var onlineUsers = 0;
 
-io.sockets.on('connection', function (socket) {
+io.sockets.on('connection', function(socket) {
   onlineUsers++;
   io.sockets.emit('onlineUsers', { onlineUsers: onlineUsers });
   socket.on('disconnect', function() {
