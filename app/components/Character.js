@@ -115,10 +115,7 @@ var Character = React.createClass({
           <h4 className='lead'>Bloodline: <strong>{this.state.bloodline}</strong></h4>
           <h4 className='lead'>Gender: <strong>{this.state.gender}</strong></h4>
 
-          <div className='btn-group'>
-            <button className='btn btn-transparent'>Request to Delete</button>
-            <button className='btn btn-transparent'>Wrong Gender</button>
-          </div>
+          <button className='btn btn-transparent'>Report Character</button>
         </div>
         <div className='profile-stats clearfix'>
           <ul>
