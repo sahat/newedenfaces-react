@@ -28,7 +28,7 @@ gulp.task('less', function () {
 });
 
 gulp.task('browserify', function() {
-  var bundler = watchify(browserify('./app/app.js', watchify.args));
+  var bundler = watchify(browserify('./app/main.js', watchify.args));
   bundler.transform(reactify);
   bundler.on('update', rebundle);
   function rebundle() {

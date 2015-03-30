@@ -6,6 +6,13 @@ var async = require('async');
 var mongoose = require('mongoose');
 var request = require('request');
 var xml2js = require('xml2js');
+var _ = require('underscore');
+var React = require('react');
+var Router = require('react-router');
+
+require('node-jsx').install();
+
+var reactRoutes = require('./app/routes');
 
 var app = express();
 
@@ -30,6 +37,32 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+app.use(function(req, res, next) {
+  console.log(req.url);
+
+  if (req.url.indexOf('/api') > -1) {
+    console.log('api call');
+    return next();
+  }
+
+  Router.run(reactRoutes, req.path, function(Handler) {
+    res.send(React.renderToString(React.createElement(Handler, { path: req.path })));
+  });
+
+  //
+  //console.log('non-api call');
+  //var router = Router.create({location: req.url, routes: routes})
+  //router.run(function(Handler, state) {
+  //  var html = React.renderToString(React.createElement(Handler))
+  //  return res.render('index', {html: html})
+  //})
+});
+
+
+
+
 
 /**
  * GET /api/characters
@@ -246,7 +279,7 @@ app.get('/api/leaderboard', function(req, res, next) {
   Character
     .find()
     .sort('-wins')
-    .limit(18)
+    .limit(5)
     .lean()
     .exec(function(err, characters) {
       if (err) return next(err);
@@ -255,7 +288,7 @@ app.get('/api/leaderboard', function(req, res, next) {
         if (a.wins / (a.wins + a.losses) > b.wins / (b.wins + b.losses)) return -1;
         return 0;
       });
-      res.send(characters.slice(0, 12));
+      res.send(characters);
     });
 });
 
@@ -300,13 +333,13 @@ app.get('/api/characters/wrong-gender', function(req, res, next) {
 
 /**
  * GET /characters/:id
- * @param id
  * Return detailed character information
  */
 app.get('/api/characters/:id', function(req, res, next) {
-  Character.findOne({ characterId: req.params.id }, function(err, character) {
+  Character.findOne({ characterId: req.params.id }, { lean: true }, function(err, character) {
     if (err) return next(err);
     if (character) {
+      character.winLossRatio = (character.wins / (character.wins + character.losses) * 100).toFixed(1);
       res.send(character);
     } else {
       res.send(404, { message: 'Character Not Found' });
@@ -320,8 +353,9 @@ app.get('/api/characters/:id', function(req, res, next) {
  */
 app.post('/api/characters', function(req, res, next) {
   var gender = req.body.gender;
-  var parser = new xml2js.Parser();
   var characterName = decodeURIComponent(req.body.name || '');
+
+  var parser = new xml2js.Parser();
   var characterIdUrl = 'https://api.eveonline.com/eve/CharacterID.xml.aspx?names=' + characterName;
 
   async.waterfall([
@@ -520,6 +554,8 @@ app.post('/api/gender', function(req, res, next) {
     });
   });
 });
+
+
 
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
