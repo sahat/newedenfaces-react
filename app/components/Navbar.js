@@ -5,8 +5,13 @@ var Link = Router.Link;
 
 var Navbar = React.createClass({
 
+  contextTypes: {
+    router: React.PropTypes.func.isRequired
+  },
+
   getInitialState: function() {
     return {
+      searchQuery: '',
       ajaxAnimation: ''
     }
   },
@@ -20,6 +25,25 @@ var Navbar = React.createClass({
       setTimeout(function() {
         this.setState({ ajaxAnimation: 'fadeOut' });
       }.bind(this), 750);
+    }.bind(this));
+  },
+
+  handleSearchChange: function(event) {
+    this.setState({ searchQuery: event.target.value });
+  },
+
+  handleSubmit: function(event) {
+    event.preventDefault();
+
+    $.ajax({
+      type: 'POST',
+      url: '/api/characters/search',
+      data: { name: this.state.searchQuery }
+    }).done(function(data) {
+      if (data) {
+        this.context.router.transitionTo('/characters/' + data.characterId);
+        this.setState({ searchQuery: '' });
+      }
     }.bind(this));
   },
 
@@ -49,9 +73,9 @@ var Navbar = React.createClass({
           </a>
         </div>
         <div id='navbar' className='navbar-collapse collapse'>
-          <form className='navbar-form navbar-left'>
+          <form className='navbar-form navbar-left' onSubmit={this.handleSubmit}>
             <div className='input-group'>
-              <input type='text' className='form-control' placeholder='Search'/>
+              <input type='text' className='form-control' placeholder='Search' value={this.state.searchQuery} onChange={this.handleSearchChange} />
               <span className='input-group-btn'>
                 <button className='btn btn-default' type='button'>Go!</button>
               </span>
