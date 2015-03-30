@@ -36,6 +36,17 @@ var Character = React.createClass({
           winLossRatio: data.winLossRatio
         });
       }.bind(this));
+
+    $('.magnific-popup').magnificPopup({
+      type: 'image',
+      mainClass: 'mfp-zoom-in',
+      closeOnContentClick: true,
+      midClick: true,
+      zoom: {
+        enabled: true,
+        duration: 300
+      }
+    });
   },
 
   componentWillUnmount: function() {
@@ -49,7 +60,7 @@ var Character = React.createClass({
     return (
       <div className='container animated fadeIn'>
         <div className='profile-img'>
-          <a className='magnific-popup fade-zoom' href={'https://image.eveonline.com/Character/' + this.state.characterId + '_1024.jpg'}>
+          <a className='magnific-popup' href={'https://image.eveonline.com/Character/' + this.state.characterId + '_1024.jpg'}>
             <img src={'https://image.eveonline.com/Character/' + this.state.characterId + '_256.jpg'}/>
           </a>
         </div>
