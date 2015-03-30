@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+var swig = require('swig');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var async = require('async');
@@ -10,11 +11,12 @@ var _ = require('underscore');
 var React = require('react');
 var Router = require('react-router');
 
+var app = express();
+
 require('node-jsx').install();
 
 var reactRoutes = require('./app/routes');
 
-var app = express();
 
 mongoose.connect('localhost');
 
@@ -32,6 +34,9 @@ var Character = mongoose.model('Character', {
   voted: { type: Boolean, default: false }
 });
 
+app.engine('html', swig.renderFile);
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
 app.set('port', process.env.PORT || 3000);
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -39,23 +44,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use(function(req, res, next) {
-  if (/^\/?api/i.test(req.path)) {
-    return next();
-  }
 
-  Router.run(reactRoutes, req.path, function(Handler) {
-    res.send(React.renderToString(React.createElement(Handler, { path: req.path })));
-  });
-
-  //
-  //console.log('non-api call');
-  //var router = Router.create({location: req.url, routes: routes})
-  //router.run(function(Handler, state) {
-  //  var html = React.renderToString(React.createElement(Handler))
-  //  return res.render('index', {html: html})
-  //})
-});
 
 
 
@@ -555,13 +544,33 @@ app.post('/api/gender', function(req, res, next) {
   });
 });
 
-
+app.use(function(req, res, next) {
+  Router.run(reactRoutes, req.path, function(Handler) {
+    var html = React.renderToString(React.createElement(Handler, { path: req.path }));
+    //res.render('index', { html: html });
+    res.send(html);
+  });
+});
 
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.send({ message: err.message });
 });
 
-app.listen(app.get('port'), function() {
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+
+var onlineUsers = 0;
+
+io.sockets.on('connection', function (socket) {
+  onlineUsers++;
+  io.sockets.emit('onlineUsers', { onlineUsers: onlineUsers });
+  socket.on('disconnect', function() {
+    onlineUsers--;
+    io.sockets.emit('onlineUsers', { onlineUsers: onlineUsers });
+  });
+});
+
+server.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });
