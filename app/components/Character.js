@@ -19,12 +19,12 @@ var Character = React.createClass({
   },
 
   componentDidMount: function() {
-    var routeParams = this.context.router.getCurrentParams();
+    this.setState({ path: this.context.router.getCurrentPath() });
 
-    $.ajax({ url: '/api/characters/' + routeParams.id })
+    this.getCharacter()
       .done(function(data) {
         document.body.classList.add('profile');
-        document.body.classList.add(data.race.toLowerCase());
+        document.body.classList.add('profile-' + data.race.toLowerCase());
 
         this.setState({
           characterId: data.characterId,
@@ -35,30 +35,72 @@ var Character = React.createClass({
           losses: data.losses,
           winLossRatio: data.winLossRatio
         });
-      }.bind(this));
 
-    $('.magnific-popup').magnificPopup({
-      type: 'image',
-      mainClass: 'mfp-zoom-in',
-      closeOnContentClick: true,
-      midClick: true,
-      zoom: {
-        enabled: true,
-        duration: 300
-      }
-    });
+        $('.magnific-popup').magnificPopup({
+          type: 'image',
+          mainClass: 'mfp-zoom-in',
+          closeOnContentClick: true,
+          midClick: true,
+          zoom: {
+            enabled: true,
+            duration: 300
+          }
+        });
+      }.bind(this));
   },
 
   componentWillUnmount: function() {
-    console.log('bye');
     document.body.classList.remove('profile');
-    document.body.classList.remove(this.state.race.toLowerCase());
+    document.body.classList.remove('profile-' + this.state.race.toLowerCase());
+  },
 
+  componentDidUpdate: function() {
+    var currentPath = this.context.router.getCurrentPath();
+
+    if (currentPath === this.state.path) {
+      return;
+    }
+
+    this.setState({ path: currentPath });
+
+    this.refs.container.getDOMNode().classList.remove('fadeIn');
+
+    this.getCharacter()
+      .done(function(data) {
+        document.body.classList.remove('profile-' + this.state.race.toLowerCase());
+        document.body.classList.add('profile-' + data.race.toLowerCase());
+        this.refs.container.getDOMNode().classList.add('fadeIn');
+
+        this.setState({
+          characterId: data.characterId,
+          race: data.race,
+          bloodline: data.bloodline,
+          gender: data.gender.charAt(0).toUpperCase() + data.gender.substring(1),
+          wins: data.wins,
+          losses: data.losses,
+          winLossRatio: data.winLossRatio
+        });
+
+        $('.magnific-popup').magnificPopup({
+          type: 'image',
+          mainClass: 'mfp-zoom-in',
+          closeOnContentClick: true,
+          midClick: true,
+          zoom: {
+            enabled: true,
+            duration: 300
+          }
+        });
+      }.bind(this));
+  },
+
+  getCharacter: function() {
+    return $.ajax({ url: '/api/characters/' + this.context.router.getCurrentParams().id })
   },
 
   render: function() {
     return (
-      <div className='container animated fadeIn'>
+      <div ref='container' className='container animated fadeIn'>
         <div className='profile-img'>
           <a className='magnific-popup' href={'https://image.eveonline.com/Character/' + this.state.characterId + '_1024.jpg'}>
             <img src={'https://image.eveonline.com/Character/' + this.state.characterId + '_256.jpg'}/>
