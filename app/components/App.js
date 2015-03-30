@@ -23,6 +23,7 @@ var App = React.createClass({
         <Navbar />
         <RouteHandler />
         <Footer />
+        <script src='/socket.io/socket.io.js'></script>
         <script src='/js/jquery-1.11.2.min.js'></script>
         <script src='/js/jquery.magnific-popup.min.js'></script>
         <script src='/js/bootstrap.min.js'></script>

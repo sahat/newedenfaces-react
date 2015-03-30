@@ -11,12 +11,19 @@ var Navbar = React.createClass({
 
   getInitialState: function() {
     return {
+      onlineUsers: 0,
       searchQuery: '',
       ajaxAnimation: ''
     }
   },
 
   componentDidMount: function() {
+    var socket = io.connect();
+
+    socket.on('onlineUsers', function (data) {
+      this.setState({ onlineUsers: data.onlineUsers });
+    }.bind(this));
+
     $(document).ajaxStart(function() {
       this.setState({ ajaxAnimation: 'fadeIn' });
     }.bind(this));
@@ -69,7 +76,8 @@ var Navbar = React.createClass({
               <div className='tri'></div>
               <div className='tri invert'></div>
             </span>
-            NEF
+            <span>NEF</span>
+            <span className='badge badge-up badge-danger'>{this.state.onlineUsers}</span>
           </a>
         </div>
         <div id='navbar' className='navbar-collapse collapse'>
@@ -77,7 +85,7 @@ var Navbar = React.createClass({
             <div className='input-group'>
               <input type='text' className='form-control' placeholder='Search' value={this.state.searchQuery} onChange={this.handleSearchChange} />
               <span className='input-group-btn'>
-                <button className='btn btn-default' type='button'>Go!</button>
+                <button className='btn btn-default' onClick={this.handleSubmit}>Go!</button>
               </span>
             </div>
           </form>
