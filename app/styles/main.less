@@ -1,6 +1,9 @@
 @import 'vendor/bootstrap/bootstrap';
 @import (less) 'vendor/magnific-popup.css';
 
+/*
+ * Bootstrap overrides.
+ */
 @body-bg: #f0f3f4;
 @text-color: #58666f;
 @font-family-base: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -62,9 +65,16 @@ footer {
 footer a {
   color: #fff;
   text-decoration: underline;
+
+  &:hover {
+    color: #fff;
+  }
 }
 
 
+/*
+ * Character profile page styles.
+ */
 
 .profile {
   background-size: cover;
@@ -423,7 +433,7 @@ label {
   display: block;
   margin-bottom: 15px;
   font-size: 40px;
-  font-weight: 300;
+  font-weight: 600;
   line-height: 40px
 }
 
@@ -704,3 +714,4 @@ label {
     animation-delay: -500ms;
   }
 }
+
