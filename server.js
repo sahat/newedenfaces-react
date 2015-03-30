@@ -52,7 +52,6 @@ app.get('/api/characters', function(req, res, next) {
     .limit(2)
     .exec(function(err, characters) {
       if (err) return next(err);
-
       if (characters.length < 2) {
         var oppositeGender = _.first(_.without(choices, randomGender));
 
@@ -63,11 +62,9 @@ app.get('/api/characters', function(req, res, next) {
           .limit(2)
           .exec(function(err, characters) {
             if (err) return next(err);
-
             if (characters.length < 2) {
               Character.update({}, { $set: { voted: false } }, { multi: true }, function(err) {
                 if (err) return next(err);
-
                 res.send([]);
               });
             } else {
@@ -81,40 +78,28 @@ app.get('/api/characters', function(req, res, next) {
 });
 
 /**
- * POST /report
- * Reports a character.
+ * POST /api/report
+ * Reports a character. Character is removed after 4 reports.
  */
 app.post('/api/report', function(req, res, next) {
   var characterId = req.body.characterId;
 
   Character.findOne({ characterId: characterId }, function(err, character) {
     if (err) return next(err);
-    if (!character) return res.send(404, { message: 'Character Not Found' });
+    if (!character) {
+      return res.status(404).send({ message: 'Character Not Found' });
+    }
+
     character.reports++;
+
     if (character.reports > 4) {
       character.remove();
       return res.send({ message: 'Character has been deleted' });
     }
-    character.save(function(err) {
-      if (err) return next(err);
-      res.send(200, { message: character.name + ' has been reported' });
-    });
-  });
-});
 
-/**
- * POST /report/gender
- * @param characterId
- * Marks a character with a wrong gender flag
- */
-app.post('/api/report/gender', function(req, res, next) {
-  Character.findOne({ characterId: req.body.characterId }, function(err, character) {
-    if (err) return next(err);
-    if (!character) return res.send(404, { message: 'Character Not Found' });
-    character.wrongGender = true;
     character.save(function(err) {
       if (err) return next(err);
-      res.send(200, { message: character.name + ' has been flagged' });
+      res.send({ message: character.name + ' has been reported' });
     });
   });
 });
