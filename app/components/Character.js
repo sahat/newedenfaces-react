@@ -27,6 +27,19 @@ var Character = React.createClass({
         document.body.classList.add('profile');
         document.body.classList.add('profile-' + data.race.toLowerCase());
 
+        var reportsJSON = localStorage.getItem('nef-reports');
+
+        if (!reportsJSON) {
+          localStorage.setItem('nef-reports', JSON.stringify({}));
+        } else {
+          var reports = JSON.parse(reportsJSON);
+
+          if (reports[data.characterId]) {
+            this.refs.reportButton.getDOMNode().disabled = true;
+            this.refs.reportButton.getDOMNode().innerText = 'Reported';
+          }
+        }
+
         this.setState({
           characterId: data.characterId,
           name: data.name,
@@ -110,6 +123,12 @@ var Character = React.createClass({
       .done(function() {
         this.refs.reportButton.getDOMNode().disabled = true;
         this.refs.reportButton.getDOMNode().innerText = 'Reported';
+
+        var reportsJSON = localStorage.getItem('nef-reports');
+        var reports = JSON.parse(reportsJSON);
+
+        reports[this.state.characterId] = true;
+        localStorage.setItem('nef-reports', JSON.stringify(reports));
       }.bind(this));
   },
 
