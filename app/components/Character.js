@@ -143,8 +143,7 @@ var Character = React.createClass({
         <div className='profile-info clearfix'>
           <h2>{this.state.name}</h2>
           <h4 className='lead'>Race: <strong>{this.state.race}</strong></h4>
-          <h4 className='lead'>Bloodline:
-            <strong>{this.state.bloodline}</strong></h4>
+          <h4 className='lead'>Bloodline: <strong>{this.state.bloodline}</strong></h4>
           <h4 className='lead'>Gender: <strong>{this.state.gender}</strong></h4>
 
           <button ref='reportButton' className='btn btn-transparent' onClick={this.handleReportCharacter}>
@@ -153,19 +152,14 @@ var Character = React.createClass({
         </div>
         <div className='profile-stats clearfix'>
           <ul>
-            <li><span className='stats-number'>{this.state.winLossRatio}</span>
-              Winning Percentage
-            </li>
-            <li><span className='stats-number'>{this.state.wins}</span> Wins
-            </li>
-            <li><span className='stats-number'>{this.state.losses}</span> Losses
-            </li>
+            <li><span className='stats-number'>{this.state.winLossRatio}</span>Winning Percentage</li>
+            <li><span className='stats-number'>{this.state.wins}</span> Wins</li>
+            <li><span className='stats-number'>{this.state.losses}</span> Losses</li>
           </ul>
         </div>
         <div className='row'>
           <div className='col-sm-12 text-center'>
-            <h4 className='lead'> Subscribe for weekly statistics on
-              <strong>{this.state.name}</strong></h4>
+            <h4 className='lead'> Subscribe for weekly statistics on <strong>{this.state.name}</strong></h4>
           </div>
         </div>
         <div className='row'>
@@ -173,8 +167,7 @@ var Character = React.createClass({
             <div className='input-group'>
               <input type='text' className='form-control' placeholder='Email'/>
               <span className='input-group-btn'>
-                <button className='btn btn-default' type='button'>Subscribe
-                </button>
+                <button className='btn btn-default' type='button'>Subscribe</button>
               </span>
             </div>
           </div>
