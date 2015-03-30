@@ -12,9 +12,7 @@ var Home = React.createClass({
   },
 
   componentDidMount: function() {
-    $.get('/api/characters', function(data) {
-      this.setState({ characters: data });
-    }.bind(this));
+    this.getCharacters();
   },
 
   handleClick: function(character) {
@@ -26,11 +24,16 @@ var Home = React.createClass({
       url: '/api/characters',
       data: { winner: winner.characterId, loser: loser.characterId },
       success: function() {
-        $.get('/api/characters', function(data) {
-          this.setState({ characters: data });
-        }.bind(this));
+        this.getCharacters();
       }.bind(this)
     });
+  },
+
+  getCharacters: function() {
+    $.ajax({ url: '/api/characters' })
+      .done(function(data) {
+        this.setState({ characters: data });
+      }.bind(this));
   },
 
   render: function() {
@@ -39,7 +42,6 @@ var Home = React.createClass({
         <div key={character.characterId} className={index === 0 ? 'col-xs-6 col-sm-6 col-md-5 col-md-offset-1' : 'col-xs-6 col-sm-6 col-md-5'}>
           <div className='thumbnail fadeInUp animated'>
             <img onClick={this.handleClick.bind(this, character)} src={'http://image.eveonline.com/Character/' + character.characterId + '_512.jpg'}/>
-
             <div className='caption text-center'>
               <ul className='list-inline'>
                 <li><strong>Race:</strong> {character.race}</li>
@@ -57,7 +59,6 @@ var Home = React.createClass({
     return (
       <div className='container'>
         <h3 className='text-center'>Click on the portrait. Select your favorite.</h3>
-
         <div className='row'>
           {characterNodes}
         </div>
