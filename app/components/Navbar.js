@@ -66,7 +66,7 @@ var Navbar = React.createClass({
             <span className='icon-bar'></span>
             <span className='icon-bar'></span>
           </button>
-          <a className='navbar-brand' href='#'>
+          <Link to='/' className='navbar-brand'>
             <span ref='triangles' className={'triangles animated ' + this.state.ajaxAnimation}>
               <div className='tri invert'></div>
               <div className='tri invert'></div>
@@ -78,9 +78,9 @@ var Navbar = React.createClass({
               <div className='tri'></div>
               <div className='tri invert'></div>
             </span>
-            <span>NEF</span>
+            NEF
             <span className='badge badge-up badge-danger'>{this.state.onlineUsers}</span>
-          </a>
+          </Link>
         </div>
         <div id='navbar' className='navbar-collapse collapse'>
           <form className='navbar-form navbar-left' onSubmit={this.handleSubmit}>
