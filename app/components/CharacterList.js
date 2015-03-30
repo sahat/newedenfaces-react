@@ -74,7 +74,7 @@ var CharacterList = React.createClass({
   render: function() {
     var characterList = this.state.characters.map(function(character, index) {
       return (
-        <div key={character.characterId} className='list-group-item clearfix'>
+        <div key={character.characterId} className='list-group-item animated fadeIn'>
           <div className='media'>
             <span className='position pull-left'>{index + 1}</span>
 
