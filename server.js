@@ -117,7 +117,9 @@ app.put('/api/characters', function(req, res, next) {
       }
     ],
     function(err, results) {
-      if (err) return next(err);
+      if (err) {
+        return next(err);
+      }
 
       var winner = results[0];
       var loser = results[1];
@@ -148,7 +150,10 @@ app.put('/api/characters', function(req, res, next) {
           });
         }
       ], function(err) {
-        if (err) return next(err);
+        if (err) {
+          return next(err);
+        }
+
         res.status(200).end();
       });
     });
@@ -156,7 +161,7 @@ app.put('/api/characters', function(req, res, next) {
 
 /**
  * GET /api/characters/shame
- * Return 100 lowest ranked characters for hall of shame
+ * Returns 100 lowest ranked characters with the most losses.
  */
 app.get('/api/characters/shame', function(req, res, next) {
   Character
@@ -164,77 +169,43 @@ app.get('/api/characters/shame', function(req, res, next) {
     .sort('-losses')
     .limit(100)
     .exec(function(err, characters) {
-      if (err) return next(err);
-      res.send(characters);
-    });
-});
+      if (err) {
+        return next(err);
+      }
 
-/**
- * GET /delete/:id
- * Delete a character
- */
-//app.get('/delete/:id', function(req, res) {
-//  var id = req.params.id;
-//  Character.remove({ characterId: id}, function(err, status) {
-//    console.log(err, status);
-//  });
-//});
-
-/**
- * GET /characters/new
- * Return 100 new characters
- */
-app.get('/api/characters/new', function(req, res, next) {
-  Character
-    .find()
-    .sort({ _id: -1 })
-    .limit(100)
-    .exec(function(err, characters) {
-      if (err) return next(err);
-      res.send(characters);
-    });
-});
-
-/**
- * GET /browse
- * @param page
- */
-app.get('/api/browse', function(req, res, next) {
-  var page = req.query.currentPage;
-  Character
-    .find()
-    .limit(30)
-    .skip(page * 30)
-    .exec(function(err, characters) {
-      if (err) return next(err);
       res.send(characters);
     });
 });
 
 /**
  * GET /characters/top
- * Return 100 highest ranked characters
- * Filter gender, race, bloodline by a querystring
+ * Return 100 highest ranked characters. Filter by gender, race and bloodline.
  */
 app.get('/api/characters/top', function(req, res, next) {
   var conditions = {};
+
   for (var key in req.query) {
     if (req.query.hasOwnProperty(key)) {
       conditions[key] = new RegExp('^' + req.query[key] + '$', 'i');
     }
   }
+
   Character
     .find(conditions)
     .sort('-wins')
-    .limit(150)
+    .limit(100)
     .exec(function(err, characters) {
-      if (err) return next(err);
+      if (err) {
+        return next(err);
+      }
+
       characters.sort(function(a, b) {
         if (a.wins / (a.wins + a.losses) < b.wins / (b.wins + b.losses)) return 1;
         if (a.wins / (a.wins + a.losses) > b.wins / (b.wins + b.losses)) return -1;
         return 0;
       });
-      res.send(characters.slice(0, 100));
+
+      res.send(characters);
     });
 });
 
