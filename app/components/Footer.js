@@ -12,8 +12,8 @@ var Footer = React.createClass({
   },
 
   componentDidMount: function() {
-    $.get('/api/leaderboard', function(data) {
-      this.setState({ characters: data });
+    $.get('/api/characters/top', function(data) {
+      this.setState({ characters: data.slice(0,5) });
     }.bind(this));
   },
 
