@@ -58,10 +58,14 @@ var Navbar = React.createClass({
           this.setState({ searchQuery: '' });
         }
       }.bind(this))
-        .fail(function(data) {
+        .fail(function() {
+          this.refs.searchForm.getDOMNode().classList.add('shake');
 
+          setTimeout(function() {
+            this.refs.searchForm.getDOMNode().classList.remove('shake');
+          }.bind(this), 1000)
         }.bind(this));
-    };
+    }
   },
 
   render: function() {
@@ -91,7 +95,7 @@ var Navbar = React.createClass({
           </Link>
         </div>
         <div id='navbar' className='navbar-collapse collapse'>
-          <form className='navbar-form navbar-left' onSubmit={this.handleSubmit}>
+          <form ref='searchForm' className='navbar-form navbar-left animated' onSubmit={this.handleSubmit}>
             <div className='input-group'>
               <input type='text' className='form-control' placeholder={this.state.totalCharacters + ' characters'} value={this.state.searchQuery} onChange={this.handleSearchChange} />
               <span className='input-group-btn'>
