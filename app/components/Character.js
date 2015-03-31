@@ -161,7 +161,7 @@ var Character = React.createClass({
           </a>
         </div>
         <div className='profile-info clearfix'>
-          <h2>{this.state.name}</h2>
+          <h2><strong>{this.state.name}</strong></h2>
           <h4 className='lead'>Race: <strong>{this.state.race}</strong></h4>
           <h4 className='lead'>Bloodline: <strong>{this.state.bloodline}</strong></h4>
           <h4 className='lead'>Gender: <strong>{this.state.gender}</strong></h4>
