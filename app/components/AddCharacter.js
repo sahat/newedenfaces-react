@@ -38,41 +38,30 @@ var AddCharacter = React.createClass({
       return;
     }
 
-    var jqxhr = $.ajax({
+    $.ajax({
       type: 'POST',
       url: '/api/characters',
       data: { name: name, gender: gender }
-    });
-
-    jqxhr.done(function() {
-      this.refs.nameFormGroup.getDOMNode().classList.add('has-success');
-      this.setState({ helpBlock: name + ' has been added successfully!' });
-    }.bind(this));
-
-    jqxhr.fail(function(jqXHR) {
-      this.refs.nameFormGroup.getDOMNode().classList.add('has-error');
-
-      switch(jqXHR.status) {
-        case 409:
-          this.setState({ helpBlock: name + ' is already in the database.' });
-          break;
-        case 404:
-          this.setState({ helpBlock: name + ' is not a registered citizen of New Eden.' });
-          break;
-      }
-    }.bind(this));
-
-    jqxhr.always(function() {
-      this.setState({ name: '', gender: '' });
-      this.refs.nameInput.getDOMNode().focus();
-    }.bind(this));
+    })
+      .done(function() {
+        this.refs.nameFormGroup.getDOMNode().classList.add('has-success');
+        this.setState({ helpBlock: jqXhr.responseJSON.message });
+      }.bind(this))
+      .fail(function(jqXhr) {
+        this.refs.nameFormGroup.getDOMNode().classList.add('has-error');
+        this.setState({ helpBlock: jqXhr.responseJSON.message });
+      }.bind(this))
+      .always(function() {
+        this.setState({ name: '', gender: '' });
+        this.refs.nameInput.getDOMNode().focus();
+      }.bind(this));
   },
 
   render: function() {
     return (
-      <div className="container">
-        <div className="row flipInX animated">
-          <div className="col-sm-8">
+      <div className='container'>
+        <div className='row flipInX animated'>
+          <div className='col-sm-8'>
             <div className='panel panel-default'>
               <div className='panel-heading'>Add Character</div>
               <div className='panel-body'>
@@ -80,7 +69,7 @@ var AddCharacter = React.createClass({
                   <div className='form-group' ref='nameFormGroup'>
                     <label className='control-label'>Character Name</label>
                     <input type='text' className='form-control' ref='nameInput' value={this.state.name} onChange={this.handleNameChange} autoFocus/>
-                    <span className="help-block">{this.state.helpBlock}</span>
+                    <span className='help-block'>{this.state.helpBlock}</span>
                   </div>
                   <div className='form-group ' ref='genderFormGroup'>
                     <div className='radio radio-inline'>
