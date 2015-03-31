@@ -192,27 +192,6 @@ app.get('/api/characters/top', function(req, res, next) {
 });
 
 /**
- * GET /leaderboard
- * Return 12 characters sorted by the winning percentage
- */
-app.get('/api/leaderboard', function(req, res, next) {
-  Character
-    .find()
-    .sort('-wins')
-    .limit(5)
-    .lean()
-    .exec(function(err, characters) {
-      if (err) return next(err);
-      characters.sort(function(a, b) {
-        if (a.wins / (a.wins + a.losses) < b.wins / (b.wins + b.losses)) return 1;
-        if (a.wins / (a.wins + a.losses) > b.wins / (b.wins + b.losses)) return -1;
-        return 0;
-      });
-      res.send(characters);
-    });
-});
-
-/**
  * GET /characters/all
  * Returns a total # of characters in the DB
  */
