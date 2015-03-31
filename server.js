@@ -90,11 +90,11 @@ app.put('/api/characters', function(req, res, next) {
   var loser = req.body.loser;
 
   if (!winner || !loser) {
-    return res.status(400).send({ message: 'Voting requires two characters' });
+    return res.status(400).send({ message: 'Voting requires two characters.' });
   }
 
   if (winner === loser) {
-    return res.status(400).send({ message: 'Cannot vote for and against the same character' });
+    return res.status(400).send({ message: 'Cannot vote for and against the same character.' });
   }
 
   async.parallel([
@@ -116,7 +116,7 @@ app.put('/api/characters', function(req, res, next) {
       var loser = results[1];
 
       if (!winner || !loser) {
-        return res.status(404).send({ message: 'One of the characters no longer exists' });
+        return res.status(404).send({ message: 'One of the characters no longer exists.' });
       }
 
       if (winner.voted || loser.voted) {
@@ -213,7 +213,7 @@ app.get('/api/characters/search', function(req, res, next) {
     if (err) return next(err);
 
     if (!character) {
-      return res.status(404).send({ message: 'Character Not Found' });
+      return res.status(404).send({ message: 'Character not found.' });
     }
 
     res.send(character);
@@ -231,7 +231,7 @@ app.get('/api/characters/:id', function(req, res, next) {
     if (err) return next(err);
 
     if (!character) {
-      return res.status(404).send({ message: 'Character Not Found' });
+      return res.status(404).send({ message: 'Character not found.' });
     }
 
     character.winLossRatio = (character.wins / (character.wins + character.losses) * 100).toFixed(1);
@@ -242,31 +242,36 @@ app.get('/api/characters/:id', function(req, res, next) {
 
 /**
  * POST /api/characters
- * Add new character
+ * Adds new character to the database.
  */
 app.post('/api/characters', function(req, res, next) {
   var gender = req.body.gender;
-  var characterName = decodeURIComponent(req.body.name || '');
+  var characterName = req.body.name;
+  var characterIdLookupUrl = 'https://api.eveonline.com/eve/CharacterID.xml.aspx?names=' + characterName;
 
   var parser = new xml2js.Parser();
-  var characterIdUrl = 'https://api.eveonline.com/eve/CharacterID.xml.aspx?names=' + characterName;
 
   async.waterfall([
     function(callback) {
-      request.get(characterIdUrl, function(e, r, xml) {
-        if (e) return next(e);
+      request.get(characterIdLookupUrl, function(err, request, xml) {
+        if (err) return next(err);
         parser.parseString(xml, function(err, parsedXml) {
           if (err) return next(err);
           try {
             var characterId = parsedXml.eveapi.result[0].rowset[0].row[0].$.characterID;
+
             Character.findOne({ characterId: characterId }, function(err, character) {
-              if (character) return res.send(409, { characterId: character.characterId });
+              if (err) return next(err);
+
+              if (character) {
+                return res.status(409).send({ message: character.name + ' is already in the database.' });
+              }
+
               callback(err, characterId);
             });
           } catch (e) {
-            return res.send(404, { message: 'Character Not Found' });
+            return res.status(400).send({ message: 'XML Parse Error' });
           }
-
         });
       });
     },
@@ -291,13 +296,12 @@ app.post('/api/characters', function(req, res, next) {
             });
             character.save(function(err) {
               if (err) return next(err);
-              res.send(character);
+              res.send({ message: characterName + ' has been added successfully!' });
             });
             callback(null);
           } catch (e) {
-            return res.send(404, { message: 'Character Not Found' });
+            res.send(404, { message: characterName + ' is not a registered citizen of New Eden.' });
           }
-
         });
       });
     }
