@@ -1,3 +1,5 @@
+require('node-jsx').install();
+
 var _ = require('underscore');
 var express = require('express');
 var path = require('path');
@@ -9,13 +11,12 @@ var request = require('request');
 var xml2js = require('xml2js');
 var React = require('react');
 var Router = require('react-router');
+var config = require('./config');
+var sendgrid   = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
 
 var app = express();
 
-require('node-jsx').install();
-
 var reactRoutes = require('./app/routes');
-
 mongoose.connect('localhost');
 
 var Character = mongoose.model('Character', {
@@ -51,7 +52,10 @@ app.get('/api/characters', function(req, res, next) {
     .where('gender', randomGender)
     .limit(2)
     .exec(function(err, characters) {
-      if (err) return next(err);
+      if (err) {
+        return next(err);
+      }
+
       if (characters.length < 2) {
         var oppositeGender = _.first(_.without(choices, randomGender));
 
@@ -61,10 +65,16 @@ app.get('/api/characters', function(req, res, next) {
           .where('gender', oppositeGender)
           .limit(2)
           .exec(function(err, characters) {
-            if (err) return next(err);
+            if (err) {
+              return next(err);
+            }
+
             if (characters.length < 2) {
               Character.update({}, { $set: { voted: false } }, { multi: true }, function(err) {
-                if (err) return next(err);
+                if (err) {
+                  return next(err);
+                }
+
                 res.send([]);
               });
             } else {
@@ -532,6 +542,22 @@ app.post('/api/report', function(req, res, next) {
   });
 });
 
+app.post('/api/subscribe', function(req, res, next) {
+  var email = new sendgrid.Email();
+  email.addTo('sakhat@gmail.com');
+  email.setFrom('sakhat@gmail.com');
+  email.setSubject('[sendgrid-php-example] Owl');
+  email.setText('Owl are you doing?');
+  email.setHtml('<strong>%how% are you doing?</strong>');
+  email.addSubstitution("%how%", "Owl");
+  email.addHeader('X-Sent-Using', 'SendGrid-API');
+  email.addHeader('X-Transport', 'web');
+
+  sendgrid.send(email, function(err, json) {
+    if (err) return next(err);
+    console.log(json);
+  });
+});
 
 app.use(function(req, res, next) {
   Router.run(reactRoutes, req.path, function(Handler) {
@@ -542,6 +568,7 @@ app.use(function(req, res, next) {
 });
 
 app.use(function(err, req, res, next) {
+  // TODO: sendgrid email notification
   res.status(err.status || 500);
   res.send({ message: err.message });
 });
