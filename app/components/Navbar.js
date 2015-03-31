@@ -48,18 +48,20 @@ var Navbar = React.createClass({
   handleSubmit: function(event) {
     event.preventDefault();
 
-    if (!this.state.searchQuery) { return; }
+    if (this.state.searchQuery) {
+      $.ajax({
+        url: '/api/characters/search',
+        data: { name: this.state.searchQuery }
+      }).done(function(data) {
+        if (data) {
+          this.context.router.transitionTo('/characters/' + data.characterId);
+          this.setState({ searchQuery: '' });
+        }
+      }.bind(this))
+        .fail(function(data) {
 
-    $.ajax({
-      type: 'POST',
-      url: '/api/characters/search',
-      data: { name: this.state.searchQuery }
-    }).done(function(data) {
-      if (data) {
-        this.context.router.transitionTo('/characters/' + data.characterId);
-        this.setState({ searchQuery: '' });
-      }
-    }.bind(this));
+        }.bind(this));
+    };
   },
 
   render: function() {
