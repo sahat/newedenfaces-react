@@ -204,10 +204,11 @@ app.get('/api/characters/count', function(req, res, next) {
 
 /**
  * GET /api/characters/search
- * Character search
+ * Looks up a character by name. (case-insensitive)
  */
 app.get('/api/characters/search', function(req, res, next) {
   var characterName = new RegExp(req.query.name, 'i');
+
   Character.findOne({ name: characterName }, function(err, character) {
     if (err) return next(err);
 
@@ -220,20 +221,21 @@ app.get('/api/characters/search', function(req, res, next) {
 });
 
 /**
- * GET /characters/:id
- * Return detailed character information
+ * GET /api/characters/:id
+ * Returns detailed character information.
  */
 app.get('/api/characters/:id', function(req, res, next) {
-  Character.findOne({ characterId: req.params.id }).lean().exec(function(err, character) {
-    if (err) {
-      return next(err);
-    }
+  var id = req.params.id;
+
+  Character.findOne({ characterId: id }).lean().exec(function(err, character) {
+    if (err) return next(err);
 
     if (!character) {
       return res.status(404).send({ message: 'Character Not Found' });
     }
 
     character.winLossRatio = (character.wins / (character.wins + character.losses) * 100).toFixed(1);
+
     res.send(character);
   });
 });
