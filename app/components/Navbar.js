@@ -35,7 +35,7 @@ var Navbar = React.createClass({
       }.bind(this), 750);
     }.bind(this));
 
-    $.ajax({ url: '/api/characters/all' })
+    $.ajax({ url: '/api/characters/count' })
       .done(function(data) {
         this.setState({ totalCharacters: data.count });
       }.bind(this));

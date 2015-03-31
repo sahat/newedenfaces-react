@@ -149,7 +149,7 @@ app.put('/api/characters', function(req, res, next) {
 
 /**
  * GET /api/characters/shame
- * Returns 100 lowest ranked characters with the most losses.
+ * Returns 100 lowest ranked characters.
  */
 app.get('/api/characters/shame', function(req, res, next) {
   Character
@@ -193,9 +193,9 @@ app.get('/api/characters/top', function(req, res, next) {
 
 /**
  * GET /characters/all
- * Returns a total # of characters in the DB
+ * Returns the total number of characters.
  */
-app.get('/api/characters/all', function(req, res, next) {
+app.get('/api/characters/count', function(req, res, next) {
   Character.count({}, function(err, count) {
     if (err) return next(err);
     res.send({ count: count });
