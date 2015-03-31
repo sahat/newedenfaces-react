@@ -8,6 +8,7 @@ var Character = React.createClass({
 
   getInitialState: function() {
     return {
+      email: '',
       characterId: 0,
       name: 'TBD',
       race: 'TBD',
@@ -132,6 +133,25 @@ var Character = React.createClass({
       }.bind(this));
   },
 
+  handleSubscribeSubmit: function(event) {
+    event.preventDefault();
+
+    if (!this.state.email) { return; }
+
+    $.ajax({
+      type: 'POST',
+      url: '/api/subscribe',
+      data: { email: this.state.email }
+    })
+      .done(function(data) {
+        console.log(data);
+      }.bind(this));
+  },
+
+  handleSubscribeChange: function(event) {
+    this.setState({ email: event.target.value });
+  },
+
   render: function() {
     return (
       <div ref='container' className='container animated fadeIn'>
@@ -164,12 +184,14 @@ var Character = React.createClass({
         </div>
         <div className='row'>
           <div className='col-sm-6 col-sm-offset-3'>
-            <div className='input-group'>
-              <input type='text' className='form-control' placeholder='Email'/>
-              <span className='input-group-btn'>
-                <button className='btn btn-default' type='button'>Subscribe</button>
-              </span>
-            </div>
+            <form onSubmit={this.handleSubscribeSubmit}>
+              <div className='input-group'>
+                <input type='text' className='form-control' placeholder='Email' onChange={this.handleSubscribeChange} />
+                <span className='input-group-btn'>
+                  <button className='btn btn-default' onClick={this.handleSubscribeSubmit}>Subscribe</button>
+                </span>
+              </div>
+            </form>
           </div>
         </div>
 
