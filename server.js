@@ -52,38 +52,31 @@ app.get('/api/characters', function(req, res, next) {
     .where('gender', randomGender)
     .limit(2)
     .exec(function(err, characters) {
-      if (err) {
-        return next(err);
+      if (err) return next(err);
+
+      if (characters.length === 2) {
+        return res.send(characters);
       }
 
-      if (characters.length < 2) {
-        var oppositeGender = _.first(_.without(choices, randomGender));
+      var oppositeGender = _.first(_.without(choices, randomGender));
 
-        Character
-          .find({ random: { $near: [Math.random(), 0] } })
-          .where('voted', false)
-          .where('gender', oppositeGender)
-          .limit(2)
-          .exec(function(err, characters) {
-            if (err) {
-              return next(err);
-            }
+      Character
+        .find({ random: { $near: [Math.random(), 0] } })
+        .where('voted', false)
+        .where('gender', oppositeGender)
+        .limit(2)
+        .exec(function(err, characters) {
+          if (err) return next(err);
 
-            if (characters.length < 2) {
-              Character.update({}, { $set: { voted: false } }, { multi: true }, function(err) {
-                if (err) {
-                  return next(err);
-                }
+          if (characters.length === 2) {
+            return res.send(characters);
+          }
 
-                res.send([]);
-              });
-            } else {
-              res.send(characters);
-            }
+          Character.update({}, { $set: { voted: false } }, { multi: true }, function(err) {
+            if (err) return next(err);
+            res.send([]);
           });
-      } else {
-        res.send(characters);
-      }
+        });
     });
 });
 
@@ -117,9 +110,7 @@ app.put('/api/characters', function(req, res, next) {
       }
     ],
     function(err, results) {
-      if (err) {
-        return next(err);
-      }
+      if (err) return next(err);
 
       var winner = results[0];
       var loser = results[1];
@@ -150,10 +141,7 @@ app.put('/api/characters', function(req, res, next) {
           });
         }
       ], function(err) {
-        if (err) {
-          return next(err);
-        }
-
+        if (err) return next(err);
         res.status(200).end();
       });
     });
@@ -169,10 +157,7 @@ app.get('/api/characters/shame', function(req, res, next) {
     .sort('-losses')
     .limit(100)
     .exec(function(err, characters) {
-      if (err) {
-        return next(err);
-      }
-
+      if (err) return next(err);
       res.send(characters);
     });
 });
@@ -182,26 +167,23 @@ app.get('/api/characters/shame', function(req, res, next) {
  * Return 100 highest ranked characters. Filter by gender, race and bloodline.
  */
 app.get('/api/characters/top', function(req, res, next) {
+  var params = req.query;
   var conditions = {};
 
-  for (var key in req.query) {
-    if (req.query.hasOwnProperty(key)) {
-      conditions[key] = new RegExp('^' + req.query[key] + '$', 'i');
-    }
-  }
+  _.each(params, function(value, key) {
+    conditions[key] = new RegExp('^' + value + '$', 'i');
+  });
 
   Character
     .find(conditions)
     .sort('-wins')
     .limit(100)
     .exec(function(err, characters) {
-      if (err) {
-        return next(err);
-      }
+      if (err) return next(err);
 
       characters.sort(function(a, b) {
-        if (a.wins / (a.wins + a.losses) < b.wins / (b.wins + b.losses)) return 1;
-        if (a.wins / (a.wins + a.losses) > b.wins / (b.wins + b.losses)) return -1;
+        if (a.wins / (a.wins + a.losses) < b.wins / (b.wins + b.losses)) { return 1; }
+        if (a.wins / (a.wins + a.losses) > b.wins / (b.wins + b.losses)) { return -1; }
         return 0;
       });
 
