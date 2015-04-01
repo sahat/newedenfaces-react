@@ -351,13 +351,9 @@ app.get('/api/stats', function(req, res, next) {
         });
       },
       function(callback) {
-        Character.aggregate({
-            $group: {
-              _id: null,
-              total: { $sum: '$wins' }
-            }
-          }, function(err, winsCount) {
-            callback(err, winsCount[0].total);
+        Character.aggregate({ $group: { _id: null, total: { $sum: '$wins' } } }, function(err, totalVotes) {
+            var total = totalVotes.length ? totalVotes[0].total : 0;
+            callback(err, total);
           }
         );
       },
