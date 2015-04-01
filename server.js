@@ -416,27 +416,6 @@ app.get('/api/stats', function(req, res, next) {
     });
 });
 
-/**
- * POST /api/gender
- * @param characterId
- * @param gender
- * Update character's gender
- */
-app.post('/api/gender', function(req, res, next) {
-  var characterId = req.body.characterId;
-  var gender = req.body.gender;
-  Character.findOne({ characterId: characterId }, function(err, character) {
-    if (err) return next(err);
-    if (!character) return res.send(404);
-    character.gender = gender;
-    character.wrongGender = false;
-    character.save(function(err) {
-      if (err) return next(err);
-      res.send(200);
-    });
-  });
-});
-
 
 /**
  * POST /api/report
