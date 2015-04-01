@@ -426,6 +426,7 @@ app.post('/api/report', function(req, res, next) {
 
   Character.findOne({ characterId: characterId }, function(err, character) {
     if (err) return next(err);
+
     if (!character) {
       return res.status(404).send({ message: 'Character Not Found' });
     }
@@ -464,17 +465,18 @@ app.post('/api/subscribe', function(req, res, next) {
 app.use(function(req, res, next) {
   Router.run(reactRoutes, req.path, function(Handler) {
     var html = React.renderToString(React.createElement(Handler, { path: req.path }));
-    //res.render('index', { html: html });
     res.send(html);
   });
 });
 
 app.use(function(err, req, res, next) {
-  // TODO: sendgrid email notification
   res.status(err.status || 500);
   res.send({ message: err.message });
 });
 
+/**
+ * Socket.io stuff.
+ */
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
@@ -482,7 +484,9 @@ var onlineUsers = 0;
 
 io.sockets.on('connection', function(socket) {
   onlineUsers++;
+
   io.sockets.emit('onlineUsers', { onlineUsers: onlineUsers });
+
   socket.on('disconnect', function() {
     onlineUsers--;
     io.sockets.emit('onlineUsers', { onlineUsers: onlineUsers });
