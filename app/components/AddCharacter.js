@@ -43,9 +43,9 @@ var AddCharacter = React.createClass({
       url: '/api/characters',
       data: { name: name, gender: gender }
     })
-      .done(function() {
+      .done(function(data) {
         this.refs.nameFormGroup.getDOMNode().classList.add('has-success');
-        this.setState({ helpBlock: jqXhr.responseJSON.message });
+        this.setState({ helpBlock: data.message });
       }.bind(this))
       .fail(function(jqXhr) {
         this.refs.nameFormGroup.getDOMNode().classList.add('has-error');
