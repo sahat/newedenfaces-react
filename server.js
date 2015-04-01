@@ -277,8 +277,9 @@ app.post('/api/characters', function(req, res, next) {
     },
     function(characterId, callback) {
       var characterInfoUrl = 'https://api.eveonline.com/eve/CharacterInfo.xml.aspx?characterID=' + characterId;
-      request.get({ url: characterInfoUrl }, function(e, r, xml) {
-        if (e) return next(e);
+
+      request.get({ url: characterInfoUrl }, function(err, request, xml) {
+        if (err) return next(err);
         parser.parseString(xml, function(err, parsedXml) {
           if (err) return res.send(err);
           try {
@@ -310,7 +311,7 @@ app.post('/api/characters', function(req, res, next) {
 
 /**
  * GET /api/stats
- * Display DB statistics
+ * Returns characters statistics.
  */
 app.get('/api/stats', function(req, res, next) {
   async.parallel([
@@ -340,28 +341,27 @@ app.get('/api/stats', function(req, res, next) {
         });
       },
       function(callback) {
-        // Total males
         Character.count({ gender: 'male' }, function(err, maleCount) {
           callback(err, maleCount);
         });
       },
       function(callback) {
-        // Total females
         Character.count({ gender: 'female' }, function(err, femaleCount) {
           callback(err, femaleCount);
         });
       },
       function(callback) {
-        // Total votes cast
-        Character.aggregate(
-          { $group: { _id: null, total: { $sum: '$wins' } } },
-          function(err, winsCount) {
+        Character.aggregate({
+            $group: {
+              _id: null,
+              total: { $sum: '$wins' }
+            }
+          }, function(err, winsCount) {
             callback(err, winsCount[0].total);
           }
         );
       },
       function(callback) {
-        // Race count in Top 100
         Character
           .find()
           .sort('-wins')
@@ -369,20 +369,17 @@ app.get('/api/stats', function(req, res, next) {
           .select('race')
           .exec(function(err, characters) {
             if (err) return next(err);
-            var raceCount = _.countBy(characters, function(character) {
-              return character.race;
-            });
-            var max = _.max(raceCount, function(race) {
-              return race
-            });
+
+            var raceCount = _.countBy(characters, function(character) { return character.race; });
+            var max = _.max(raceCount, function(race) { return race });
             var inverted = _.invert(raceCount);
             var topRace = inverted[max];
             var topCount = raceCount[topRace];
+
             callback(err, { race: topRace, count: topCount });
           });
       },
       function(callback) {
-        // Race count in Top 100
         Character
           .find()
           .sort('-wins')
@@ -390,43 +387,31 @@ app.get('/api/stats', function(req, res, next) {
           .select('bloodline')
           .exec(function(err, characters) {
             if (err) return next(err);
-            var bloodlineCount = _.countBy(characters, function(character) {
-              return character.bloodline;
-            });
-            var max = _.max(bloodlineCount, function(bloodline) {
-              return bloodline
-            });
+
+            var bloodlineCount = _.countBy(characters, function(character) { return character.bloodline; });
+            var max = _.max(bloodlineCount, function(bloodline) { return bloodline });
             var inverted = _.invert(bloodlineCount);
             var topBloodline = inverted[max];
             var topCount = bloodlineCount[topBloodline];
+
             callback(err, { bloodline: topBloodline, count: topCount });
           });
       }
     ],
     function(err, results) {
       if (err) return next(err);
-      var totalCount = results[0];
-      var amarrCount = results[1];
-      var caldariCount = results[2];
-      var gallenteCount = results[3];
-      var minmatarCount = results[4];
-      var maleCount = results[5];
-      var femaleCount = results[6];
-      var totalVotes = results[7];
-      var leadingRace = results[8];
-      var leadingBloodline = results[9];
 
       res.send({
-        totalCount: totalCount,
-        amarrCount: amarrCount,
-        caldariCount: caldariCount,
-        gallenteCount: gallenteCount,
-        minmatarCount: minmatarCount,
-        maleCount: maleCount,
-        femaleCount: femaleCount,
-        totalVotes: totalVotes,
-        leadingRace: leadingRace,
-        leadingBloodline: leadingBloodline
+        totalCount: results[0],
+        amarrCount: results[1],
+        caldariCount: results[2],
+        gallenteCount: results[3],
+        minmatarCount: results[4],
+        maleCount: results[5],
+        femaleCount: results[6],
+        totalVotes: results[7],
+        leadingRace: results[8],
+        leadingBloodline: results[9]
       });
     });
 });
