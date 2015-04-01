@@ -275,7 +275,7 @@ app.post('/api/characters', function(req, res, next) {
         });
       });
     },
-    function(characterId, callback) {
+    function(characterId) {
       var characterInfoUrl = 'https://api.eveonline.com/eve/CharacterInfo.xml.aspx?characterID=' + characterId;
 
       request.get({ url: characterInfoUrl }, function(err, request, xml) {
@@ -295,11 +295,11 @@ app.post('/api/characters', function(req, res, next) {
               gender: gender,
               random: [Math.random(), 0]
             });
+
             character.save(function(err) {
               if (err) return next(err);
               res.send({ message: characterName + ' has been added successfully!' });
             });
-            callback(null);
           } catch (e) {
             res.send(404, { message: characterName + ' is not a registered citizen of New Eden.' });
           }
