@@ -32,6 +32,10 @@ var Home = React.createClass({
   getCharacters: function() {
     $.ajax({ url: '/api/characters' })
       .done(function(data) {
+        if (!data.length) {
+          return this.getCharacters();
+        }
+
         this.setState({ characters: data });
       }.bind(this));
   },
