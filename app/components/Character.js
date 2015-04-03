@@ -36,6 +36,10 @@ var Character = React.createClass({
           if (json.reports && json.reports.indexOf(data.characterId) > -1) {
             this.setState({ reported: true });
           }
+
+          if (json.subscribed && json.subscribed.indexOf(data.characterId) > -1) {
+            this.setState({ subscribed: true });
+          }
         }
 
         this.setState({
@@ -134,15 +138,25 @@ var Character = React.createClass({
   handleSubscribeSubmit: function(event) {
     event.preventDefault();
 
-    if (!this.state.email) { return; }
+    if (!this.state.email) {
+      return;
+    }
 
     $.ajax({
       type: 'POST',
       url: '/api/subscribe',
       data: { email: this.state.email }
     })
-      .done(function(data) {
-        console.log(data);
+      .done(function() {
+        var localData = localStorage.getItem('newedenfaces');
+        var json = JSON.parse(localData) || {};
+
+        json.subscribed = json.subscribed || [];
+        json.subscribed.push(this.state.characterId);
+
+        localStorage.setItem('newedenfaces', JSON.stringify(json));
+
+        this.setState({ subscribed: true });
       }.bind(this));
   },
 
@@ -152,7 +166,11 @@ var Character = React.createClass({
 
   render: function() {
 
-    var subscribeField = this.state.subscribed ? null : (
+    var subscribeField = this.state.subscribed ? (
+      <div className='text-center animated fadeIn'>
+        Thank you for subscribing!
+      </div>
+    ) : (
       <div className='row'>
         <div className='col-sm-6 col-sm-offset-3'>
           <form onSubmit={this.handleSubscribeSubmit}>
