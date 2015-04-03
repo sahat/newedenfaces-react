@@ -27,6 +27,7 @@ var App = React.createClass({
         <script src='/js/jquery-1.11.2.min.js'></script>
         <script src='/js/jquery.magnific-popup.min.js'></script>
         <script src='/js/bootstrap.min.js'></script>
+        <script src='/js/sweet-alert.min.js'></script>
         <script src='/js/bundle.js'></script>
       </body>
       </html>
