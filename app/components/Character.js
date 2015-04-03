@@ -145,7 +145,7 @@ var Character = React.createClass({
     $.ajax({
       type: 'POST',
       url: '/api/subscribe',
-      data: { email: this.state.email }
+      data: { email: this.state.email, characterId: this.state.characterId }
     })
       .done(function() {
         var localData = localStorage.getItem('newedenfaces');
