@@ -28,10 +28,21 @@ var Character = React.createClass({
         document.body.classList.add('profile');
         document.body.classList.add('profile-' + data.race.toLowerCase());
 
+        var reported = false;
+        var subscribed = false;
         var localData = localStorage.getItem('newedenfaces');
-        var json = JSON.parse(localData) || {};
-        var reported = _.contains(json.reports, data.characterId) ? true : false;
-        var subscribed = _.contains(json.subscribed, data.characterId) ? true : false;
+
+        if (localData) {
+          var json = JSON.parse(localData);
+
+          if (json.reports && json.reports.indexOf(data.characterId) > -1) {
+            reported = true;
+          }
+
+          if (json.subscribed && json.subscribed.indexOf(data.characterId) > -1) {
+            subscribed = true;
+          }
+        }
 
         this.setState({
           characterId: data.characterId,
@@ -81,10 +92,21 @@ var Character = React.createClass({
         document.body.classList.add('profile-' + data.race.toLowerCase());
         this.refs.container.getDOMNode().classList.add('fadeIn');
 
+        var reported = false;
+        var subscribed = false;
         var localData = localStorage.getItem('newedenfaces');
-        var json = JSON.parse(localData) || {};
-        var reported = _.contains(json.reports, data.characterId) ? true : false;
-        var subscribed = _.contains(json.subscribed, data.characterId) ? true : false;
+
+        if (localData) {
+          var json = JSON.parse(localData);
+
+          if (json.reports && json.reports.indexOf(data.characterId) > -1) {
+            reported = true;
+          }
+
+          if (json.subscribed && json.subscribed.indexOf(data.characterId) > -1) {
+            subscribed = true;
+          }
+        }
 
         this.setState({
           characterId: data.characterId,
