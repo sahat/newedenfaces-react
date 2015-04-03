@@ -441,15 +441,54 @@ app.post('/api/subscribe', function(req, res, next) {
     return res.status(400).send({ message: 'Invalid Email' });
   }
 
-  Subscriber.findOne({ email: emailAddress }, function(err, doc) {
+  //
+  //async.parallel([
+  //    function(callback) {
+  //      Character.findOne({ characterId: characterId }, function(err, character) {
+  //        callback(err, character);
+  //      });
+  //    },
+  //    function(callback) {
+  //      Subscriber.findOne({ email: emailAddress }, function(err, subscriber) {
+  //        if (err) return callback(err);
+  //
+  //        if (doc) {
+  //          return res.status(400).send({ message: 'You are already subscribed' });
+  //        }
+  //
+  //        var subscriber = new Subscriber();
+  //        subscriber.email = emailAddress;
+  //        subscriber.characters.push(characterId);
+  //        subscriber.save(function(err) {
+  //          if (err) return next(err);
+  //          res.status(200).end();
+  //        });
+  //
+  //        callback(err, subscriber);
+  //      });
+  //    }
+  //  ],
+  //  function(err, results) {
+  //    if (err) return next(err);
+  //    var character = results[0];
+  //    var subscriber = results[1];
+  //
+  //
+  //
+  //
+  //  });
+
+  Subscriber.findOne({ email: emailAddress }, function(err, subscriber) {
     if (err) return next(err);
 
-    if (doc) {
-      return res.status(400).send({ message: 'You are already subscribed' });
+    if (!subscriber) {
+      subscriber = new Subscriber();
+      subscriber.email = emailAddress;
     }
+    //if (!doc) {
+    //  return res.status(400).send({ message: 'You are already subscribed to this character.' });
+    //}
 
-    var subscriber = new Subscriber();
-    subscriber.email = emailAddress;
     subscriber.characters.push(characterId);
     subscriber.save(function(err) {
       if (err) return next(err);
