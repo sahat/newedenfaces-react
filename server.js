@@ -21,23 +21,8 @@ var app = express();
 
 mongoose.connect('localhost');
 
-var Character = mongoose.model('Character', {
-  characterId: { type: String, unique: true, index: true },
-  name: String,
-  race: String,
-  gender: String,
-  bloodline: String,
-  wins: { type: Number, default: 0 },
-  losses: { type: Number, default: 0 },
-  reports: { type: Number, default: 0 },
-  random: { type: [Number], index: '2d' },
-  voted: { type: Boolean, default: false }
-});
-
-var Subscriber = mongoose.model('Subscriber', {
-  email: { type: String, unique: true, lowercase: true },
-  characters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Character' }]
-});
+var Character = require('./models/character');
+var Subscriber = require('./models/subscriber');
 
 app.set('port', process.env.PORT || 3000);
 app.use(logger('dev'));
