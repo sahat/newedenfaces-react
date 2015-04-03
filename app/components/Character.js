@@ -179,7 +179,10 @@ var Character = React.createClass({
         localStorage.setItem('newedenfaces', JSON.stringify(json));
 
         this.setState({ subscribed: true });
-      }.bind(this));
+      }.bind(this))
+      .fail(function(jqXhr) {
+        sweetAlert('Error', jqXhr.responseJSON.message, 'error');
+      })
   },
 
   handleSubscribeChange: function(event) {
