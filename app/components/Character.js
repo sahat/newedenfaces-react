@@ -28,16 +28,13 @@ var Character = React.createClass({
         document.body.classList.add('profile');
         document.body.classList.add('profile-' + data.race.toLowerCase());
 
-        var reportsJSON = localStorage.getItem('nef-reports');
+        var localData = localStorage.getItem('newedenfaces');
 
-        if (!reportsJSON) {
-          localStorage.setItem('nef-reports', JSON.stringify({}));
-        } else {
-          var reports = JSON.parse(reportsJSON);
+        if (localData) {
+          var json = JSON.parse(localData);
 
-          if (reports[data.characterId]) {
-            this.refs.reportButton.getDOMNode().disabled = true;
-            this.refs.reportButton.getDOMNode().innerText = 'Reported';
+          if (json.reports && json.reports.indexOf(data.characterId) > -1) {
+            this.setState({ reported: true });
           }
         }
 
@@ -122,14 +119,15 @@ var Character = React.createClass({
       data: { characterId: this.state.characterId }
     })
       .done(function() {
-        this.refs.reportButton.getDOMNode().disabled = true;
-        this.refs.reportButton.getDOMNode().innerText = 'Reported';
+        var localData = localStorage.getItem('newedenfaces');
+        var json = JSON.parse(localData) || {};
 
-        var reportsJSON = localStorage.getItem('nef-reports');
-        var reports = JSON.parse(reportsJSON);
+        json.reports = json.reports || [];
+        json.reports.push(this.state.characterId);
 
-        reports[this.state.characterId] = true;
-        localStorage.setItem('nef-reports', JSON.stringify(reports));
+        localStorage.setItem('newedenfaces', JSON.stringify(json));
+
+        this.setState({ reported: true });
       }.bind(this));
   },
 
@@ -153,6 +151,30 @@ var Character = React.createClass({
   },
 
   render: function() {
+
+    var subscribeField = this.state.subscribed ? null : (
+      <div className='row'>
+        <div className='col-sm-6 col-sm-offset-3'>
+          <form onSubmit={this.handleSubscribeSubmit}>
+            <div className='input-group'>
+              <input type='text' className='form-control' placeholder='Email' onChange={this.handleSubscribeChange}/>
+                <span className='input-group-btn'>
+                  <button className='btn btn-default' onClick={this.handleSubscribeSubmit}>
+                    Subscribe
+                  </button>
+                </span>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+
+    var reportButton = this.state.reported ? (
+      <button className='btn btn-transparent' disabled>Reported</button>
+    ) : (
+      <button className='btn btn-transparent' onClick={this.handleReportCharacter}>Report Character</button>
+    );
+
     return (
       <div ref='container' className='container animated fadeIn'>
         <div className='profile-img'>
@@ -165,10 +187,7 @@ var Character = React.createClass({
           <h4 className='lead'>Race: <strong>{this.state.race}</strong></h4>
           <h4 className='lead'>Bloodline: <strong>{this.state.bloodline}</strong></h4>
           <h4 className='lead'>Gender: <strong>{this.state.gender}</strong></h4>
-
-          <button ref='reportButton' className='btn btn-transparent' onClick={this.handleReportCharacter}>
-            Report Character
-          </button>
+          {reportButton}
         </div>
         <div className='profile-stats clearfix'>
           <ul>
@@ -182,20 +201,7 @@ var Character = React.createClass({
             <h4 className='lead'> Subscribe for weekly statistics on <strong>{this.state.name}</strong></h4>
           </div>
         </div>
-        <div className='row'>
-          <div className='col-sm-6 col-sm-offset-3'>
-            <form onSubmit={this.handleSubscribeSubmit}>
-              <div className='input-group'>
-                <input type='text' className='form-control' placeholder='Email' onChange={this.handleSubscribeChange} />
-                <span className='input-group-btn'>
-                  <button className='btn btn-default' onClick={this.handleSubscribeSubmit}>Subscribe</button>
-                </span>
-              </div>
-            </form>
-          </div>
-        </div>
-
-
+        {subscribeField}
       </div>
     );
   }
