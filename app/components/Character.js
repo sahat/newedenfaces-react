@@ -1,5 +1,5 @@
+var _ = require('underscore');
 var React = require('react');
-
 
 var Character = React.createClass({
   contextTypes: {
@@ -29,18 +29,9 @@ var Character = React.createClass({
         document.body.classList.add('profile-' + data.race.toLowerCase());
 
         var localData = localStorage.getItem('newedenfaces');
-
-        if (localData) {
-          var json = JSON.parse(localData);
-
-          if (json.reports && json.reports.indexOf(data.characterId) > -1) {
-            this.setState({ reported: true });
-          }
-
-          if (json.subscribed && json.subscribed.indexOf(data.characterId) > -1) {
-            this.setState({ subscribed: true });
-          }
-        }
+        var json = JSON.parse(localData) || {};
+        var reported = _.contains(json.reports, data.characterId) ? true : false;
+        var subscribed = _.contains(json.subscribed, data.characterId) ? true : false;
 
         this.setState({
           characterId: data.characterId,
@@ -50,7 +41,9 @@ var Character = React.createClass({
           gender: data.gender.charAt(0).toUpperCase() + data.gender.substring(1),
           wins: data.wins,
           losses: data.losses,
-          winLossRatio: data.winLossRatio
+          winLossRatio: data.winLossRatio,
+          reported: reported,
+          subscribed: subscribed
         });
 
         $('.magnific-popup').magnificPopup({
@@ -88,6 +81,11 @@ var Character = React.createClass({
         document.body.classList.add('profile-' + data.race.toLowerCase());
         this.refs.container.getDOMNode().classList.add('fadeIn');
 
+        var localData = localStorage.getItem('newedenfaces');
+        var json = JSON.parse(localData) || {};
+        var reported = _.contains(json.reports, data.characterId) ? true : false;
+        var subscribed = _.contains(json.subscribed, data.characterId) ? true : false;
+
         this.setState({
           characterId: data.characterId,
           name: data.name,
@@ -96,7 +94,9 @@ var Character = React.createClass({
           gender: data.gender.charAt(0).toUpperCase() + data.gender.substring(1),
           wins: data.wins,
           losses: data.losses,
-          winLossRatio: data.winLossRatio
+          winLossRatio: data.winLossRatio,
+          reported: reported,
+          subscribed: subscribed
         });
 
         $('.magnific-popup').magnificPopup({
