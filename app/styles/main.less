@@ -130,11 +130,16 @@ footer a {
 }
 
 
-.profile .input-group input {
+.profile .form-control {
   color: #fff;
   background: rgba(255,255,255,.15);
   border-color: rgba(255,255,255,.15);
   border-right: 0;
+
+  &:focus {
+    border-color: rgba(255,255,255,.3);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.045),0 0 8px rgba(255,255,255,0.3);
+  }
 }
 
 .profile .input-group-btn:last-child > .btn {
