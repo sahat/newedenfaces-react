@@ -1,8 +1,10 @@
 require('node-jsx').install();
 
 var _ = require('underscore');
+var is = require('is_js');
 var express = require('express');
 var path = require('path');
+var swig  = require('swig');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var async = require('async');
@@ -13,10 +15,10 @@ var React = require('react');
 var Router = require('react-router');
 var config = require('./config');
 var sendgrid   = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
+var reactRoutes = require('./app/routes');
 
 var app = express();
 
-var reactRoutes = require('./app/routes');
 mongoose.connect('localhost');
 
 var Character = mongoose.model('Character', {
@@ -30,6 +32,11 @@ var Character = mongoose.model('Character', {
   reports: { type: Number, default: 0 },
   random: { type: [Number], index: '2d' },
   voted: { type: Boolean, default: false }
+});
+
+var Subscriber = mongoose.model('Subscriber', {
+  email: { type: String, unique: true, lowercase: true },
+  characters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Character' }]
 });
 
 app.set('port', process.env.PORT || 3000);
@@ -442,20 +449,54 @@ app.post('/api/report', function(req, res, next) {
 });
 
 app.post('/api/subscribe', function(req, res, next) {
-  var email = new sendgrid.Email();
-  email.addTo('sakhat@gmail.com');
-  email.setFrom('sakhat@gmail.com');
-  email.setSubject('[sendgrid-php-example] Owl');
-  email.setText('Owl are you doing?');
-  email.setHtml('<strong>%how% are you doing?</strong>');
-  email.addSubstitution("%how%", "Owl");
-  email.addHeader('X-Sent-Using', 'SendGrid-API');
-  email.addHeader('X-Transport', 'web');
+  var emailAddress = req.body.email;
+  var characterId = req.body.characterId;
 
-  sendgrid.send(email, function(err, json) {
+  if (is.not.email(emailAddress)) {
+    return res.status(400).send({ message: 'Invalid Email' });
+  }
+
+  Subscriber.findOne({ email: emailAddress }, function(err, doc) {
     if (err) return next(err);
-    console.log(json);
+
+    if (doc) {
+      return res.status(400).send({ message: 'You are already subscribed' });
+    }
+
+    var subscriber = new Subscriber();
+    subscriber.email = emailAddress;
+    subscriber.characters.push(characterId);
+    subscriber.save(function(err) {
+      if (err) return next(err);
+      res.status(200).end();
+    });
   });
+
+  //var characterName;
+  //
+  //var htmlTemplate = swig.renderFile('views/email.html', {
+  //  name: 'awesome people',
+  //  characterId: '13123123',
+  //  wins: 11,
+  //  losses: 2,
+  //  winningPercentage: '22'
+  //});
+  //
+  //var email = new sendgrid.Email();
+  //email.addTo('sahat@me.com');
+  //email.setFrom('sahat@me.com');
+  //email.setSubject('New Eden Faces Weekly - ' + characterName);
+  //email.setHtml(htmlTemplate);
+  //
+  //sendgrid.send(email, function(err, json) {
+  //  if (err) return next(err);
+  //  console.log(json);
+  //  res.status(200).end();
+  //});
+});
+
+app.post('/api/unsubscribe', function(req, res, next) {
+
 });
 
 app.use(function(req, res, next) {
