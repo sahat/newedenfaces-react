@@ -485,11 +485,13 @@ app.post('/api/subscribe', function(req, res, next) {
       subscriber = new Subscriber();
       subscriber.email = emailAddress;
     }
-    //if (!doc) {
-    //  return res.status(400).send({ message: 'You are already subscribed to this character.' });
-    //}
+
+    if (_.contains(subscriber.characters, characterId)) {
+      return res.status(409).send({ message: 'You are already subscribed to this character.' });
+    }
 
     subscriber.characters.push(characterId);
+
     subscriber.save(function(err) {
       if (err) return next(err);
       res.status(200).end();
