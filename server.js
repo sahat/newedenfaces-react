@@ -15,7 +15,7 @@ var React = require('react');
 var Router = require('react-router');
 var config = require('./config');
 var sendgrid   = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
-var agenda = new Agenda({db: { address: config.database }});
+var agenda = require('agenda')({db: { address: config.database }});
 
 var reactRoutes = require('./app/routes');
 
@@ -436,56 +436,19 @@ app.post('/api/report', function(req, res, next) {
 });
 
 app.post('/api/subscribe', function(req, res, next) {
-  var emailAddress = req.body.email;
+  var email = req.body.email;
   var characterId = req.body.characterId;
 
-  if (is.not.email(emailAddress)) {
+  if (is.not.email(email)) {
     return res.status(400).send({ message: 'Invalid Email' });
   }
 
-  //
-  //async.parallel([
-  //    function(callback) {
-  //      Character.findOne({ characterId: characterId }, function(err, character) {
-  //        callback(err, character);
-  //      });
-  //    },
-  //    function(callback) {
-  //      Subscriber.findOne({ email: emailAddress }, function(err, subscriber) {
-  //        if (err) return callback(err);
-  //
-  //        if (doc) {
-  //          return res.status(400).send({ message: 'You are already subscribed' });
-  //        }
-  //
-  //        var subscriber = new Subscriber();
-  //        subscriber.email = emailAddress;
-  //        subscriber.characters.push(characterId);
-  //        subscriber.save(function(err) {
-  //          if (err) return next(err);
-  //          res.status(200).end();
-  //        });
-  //
-  //        callback(err, subscriber);
-  //      });
-  //    }
-  //  ],
-  //  function(err, results) {
-  //    if (err) return next(err);
-  //    var character = results[0];
-  //    var subscriber = results[1];
-  //
-  //
-  //
-  //
-  //  });
-
-  Subscriber.findOne({ email: emailAddress }, function(err, subscriber) {
+  Subscriber.findOne({ email: email }, function(err, subscriber) {
     if (err) return next(err);
 
     if (!subscriber) {
       subscriber = new Subscriber();
-      subscriber.email = emailAddress;
+      subscriber.email = email;
     }
 
     if (_.contains(subscriber.characters, characterId)) {
@@ -496,31 +459,16 @@ app.post('/api/subscribe', function(req, res, next) {
 
     subscriber.save(function(err) {
       if (err) return next(err);
+
+      var weeklyReport = agenda.schedule('Sunday at noon', 'send weekly report', { email: email, characterId: characterId });
+      weeklyReport.repeatEvery('1 week').save();
+      agenda.start();
+
       res.status(200).end();
     });
   });
 
-  //var characterName;
-  //
-  //var htmlTemplate = swig.renderFile('views/email.html', {
-  //  name: 'awesome people',
-  //  characterId: '13123123',
-  //  wins: 11,
-  //  losses: 2,
-  //  winningPercentage: '22'
-  //});
-  //
-  //var email = new sendgrid.Email();
-  //email.addTo('sahat@me.com');
-  //email.setFrom('sahat@me.com');
-  //email.setSubject('New Eden Faces Weekly - ' + characterName);
-  //email.setHtml(htmlTemplate);
-  //
-  //sendgrid.send(email, function(err, json) {
-  //  if (err) return next(err);
-  //  console.log(json);
-  //  res.status(200).end();
-  //});
+
 });
 
 app.post('/api/unsubscribe', function(req, res, next) {
@@ -560,4 +508,29 @@ io.sockets.on('connection', function(socket) {
 
 server.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
+});
+
+agenda.define('send weekly report', function(job, done) {
+  var data = job.attrs.data;
+
+  Character.findOne({ characterId: data.characterId }, function(err, character) {
+    var htmlTemplate = swig.renderFile('views/email.html', {
+      name: character.name,
+      characterId: character.characterId,
+      wins: character.wins,
+      losses: character.losses,
+      winningPercentage: (character.wins / (character.wins + character.losses) * 100).toFixed(1)
+  });
+
+    var email = new sendgrid.Email();
+    email.addTo(data.email);
+    email.setFrom('support@newedenfaces.com');
+    email.setSubject('New Eden Faces Weekly - ' + character.name);
+    email.setHtml(htmlTemplate);
+
+    sendgrid.send(email, function(err, json) {
+      if (err) return next(err);
+      done();
+    });
+  });
 });
