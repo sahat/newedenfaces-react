@@ -15,11 +15,13 @@ var React = require('react');
 var Router = require('react-router');
 var config = require('./config');
 var sendgrid   = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
+var agenda = new Agenda({db: { address: config.database }});
+
 var reactRoutes = require('./app/routes');
 
 var app = express();
 
-mongoose.connect('localhost');
+mongoose.connect(config.database);
 
 var Character = require('./models/character');
 var Subscriber = require('./models/subscriber');
