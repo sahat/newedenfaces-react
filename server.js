@@ -1,7 +1,6 @@
 require('node-jsx').install();
 
 var _ = require('underscore');
-var is = require('is_js');
 var express = require('express');
 var path = require('path');
 var swig  = require('swig');
@@ -16,6 +15,7 @@ var Router = require('react-router');
 var config = require('./config');
 var sendgrid   = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
 var agenda = require('agenda')({db: { address: config.database }});
+var validator = require('validator');
 
 var reactRoutes = require('./app/routes');
 
@@ -439,7 +439,7 @@ app.post('/api/subscribe', function(req, res, next) {
   var email = req.body.email;
   var characterId = req.body.characterId;
 
-  if (is.not.email(email)) {
+  if (!validator.isEmail(email)) {
     return res.status(400).send({ message: 'Invalid email address.' });
   }
 
