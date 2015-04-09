@@ -440,7 +440,11 @@ app.post('/api/subscribe', function(req, res, next) {
   var characterId = req.body.characterId;
 
   if (is.not.email(email)) {
-    return res.status(400).send({ message: 'Invalid email.' });
+    return res.status(400).send({ message: 'Invalid email address.' });
+  }
+
+  if (!characterId) {
+    return res.status(400).send({ message: 'Character ID is missing.' });
   }
 
   Subscriber.findOne({ email: email }, function(err, subscriber) {
@@ -467,8 +471,6 @@ app.post('/api/subscribe', function(req, res, next) {
       res.status(200).end();
     });
   });
-
-
 });
 
 app.post('/api/unsubscribe', function(req, res, next) {
