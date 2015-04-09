@@ -418,19 +418,19 @@ app.post('/api/report', function(req, res, next) {
     if (err) return next(err);
 
     if (!character) {
-      return res.status(404).send({ message: 'Character Not Found' });
+      return res.status(404).send({ message: 'Character not found.' });
     }
 
     character.reports++;
 
     if (character.reports > 4) {
       character.remove();
-      return res.send({ message: character.name + ' has been deleted' });
+      return res.send({ message: character.name + ' has been deleted.' });
     }
 
     character.save(function(err) {
       if (err) return next(err);
-      res.send({ message: character.name + ' has been reported' });
+      res.send({ message: character.name + ' has been reported.' });
     });
   });
 });
@@ -440,7 +440,7 @@ app.post('/api/subscribe', function(req, res, next) {
   var characterId = req.body.characterId;
 
   if (is.not.email(email)) {
-    return res.status(400).send({ message: 'Invalid Email' });
+    return res.status(400).send({ message: 'Invalid email.' });
   }
 
   Subscriber.findOne({ email: email }, function(err, subscriber) {
@@ -510,6 +510,9 @@ server.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });
 
+/**
+ * Agenda task.
+ */
 agenda.define('send weekly report', function(job, done) {
   var data = job.attrs.data;
 
