@@ -10,6 +10,7 @@ var async = require('async');
 var mongoose = require('mongoose');
 var request = require('request');
 var xml2js = require('xml2js');
+var Iso = require('iso');
 var React = require('react');
 var Router = require('react-router');
 var config = require('./config');
@@ -17,7 +18,8 @@ var sendgrid   = require('sendgrid')(config.sendgrid.username, config.sendgrid.p
 var agenda = require('agenda')({db: { address: config.database }});
 var validator = require('validator');
 
-var reactRoutes = require('./app/routes');
+var alt = require('./app/alt');
+var routes = require('./app/routes');
 
 var app = express();
 
@@ -477,10 +479,15 @@ app.post('/api/unsubscribe', function(req, res, next) {
 
 });
 
-app.use(function(req, res, next) {
-  Router.run(reactRoutes, req.path, function(Handler) {
-    var html = React.renderToString(React.createElement(Handler, { path: req.path }));
-    res.send(html);
+app.use(function(req, res) {
+  alt.bootstrap(JSON.stringify(res.locals.data || {}));
+
+  var iso = new Iso();
+
+  Router.run(routes, req.path, function(Handler) {
+    var html = React.renderToString(React.createElement(Handler));
+    iso.add(html, alt.flush());
+    res.send(iso.render());
   });
 });
 

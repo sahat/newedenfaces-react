@@ -4,9 +4,11 @@
   "main": "server.js",
   "dependencies": {
     "agenda": "^0.6.28",
+    "alt": "^0.15.5",
     "async": "^0.9.0",
     "body-parser": "^1.12.2",
     "express": "^4.12.3",
+    "iso": "^4.1.0",
     "mongoose": "^3.8.25",
     "morgan": "^1.5.2",
     "node-jsx": "^0.12.4",
