@@ -7,11 +7,14 @@ var Stats = require('./components/Stats');
 var Character = require('./components/Character');
 var CharacterList = require('./components/CharacterList');
 var AddCharacter = require('./components/AddCharacter');
+var RouteNotFound = require('./components/RouteNotFound');
 
 var Route = Router.Route;
+var NotFoundRoute = Router.NotFoundRoute;
 
 module.exports = (
   <Route handler={App}>
+    <NotFoundRoute handler={RouteNotFound}/>
     <Route path='/' handler={Home} />
     <Route path='/stats' handler={Stats} />
     <Route path='/characters/:id' handler={Character} />
