@@ -1,7 +1,7 @@
 var alt = require('../alt');
 var AddCharacterActions = require('../actions/AddCharacterActions');
 
-var AppStore = {
+var AddCharacterStore = {
   displayName: 'AppStore',
 
   state: {
@@ -26,4 +26,4 @@ var AppStore = {
   }
 };
 
-module.exports = alt.createStore(AppStore);
+module.exports = alt.createStore(AddCharacterStore);
