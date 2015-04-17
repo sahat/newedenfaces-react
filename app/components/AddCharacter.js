@@ -1,4 +1,6 @@
 var React = require('react');
+var AppStore = require('../stores/AppStore');
+var AppActions = require('../actions/AppActions');
 
 var AddCharacter = React.createClass({
 
@@ -6,19 +8,42 @@ var AddCharacter = React.createClass({
     return {
       name: '',
       gender: '',
-      helpBlock: ''
+      helpBlock: '',
+      nameValidationState: '',
+      genderValidationState: ''
     }
   },
 
+  componentDidMount: function() {
+    AppStore.listen(this.onChange);
+  },
+
+  componentWillUnmount: function() {
+    AppStore.unlisten(this.onChange);
+  },
+
+  onChange: function() {
+    var state = AppStore.getState();
+
+    this.setState({
+      nameValidationState: state.nameValidationState,
+      helpBlock: state.helpBlock
+    });
+  },
+
   handleNameChange: function(event) {
-    this.refs.nameFormGroup.getDOMNode().classList.remove('has-error');
-    this.refs.nameFormGroup.getDOMNode().classList.remove('has-success');
-    this.setState({ name: event.target.value, helpBlock: '' });
+    this.setState({
+      name: event.target.value,
+      nameValidationState: '',
+      helpBlock: ''
+    });
   },
 
   handleGenderChange: function(event) {
-    this.refs.genderFormGroup.getDOMNode().classList.remove('has-error');
-    this.setState({ gender: event.target.value })
+    this.setState({
+      gender: event.target.value,
+      genderValidationState: ''
+    });
   },
 
   handleSubmit: function(event) {
@@ -29,34 +54,38 @@ var AddCharacter = React.createClass({
 
     if (!name) {
       this.refs.nameInput.getDOMNode().focus();
-      this.refs.nameFormGroup.getDOMNode().classList.add('has-error');
+      this.setState({
+        nameValidationState: 'has-error',
+        helpBlock: 'Please enter a character name.'
+      });
       return;
     }
 
     if (!gender) {
-      this.refs.genderFormGroup.getDOMNode().classList.add('has-error');
+      this.setState({
+        genderValidationState: 'has-error'
+      });
       return;
     }
 
-    $.ajax({
-      type: 'POST',
-      url: '/api/characters',
-      data: { name: name, gender: gender }
-    })
-      .done(function(data) {
-        this.refs.nameFormGroup.getDOMNode().classList.add('has-success');
-        this.setState({ helpBlock: data.message });
-      }.bind(this))
-      .fail(function(jqXhr) {
-        this.refs.nameFormGroup.getDOMNode().classList.add('has-error');
-        this.setState({ helpBlock: jqXhr.responseJSON.message });
-      }.bind(this))
-      .always(function() {
-        this.setState({ name: '', gender: '' });
-        this.refs.nameInput.getDOMNode().focus();
-      }.bind(this));
-  },
+    AppActions.addCharacter(name, gender);
 
+    //
+    //xhr.done(function(data) {
+    //  this.refs.nameFormGroup.getDOMNode().classList.add('has-success');
+    //  this.setState({ helpBlock: data.message });
+    //}.bind(this));
+    //
+    //xhr.fail(function(jqXhr) {
+    //  this.refs.nameFormGroup.getDOMNode().classList.add('has-error');
+    //  this.setState({ helpBlock: jqXhr.responseJSON.message });
+    //}.bind(this));
+    //
+    //xhr.always(function() {
+    //  this.setState({ name: '', gender: '' });
+    //  this.refs.nameInput.getDOMNode().focus();
+    //}.bind(this));
+  },
   render: function() {
     return (
       <div className='container'>
@@ -66,12 +95,12 @@ var AddCharacter = React.createClass({
               <div className='panel-heading'>Add Character</div>
               <div className='panel-body'>
                 <form onSubmit={this.handleSubmit}>
-                  <div className='form-group' ref='nameFormGroup'>
+                  <div className={'form-group ' + this.state.nameValidationState}>
                     <label className='control-label'>Character Name</label>
                     <input type='text' className='form-control' ref='nameInput' value={this.state.name} onChange={this.handleNameChange} autoFocus/>
                     <span className='help-block'>{this.state.helpBlock}</span>
                   </div>
-                  <div className='form-group ' ref='genderFormGroup'>
+                  <div className={'form-group ' + this.state.genderValidationState}>
                     <div className='radio radio-inline'>
                       <input type='radio' name='gender' id='female' value='female' checked={this.state.gender === 'female'} onChange={this.handleGenderChange}/>
                       <label htmlFor='female'>Female</label>
