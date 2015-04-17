@@ -1,6 +1,6 @@
 var React = require('react');
-var AppStore = require('../stores/AppStore');
-var AppActions = require('../actions/AppActions');
+var AddCharacterStore = require('../stores/AddCharacterStore');
+var AddCharacterActions = require('../actions/AddCharacterActions');
 
 var AddCharacter = React.createClass({
 
@@ -15,15 +15,15 @@ var AddCharacter = React.createClass({
   },
 
   componentDidMount: function() {
-    AppStore.listen(this.onChange);
+    AddCharacterStore.listen(this.onChange);
   },
 
   componentWillUnmount: function() {
-    AppStore.unlisten(this.onChange);
+    AddCharacterStore.unlisten(this.onChange);
   },
 
   onChange: function() {
-    var state = AppStore.getState();
+    var state = AddCharacterStore.getState();
 
     this.setState({
       nameValidationState: state.nameValidationState,
@@ -68,23 +68,7 @@ var AddCharacter = React.createClass({
       return;
     }
 
-    AppActions.addCharacter(name, gender);
-
-    //
-    //xhr.done(function(data) {
-    //  this.refs.nameFormGroup.getDOMNode().classList.add('has-success');
-    //  this.setState({ helpBlock: data.message });
-    //}.bind(this));
-    //
-    //xhr.fail(function(jqXhr) {
-    //  this.refs.nameFormGroup.getDOMNode().classList.add('has-error');
-    //  this.setState({ helpBlock: jqXhr.responseJSON.message });
-    //}.bind(this));
-    //
-    //xhr.always(function() {
-    //  this.setState({ name: '', gender: '' });
-    //  this.refs.nameInput.getDOMNode().focus();
-    //}.bind(this));
+    AddCharacterActions.addCharacter(name, gender);
   },
   render: function() {
     return (
