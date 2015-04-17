@@ -1,5 +1,5 @@
 var alt = require('../alt');
-var AppActions = require('../actions/AddCharacterActions');
+var AddCharacterActions = require('../actions/AddCharacterActions');
 
 var AppStore = {
   displayName: 'AppStore',
@@ -11,8 +11,8 @@ var AppStore = {
   },
 
   bindListeners: {
-    onAddCharacterSucceeded: AppActions.ADD_CHARACTER_SUCCEEDED,
-    onAddCharacterFailed: AppActions.ADD_CHARACTER_FAILED
+    onAddCharacterSucceeded: AddCharacterActions.ADD_CHARACTER_SUCCEEDED,
+    onAddCharacterFailed: AddCharacterActions.ADD_CHARACTER_FAILED
   },
 
   onAddCharacterSucceeded: function(successMessage) {
