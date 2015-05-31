@@ -1,17 +1,12 @@
 var React = require('react');
+
 var AddCharacterStore = require('../stores/AddCharacterStore');
 var AddCharacterActions = require('../actions/AddCharacterActions');
 
 var AddCharacter = React.createClass({
 
   getInitialState: function() {
-    return {
-      name: '',
-      gender: '',
-      helpBlock: '',
-      nameValidationState: '',
-      genderValidationState: ''
-    }
+    return AddCharacterStore.getState();
   },
 
   componentDidMount: function() {
@@ -23,20 +18,11 @@ var AddCharacter = React.createClass({
   },
 
   onChange: function() {
-    var state = AddCharacterStore.getState();
-
-    this.setState({
-      nameValidationState: state.nameValidationState,
-      helpBlock: state.helpBlock
-    });
+    this.setState(AddCharacterStore.getState());
   },
 
   handleNameChange: function(event) {
-    this.setState({
-      name: event.target.value,
-      nameValidationState: '',
-      helpBlock: ''
-    });
+    AddCharacterActions.updateCharacterName(event.target.value);
   },
 
   handleGenderChange: function(event) {

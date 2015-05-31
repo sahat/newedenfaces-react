@@ -12,12 +12,16 @@ var AddCharacterActions = {
       }.bind(this));
   },
 
-  addCharacterSucceeded: function(successMessage) {
-    this.dispatch(successMessage);
+  addCharacterSuccess: function(message) {
+    this.dispatch(message);
   },
 
-  addCharacterFailed: function(errorMessage) {
-    this.dispatch(errorMessage);
+  addCharacterFail: function(message) {
+    this.dispatch(message);
+  }
+
+  updateCharacterName: function(name) {
+    this.dispatch(name);
   }
 };
 
