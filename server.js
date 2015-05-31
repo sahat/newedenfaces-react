@@ -526,7 +526,7 @@ agenda.define('send weekly report', function(job, done) {
   var data = job.attrs.data;
 
   Character.findOne({ characterId: data.characterId }, function(err, character) {
-    var htmlTemplate = swig.renderFile('views/email.html', {
+    var htmlTemplate = swig.renderFile('templates/email.html', {
       name: character.name,
       characterId: character.characterId,
       wins: character.wins,
