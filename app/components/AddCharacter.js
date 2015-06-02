@@ -21,10 +21,6 @@ var AddCharacter = React.createClass({
     this.setState(AddCharacterStore.getState());
   },
 
-  handleNameChange: function(event) {
-    AddCharacterActions.updateCharacterName(event.target.value);
-  },
-
   handleGenderChange: function(event) {
     this.setState({
       gender: event.target.value,
@@ -56,6 +52,7 @@ var AddCharacter = React.createClass({
 
     AddCharacterActions.addCharacter(name, gender);
   },
+
   render: function() {
     return (
       <div className='container'>
@@ -67,7 +64,7 @@ var AddCharacter = React.createClass({
                 <form onSubmit={this.handleSubmit}>
                   <div className={'form-group ' + this.state.nameValidationState}>
                     <label className='control-label'>Character Name</label>
-                    <input type='text' className='form-control' ref='nameInput' value={this.state.name} onChange={this.handleNameChange} autoFocus/>
+                    <input type='text' className='form-control' ref='nameInput' value={this.state.name} onChange={AddCharacterActions.updateCharacterName} autoFocus/>
                     <span className='help-block'>{this.state.helpBlock}</span>
                   </div>
                   <div className={'form-group ' + this.state.genderValidationState}>

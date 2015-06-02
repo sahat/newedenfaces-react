@@ -28,7 +28,7 @@ var AddCharacterStore = {
   onAddCharacterFail: function(errorMessage) {
     this.state.nameValidationState = 'has-error';
     this.state.helpBlock = errorMessage;
-  }
+  },
 
   onUpdateCharacterName: function(name) {
     this.setState({

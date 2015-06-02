@@ -1,7 +1,7 @@
 var alt = require('../alt');
 var WebAPIUtils = require('../utils/WebAPIUtils');
 
-var AddCharacterActions = {
+var AddCharacterActions = alt.createActions({
   addCharacter: function(name, gender) {
     WebAPIUtils.addCharacter(name, gender)
       .done(function(data) {
@@ -18,11 +18,11 @@ var AddCharacterActions = {
 
   addCharacterFail: function(message) {
     this.dispatch(message);
-  }
+  },
 
-  updateCharacterName: function(name) {
-    this.dispatch(name);
+  updateCharacterName: function(event) {
+    this.dispatch(event.target.value);
   }
-};
+});
 
-module.exports = alt.createActions(AddCharacterActions);
+module.exports = AddCharacterActions;
