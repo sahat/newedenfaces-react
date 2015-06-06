@@ -1,46 +1,37 @@
 import React from 'react';
 import {Link} from 'react-router';
+import HomeStore from '../stores/HomeStore'
+import HomeActions from '../actions/HomeActions';
 
 class Home extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      characters: []
-    };
+    this.state = HomeStore.getState();
+    this.onChange = this.onChange.bind(this);
   }
 
   componentDidMount() {
-    this.getCharacters();
+    HomeStore.listen(this.onChange);
+    HomeActions.getTwoCharacters();
+  }
+
+  componentWillUnmount() {
+    HomeStore.unlisten(this.onChange);
+  }
+
+  onChange() {
+    this.setState(HomeStore.getState());
   }
 
   handleClick(character) {
     var winner = character;
     var loser = this.state.characters[1 - this.state.characters.indexOf(winner)];
-
-    $.ajax({
-      type: 'PUT',
-      url: '/api/characters',
-      data: { winner: winner.characterId, loser: loser.characterId },
-      success: function() {
-        this.getCharacters();
-      }.bind(this)
-    });
-  }
-
-  getCharacters() {
-    $.ajax({ url: '/api/characters' })
-      .done(function(data) {
-        if (!data.length) {
-          return this.getCharacters();
-        }
-
-        this.setState({ characters: data });
-      }.bind(this));
+    HomeActions.vote(winner, loser);
   }
 
   render() {
-    var characterNodes = this.state.characters.map(function(character, index) {
+    var characterNodes = this.state.characters.map((character, index) => {
       return (
         <div key={character.characterId} className={index === 0 ? 'col-xs-6 col-sm-6 col-md-5 col-md-offset-1' : 'col-xs-6 col-sm-6 col-md-5'}>
           <div className='thumbnail fadeInUp animated'>
@@ -57,7 +48,7 @@ class Home extends React.Component {
           </div>
         </div>
       );
-    }.bind(this));
+    });
 
     return (
       <div className='container'>
