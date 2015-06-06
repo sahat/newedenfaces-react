@@ -1,7 +1,7 @@
-var React = require('react');
+import React from 'react';
 
-var RouteNotFound = React.createClass({
-  render: function() {
+class NotFound extends React.Component {
+  render() {
     return (
       <div className='container'>
         <h1>Page Not Found</h1>
@@ -9,6 +9,6 @@ var RouteNotFound = React.createClass({
       </div>
     );
   }
-});
+}
 
-module.exports = RouteNotFound;
+export default NotFound;

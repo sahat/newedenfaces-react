@@ -1,20 +1,16 @@
-var React = require('react');
-var Router = require('react-router');
-
-var App = require('./components/App.jsx');
-var Home = require('./components/Home.jsx');
-var Stats = require('./components/Stats.jsx');
-var Character = require('./components/Character.jsx');
-var CharacterList = require('./components/CharacterList.jsx');
-var AddCharacter = require('./components/AddCharacter.jsx');
-var RouteNotFound = require('./components/RouteNotFound.jsx');
-
-var Route = Router.Route;
-var NotFoundRoute = Router.NotFoundRoute;
+import React from 'react';
+import {Route, NotFoundRoute} from 'react-router';
+import App from './components/App';
+import Home from './components/Home';
+import Stats from './components/Stats';
+import Character from './components/Character';
+import CharacterList from './components/CharacterList';
+import AddCharacter from './components/AddCharacter';
+import NotFound from './components/404';
 
 module.exports = (
   <Route handler={App}>
-    <NotFoundRoute handler={RouteNotFound}/>
+    <NotFoundRoute handler={NotFound}/>
     <Route path='/' handler={Home} />
     <Route path='/stats' handler={Stats} />
     <Route path='/characters/:id' handler={Character} />

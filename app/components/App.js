@@ -1,13 +1,11 @@
-var React = require('react');
-var Router = require('react-router');
+import React from 'react';
+import {RouteHandler} from 'react-router';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
-var Navbar = require('./Navbar');
-var Footer = require('./Footer');
 
-var RouteHandler = Router.RouteHandler;
-
-var App = React.createClass({
-  render: function() {
+class App extends React.Component {
+  render() {
     return (
       <html>
       <head>
@@ -31,6 +29,6 @@ var App = React.createClass({
       </html>
     );
   }
-});
+}
 
-module.exports = App;
+export default App;

@@ -1,9 +1,19 @@
-var alt = require('../alt');
-var WebAPIUtils = require('../utils/WebAPIUtils');
+import alt from '../alt';
+import WebAPIUtils from '../utils/WebAPIUtils';
 
-var AddCharacterActions = alt.createActions({
+class AddCharacterActions {
+  constructor() {
+    this.generateActions(
+      'addCharacterSuccess',
+      'addCharacterFail',
+      'updateName',
+      'updateGender',
+      'invalidName',
+      'invalidGender'
+    );
+  }
 
-  addCharacter: function(name, gender) {
+  addCharacter(name, gender) {
     WebAPIUtils.addCharacter(name, gender)
       .done(function(data) {
         this.actions.addCharacterSuccess(data.message);
@@ -11,32 +21,7 @@ var AddCharacterActions = alt.createActions({
       .fail(function(jqXHR) {
         this.actions.addCharacterFail(jqXHR.responseJSON.message);
       }.bind(this));
-  },
-
-  addCharacterSuccess: function(message) {
-    this.dispatch(message);
-  },
-
-  addCharacterFail: function(message) {
-    this.dispatch(message);
-  },
-
-  updateCharacterName: function(event) {
-    this.dispatch(event.target.value);
-  },
-
-  updateGender: function(event) {
-    this.dispatch(event.target.value);
-  },
-
-  invalidName: function() {
-    this.dispatch();
-  },
-
-  invalidGender: function() {
-    this.dispatch();
   }
+}
 
-});
-
-module.exports = AddCharacterActions;
+export default alt.createActions(AddCharacterActions);

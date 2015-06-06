@@ -1,66 +1,53 @@
-var alt = require('../alt');
+import alt from '../alt';
+import WebAPAddCharacterActionsIUtils from '../actions/AddCharacterActions';
 
-var AddCharacterActions = require('../actions/AddCharacterActions');
+class AddCharacterStore {
+  constructor() {
+    this.bindActions(AddCharacterActions);
+    this.name = '';
+    this.gender = '';
+    this.helpBlock = '';
+    this.nameValidationState = '';
+    this.genderValidationState = '';
+  }
 
-var AddCharacterStore = {
-
-  displayName: 'AppStore',
-
-  state: {
-    name: '',
-    gender: '',
-    helpBlock: '',
-    nameValidationState: '',
-    genderValidationState: ''
-  },
-
-  bindListeners: {
-    onAddCharacterSuccess: AddCharacterActions.addCharacterSuccess,
-    onAddCharacterFail: AddCharacterActions.addCharacterFail,
-    onUpdateCharacterName: AddCharacterActions.updateCharacterName,
-    onUpdateGender: AddCharacterActions.updateGender,
-    onInvalidName: AddCharacterActions.invalidName,
-    onInvalidGender: AddCharacterActions.invalidGender
-  },
-
-  onAddCharacterSuccess: function(successMessage) {
+  onAddCharacterSuccess(successMessage) {
     this.state.nameValidationState = 'has-success';
     this.state.helpBlock = successMessage;
-  },
+  }
 
-  onAddCharacterFail: function(errorMessage) {
+  onAddCharacterFail(errorMessage) {
     this.state.nameValidationState = 'has-error';
     this.state.helpBlock = errorMessage;
-  },
+  }
 
-  onUpdateCharacterName: function(name) {
+  onUpdateName(name) {
     this.setState({
       name: name,
       nameValidationState: '',
       helpBlock: ''
     });
-  },
+  }
 
-  onUpdateGender: function(gender) {
+  onUpdateGender(gender) {
     this.setState({
       gender: gender,
       genderValidationState: ''
     });
-  },
+  }
 
-  onInvalidName: function() {
+  onInvalidName() {
     this.setState({
       nameValidationState: 'has-error',
       helpBlock: 'Please enter a character name.'
     })
-  },
+  }
 
-  onInvalidGender: function() {
+  onInvalidGender() {
     this.setState({
       genderValidationState: 'has-error'
     });
   }
+}
 
-};
-
-module.exports = alt.createStore(AddCharacterStore);
+export default alt.createStore(AddCharacterStore);

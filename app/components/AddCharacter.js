@@ -1,27 +1,27 @@
-var React = require('react');
+import React from 'react';
+import AddCharacterStore from '../stores/AddCharacterStore';
+import AddCharacterActions from '../actions/AddCharacterActions';
 
-var AddCharacterStore = require('../stores/AddCharacterStore');
-var AddCharacterActions = require('../actions/AddCharacterActions');
+class AddCharacter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = AddCharacterStore.getState();
+    this.onChange = this.onChange.bind(this);
+  }
 
-var AddCharacter = React.createClass({
-
-  getInitialState: function() {
-    return AddCharacterStore.getState();
-  },
-
-  componentDidMount: function() {
+  componentDidMount() {
     AddCharacterStore.listen(this.onChange);
-  },
+  }
 
-  componentWillUnmount: function() {
+  componentWillUnmount() {
     AddCharacterStore.unlisten(this.onChange);
-  },
+  }
 
-  onChange: function() {
+  onChange() {
     this.setState(AddCharacterStore.getState());
-  },
+  }
 
-  handleSubmit: function(event) {
+  handleSubmit(event) {
     event.preventDefault();
 
     var name = this.state.name.trim();
@@ -39,9 +39,9 @@ var AddCharacter = React.createClass({
     if (name && gender) {
       AddCharacterActions.addCharacter(name, gender);
     }
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className='container'>
         <div className='row flipInX animated'>
@@ -77,6 +77,6 @@ var AddCharacter = React.createClass({
       </div>
     );
   }
-});
+}
 
-module.exports = AddCharacter;
+export default AddCharacter;

@@ -1,21 +1,20 @@
-var React = require('react');
-var Router = require('react-router');
+import React from 'react';
+import {Link} from 'react-router';
 
-var Link = Router.Link;
+class Home extends React.Component {
 
-var Home = React.createClass({
-
-  getInitialState: function() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       characters: []
-    }
-  },
+    };
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     this.getCharacters();
-  },
+  }
 
-  handleClick: function(character) {
+  handleClick(character) {
     var winner = character;
     var loser = this.state.characters[1 - this.state.characters.indexOf(winner)];
 
@@ -27,9 +26,9 @@ var Home = React.createClass({
         this.getCharacters();
       }.bind(this)
     });
-  },
+  }
 
-  getCharacters: function() {
+  getCharacters() {
     $.ajax({ url: '/api/characters' })
       .done(function(data) {
         if (!data.length) {
@@ -38,9 +37,9 @@ var Home = React.createClass({
 
         this.setState({ characters: data });
       }.bind(this));
-  },
+  }
 
-  render: function() {
+  render() {
     var characterNodes = this.state.characters.map(function(character, index) {
       return (
         <div key={character.characterId} className={index === 0 ? 'col-xs-6 col-sm-6 col-md-5 col-md-offset-1' : 'col-xs-6 col-sm-6 col-md-5'}>
@@ -69,6 +68,6 @@ var Home = React.createClass({
       </div>
     );
   }
-});
+}
 
-module.exports = Home;
+export default Home;

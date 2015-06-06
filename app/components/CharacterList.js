@@ -1,21 +1,14 @@
-var React = require('react');
-var Router = require('react-router');
+import React from 'react';
+import {Link} from 'react-router';
 
-var Link = Router.Link;
+class CharacterList extends React.Component {
 
-var CharacterList = React.createClass({
+  constructor(props) {
+    super(props);
+    this.characters = [];
+  }
 
-  contextTypes: {
-    router: React.PropTypes.func.isRequired
-  },
-
-  getInitialState: function() {
-    return {
-      characters: []
-    }
-  },
-
-  fetchCharacters: function() {
+  fetchCharacters() {
     var routeParams = this.context.router.getCurrentParams();
     var currentPath = this.context.router.getCurrentPath();
     var baseUrl = '/api/characters/top';
@@ -34,15 +27,15 @@ var CharacterList = React.createClass({
     $.get(baseUrl, options, function(data) {
       this.setState({ characters: data });
     }.bind(this));
-  },
+  }
 
-  fetchShame: function() {
+  fetchShame() {
     $.get('/api/characters/shame', function(data) {
       this.setState({ characters: data });
     }.bind(this));
-  },
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     var currentPath = this.context.router.getCurrentPath();
 
     if (currentPath.indexOf('shame') > -1) {
@@ -52,10 +45,10 @@ var CharacterList = React.createClass({
     }
 
     this.setState({ path: currentPath });
-  },
+  }
 
 
-  componentDidUpdate: function() {
+  componentDidUpdate() {
     var currentPath = this.context.router.getCurrentPath();
 
     if (currentPath === this.state.path) {
@@ -69,9 +62,9 @@ var CharacterList = React.createClass({
     }
 
     this.setState({ path: currentPath });
-  },
+  }
 
-  render: function() {
+  render() {
     var characterList = this.state.characters.map(function(character, index) {
       return (
         <div key={character.characterId} className='list-group-item animated fadeIn'>
@@ -106,6 +99,10 @@ var CharacterList = React.createClass({
       </div>
     );
   }
-});
+}
 
-module.exports = CharacterList;
+CharacterList.contextTypes = {
+  router: React.PropTypes.func.isRequired
+};
+
+export default CharacterList;

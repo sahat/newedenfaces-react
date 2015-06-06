@@ -1,23 +1,22 @@
-var React = require('react');
-var Router = require('react-router');
+import React from 'react';
+import {Link} from 'react-router';
 
-var Link = Router.Link;
+class Footer extends React.Component {
 
-var Footer = React.createClass({
-
-  getInitialState: function() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       characters: []
-    }
-  },
+    };
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     $.get('/api/characters/top', function(data) {
       this.setState({ characters: data.slice(0,5) });
     }.bind(this));
-  },
+  }
 
-  render: function() {
+  render() {
     var leaderboardCharacters = this.state.characters.map(function(character) {
       return (
         <li key={character.characterId}>
@@ -49,6 +48,6 @@ var Footer = React.createClass({
       </footer>
     );
   }
-});
+}
 
-module.exports = Footer;
+export default Footer;

@@ -1,51 +1,45 @@
-var React = require('react');
-var Router = require('react-router');
+import React from 'react';
+import {Link} from 'react-router';
 
-var Link = Router.Link;
+class Navbar extends React.Component {
 
-var Navbar = React.createClass({
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.state.totalCharacters = 0;
+    this.state.onlineUsers = 0;
+    this.state.searchQuery = '';
+    this.state.ajaxAnimation = '';
+  }
 
-  contextTypes: {
-    router: React.PropTypes.func.isRequired
-  },
-
-  getInitialState: function() {
-    return {
-      totalCharacters: 0,
-      onlineUsers: 0,
-      searchQuery: '',
-      ajaxAnimation: ''
-    }
-  },
-
-  componentDidMount: function() {
+  componentDidMount() {
     var socket = io.connect();
 
-    socket.on('onlineUsers', function (data) {
+    socket.on('onlineUsers', (data) => {
       this.setState({ onlineUsers: data.onlineUsers });
-    }.bind(this));
+    });
 
-    $(document).ajaxStart(function() {
+    $(document).ajaxStart(() => {
       this.setState({ ajaxAnimation: 'fadeIn' });
-    }.bind(this));
+    });
 
-    $(document).ajaxComplete(function() {
-      setTimeout(function() {
+    $(document).ajaxComplete(() => {
+      setTimeout(() => {
         this.setState({ ajaxAnimation: 'fadeOut' });
-      }.bind(this), 750);
-    }.bind(this));
+      }, 750);
+    });
 
     $.ajax({ url: '/api/characters/count' })
-      .done(function(data) {
+      .done((data) => {
         this.setState({ totalCharacters: data.count });
-      }.bind(this));
-  },
+      });
+  }
 
-  handleSearchChange: function(event) {
+  handleSearchChange(event) {
     this.setState({ searchQuery: event.target.value });
-  },
+  }
 
-  handleSubmit: function(event) {
+  handleSubmit(event) {
     event.preventDefault();
 
     if (this.state.searchQuery) {
@@ -66,9 +60,9 @@ var Navbar = React.createClass({
           }.bind(this), 1000)
         }.bind(this));
     }
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <nav className='navbar navbar-default navbar-static-top'>
         <div className='navbar-header'>
@@ -228,6 +222,10 @@ var Navbar = React.createClass({
       </nav>
     );
   }
-});
+}
 
-module.exports = Navbar;
+Navbar.contextTypes = {
+  router: React.PropTypes.func.isRequired
+};
+
+export default Navbar;

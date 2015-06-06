@@ -1,8 +1,10 @@
-var React = require('react');
+import React from 'react';
 
-var Stats = React.createClass({
-  getInitialState: function() {
-    return {
+class Stats extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
       stats: {
         leadingRace: { race: 'TBD', count: 0 },
         leadingBloodline: { bloodline: 'TBD', count: 0 },
@@ -16,16 +18,16 @@ var Stats = React.createClass({
         totalCount: 0
       }
     }
-  },
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     $.ajax({ url: '/api/stats' })
       .done(function(data) {
         this.setState({ stats: data });
       }.bind(this));
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className='container'>
         <div className='panel panel-default'>
@@ -82,6 +84,6 @@ var Stats = React.createClass({
       </div>
     );
   }
-});
+}
 
-module.exports = Stats;
+export default Stats;

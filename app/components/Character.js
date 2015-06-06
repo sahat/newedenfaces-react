@@ -1,26 +1,21 @@
-var _ = require('underscore');
-var React = require('react');
+import React from 'react';
 
-var Character = React.createClass({
-  contextTypes: {
-    router: React.PropTypes.func.isRequired
-  },
+class Character extends React.Component {
 
-  getInitialState: function() {
-    return {
-      email: '',
-      characterId: 0,
-      name: 'TBD',
-      race: 'TBD',
-      bloodline: 'TBD',
-      gender: 'TBD',
-      wins: 0,
-      losses: 0,
-      winLossRatio: 0
-    }
-  },
+  constructor(props) {
+    super(props);
+    this.email = '';
+    this.characterId = 0;
+    this.name = 'TBD';
+    this.race = 'TBD';
+    this.bloodline = 'TBD';
+    this.gender = 'TBD';
+    this.wins = 0;
+    this.losses = 0;
+    this.winLossRatio = 0;
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     this.setState({ path: this.context.router.getCurrentPath() });
 
     this.getCharacter()
@@ -68,14 +63,14 @@ var Character = React.createClass({
           }
         });
       }.bind(this));
-  },
+  }
 
-  componentWillUnmount: function() {
+  componentWillUnmount() {
     document.body.classList.remove('profile');
     document.body.classList.remove('profile-' + this.state.race.toLowerCase());
-  },
+  }
 
-  componentDidUpdate: function() {
+  componentDidUpdate() {
     var currentPath = this.context.router.getCurrentPath();
 
     if (currentPath === this.state.path) {
@@ -132,13 +127,13 @@ var Character = React.createClass({
           }
         });
       }.bind(this));
-  },
+  }
 
-  getCharacter: function() {
+  getCharacter() {
     return $.ajax({ url: '/api/characters/' + this.context.router.getCurrentParams().id })
-  },
+  }
 
-  handleReportCharacter: function() {
+  handleReportCharacter() {
     $.ajax({
       type: 'POST',
       url: '/api/report',
@@ -155,9 +150,9 @@ var Character = React.createClass({
 
         this.setState({ reported: true });
       }.bind(this));
-  },
+  }
 
-  handleSubscribeSubmit: function(event) {
+  handleSubscribeSubmit(event) {
     event.preventDefault();
 
     if (!this.state.email) {
@@ -183,13 +178,13 @@ var Character = React.createClass({
       .fail(function(jqXhr) {
         sweetAlert('Error', jqXhr.responseJSON.message, 'error');
       })
-  },
+  }
 
-  handleSubscribeChange: function(event) {
+  handleSubscribeChange(event) {
     this.setState({ email: event.target.value });
-  },
+  }
 
-  render: function() {
+  render() {
 
     var subscribeField = this.state.subscribed ? (
       <div className='text-center animated fadeIn'>
@@ -248,6 +243,10 @@ var Character = React.createClass({
       </div>
     );
   }
-});
+}
 
-module.exports = Character;
+Character.contextTypes = {
+  router: React.PropTypes.func.isRequired
+};
+
+export default Character;
