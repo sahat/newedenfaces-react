@@ -1,13 +1,13 @@
 var React = require('react');
 var Router = require('react-router');
 
-var App = require('./components/App');
-var Home = require('./components/Home');
-var Stats = require('./components/Stats');
-var Character = require('./components/Character');
-var CharacterList = require('./components/CharacterList');
-var AddCharacter = require('./components/AddCharacter');
-var RouteNotFound = require('./components/RouteNotFound');
+var App = require('./components/App.jsx');
+var Home = require('./components/Home.jsx');
+var Stats = require('./components/Stats.jsx');
+var Character = require('./components/Character.jsx');
+var CharacterList = require('./components/CharacterList.jsx');
+var AddCharacter = require('./components/AddCharacter.jsx');
+var RouteNotFound = require('./components/RouteNotFound.jsx');
 
 var Route = Router.Route;
 var NotFoundRoute = Router.NotFoundRoute;

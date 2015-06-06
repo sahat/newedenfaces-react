@@ -1,4 +1,4 @@
-require('node-jsx').install();
+require('node-jsx').install({ extension: '.jsx' });
 
 var _ = require('underscore');
 var express = require('express');
@@ -14,7 +14,6 @@ var Iso = require('iso');
 var React = require('react');
 var Router = require('react-router');
 var config = require('./config');
-var sendgrid   = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
 var agenda = require('agenda')({db: { address: config.database }});
 var validator = require('validator');
 
@@ -487,7 +486,10 @@ app.use(function(req, res) {
   Router.run(routes, req.path, function(Handler) {
     var html = React.renderToString(React.createElement(Handler));
     iso.add(html, alt.flush());
-    res.send(iso.render());
+    //var page = swig.renderFile('views/index.html', { html: html });
+    //res.send(page);
+    res.send(html);
+
   });
 });
 
@@ -533,16 +535,17 @@ agenda.define('send weekly report', function(job, done) {
       losses: character.losses,
       winningPercentage: (character.wins / (character.wins + character.losses) * 100).toFixed(1)
   });
+    //
+    //var email = new sendgrid.Email();
+    //email.addTo(data.email);
+    //email.setFrom('support@newedenfaces.com');
+    //email.setSubject('New Eden Faces Weekly - ' + character.name);
+    //email.setHtml(htmlTemplate);
 
-    var email = new sendgrid.Email();
-    email.addTo(data.email);
-    email.setFrom('support@newedenfaces.com');
-    email.setSubject('New Eden Faces Weekly - ' + character.name);
-    email.setHtml(htmlTemplate);
-
-    sendgrid.send(email, function(err, json) {
-      if (err) return next(err);
-      done();
-    });
+    //sendgrid.send(email, function(err, json) {
+    //  if (err) return next(err);
+    //  done();
+    //});
   });
 });
+

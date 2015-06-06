@@ -21,13 +21,6 @@ var AddCharacter = React.createClass({
     this.setState(AddCharacterStore.getState());
   },
 
-  handleGenderChange: function(event) {
-    this.setState({
-      gender: event.target.value,
-      genderValidationState: ''
-    });
-  },
-
   handleSubmit: function(event) {
     event.preventDefault();
 
@@ -35,19 +28,12 @@ var AddCharacter = React.createClass({
     var gender = this.state.gender;
 
     if (!name) {
-      this.refs.nameInput.getDOMNode().focus();
-      this.setState({
-        nameValidationState: 'has-error',
-        helpBlock: 'Please enter a character name.'
-      });
-      return;
+      this.refs.nameTextField.getDOMNode().focus();
+      return AddCharacterActions.invalidName();
     }
 
     if (!gender) {
-      this.setState({
-        genderValidationState: 'has-error'
-      });
-      return;
+      return AddCharacterActions.invalidGender();
     }
 
     AddCharacterActions.addCharacter(name, gender);
@@ -64,16 +50,19 @@ var AddCharacter = React.createClass({
                 <form onSubmit={this.handleSubmit}>
                   <div className={'form-group ' + this.state.nameValidationState}>
                     <label className='control-label'>Character Name</label>
-                    <input type='text' className='form-control' ref='nameInput' value={this.state.name} onChange={AddCharacterActions.updateCharacterName} autoFocus/>
+                    <input type='text' className='form-control' ref='nameTextField' value={this.state.name}
+                           onChange={AddCharacterActions.updateCharacterName} autoFocus/>
                     <span className='help-block'>{this.state.helpBlock}</span>
                   </div>
                   <div className={'form-group ' + this.state.genderValidationState}>
                     <div className='radio radio-inline'>
-                      <input type='radio' name='gender' id='female' value='female' checked={this.state.gender === 'female'} onChange={this.handleGenderChange}/>
+                      <input type='radio' name='gender' id='female' value='female'
+                             checked={this.state.gender === 'female'} onChange={AddCharacterActions.updateGender}/>
                       <label htmlFor='female'>Female</label>
                     </div>
                     <div className='radio radio-inline'>
-                      <input type='radio' name='gender' id='male' value='male' checked={this.state.gender === 'male'} onChange={this.handleGenderChange}/>
+                      <input type='radio' name='gender' id='male' value='male' checked={this.state.gender === 'male'}
+                             onChange={AddCharacterActions.updateGender}/>
                       <label htmlFor='male'>Male</label>
                     </div>
                   </div>
