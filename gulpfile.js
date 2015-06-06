@@ -1,51 +1,113 @@
 var gulp = require('gulp');
+var gutil = require('gulp-util');
+var source = require('vinyl-source-stream');
+var streamify = require('gulp-streamify');
+var browserify = require('browserify');
+var watchify = require('watchify');
+var reactify = require('reactify');
+var uglify = require('gulp-uglify');
+var gulpif = require('gulp-if');
 var autoprefixer = require('gulp-autoprefixer');
 var cssmin = require('gulp-cssmin');
-var uglify = require('gulp-uglify');
 var merge = require('merge-stream');
 var less = require('gulp-less');
-var reactify = require('reactify');
-var watchify = require('watchify');
-var browserify = require('browserify');
-var source = require('vinyl-source-stream');
-var plumber = require('gulp-plumber');
+var concat = require('gulp-concat');
 
-gulp.task('less', function() {
-  return gulp.src('./app/styles/main.less')
-    .pipe(plumber())
-    .pipe(less())
-    .pipe(autoprefixer())
-    .pipe(gulp.dest('./public/css'));
+var plumber = require('gulp-plumber'); // rremove
+var imagemin = require('gulp-imagemin');
+
+var browserSync = require('browser-sync');
+var reload = browserSync.reload;
+
+var production = process.env.NODE_ENV === 'production';
+
+var dependencies = [
+  'react',
+  'react-router',
+  'underscore'
+];
+
+gulp.task('vendor', function() {
+  gulp.src([
+    'bower_components/jquery/dist/jquery.js',
+    'bower_components/bootstrap/dist/js/bootstrap.js',
+    'bower_components/magnific-popup/dist/js/jquery.magnific-popup.js'
+  ])
+    .pipe(concat('vendor.js'))
+    .pipe(gulpif(production, streamify(uglify())))
+    .pipe(gulp.dest('public/js'));
 });
 
-gulp.task('browserify', function() {
-  var bundler = watchify(browserify('./app/main.js', watchify.args));
+gulp.task('browserify-app', function() {
+  var bundler = browserify('app/main.js', watchify.args);
   bundler.transform(reactify);
-  bundler.on('update', rebundle);
-  function rebundle() {
-    return plumber()
-      .pipe(bundler.bundle())
+  bundler.external(dependencies);
+
+  var rebundle = function() {
+    var start = Date.now();
+
+    return bundler.bundle()
+      .on('error', function(err) {
+        gutil.log(gutil.colors.red(err.toString()));
+      })
+      .on('end', function() {
+        gutil.log(gutil.colors.green('Finished rebundling in', (Date.now() - start) + 'ms.'));
+      })
       .pipe(source('bundle.js'))
-      .pipe(gulp.dest('./public/js/'));
+      .pipe(gulpif(production, streamify(uglify())))
+      .pipe(gulp.dest('public/js'))
+      .pipe(browserSync.reload({ stream: true }));
+  };
+
+  if (!production) {
+    bundler = watchify(bundler);
+    bundler.on('update', rebundle);
   }
 
   return rebundle();
 });
 
-gulp.task('minify', function() {
-  var css = gulp.src('./public/css/main.css')
-    .pipe(cssmin())
-    .pipe(gulp.dest('./public/css/'));
+gulp.task('browserify-vendor', function() {
+  var bundler = browserify({ require: dependencies });
+  bundler.bundle()
+    .pipe(source('bundle-vendor.js'))
+    .pipe(gulpif(production, streamify(uglify())))
+    .pipe(gulp.dest('public/js'));
+});
 
-  var js = gulp.src('./public/js/bundle.js')
-    .pipe(uglify())
-    .pipe(gulp.dest('./public/js/'));
+gulp.task('browser-sync', function() {
+  browserSync({
+    server: {
+      port: 3000,
+      baseDir: './public/'
+    }
+  });
+});
 
-  return merge(css, js);
+gulp.task('styles', function() {
+  return gulp.src('app/stylesheets/main.less')
+    .pipe(plumber())
+    .pipe(less())
+    .pipe(autoprefixer())
+    .pipe(gulpif(production, streamify(cssmin())))
+    .pipe(gulp.dest('./public/css'));
 });
 
 gulp.task('watch', function() {
   gulp.watch('./app/styles/**/*.less', ['less']);
 });
 
-gulp.task('default', ['less', 'browserify', 'watch']);
+gulp.task('images', function() {
+  gulp.src(['public/img/*.jpg', 'public/img/*.png'])
+    .pipe(imagemin())
+    .pipe(gulp.dest('public/img'));
+});
+
+gulp.task('production', ['vendor', 'browserify-app', 'browserify-vendor'], function() {
+  gulp.src(['public/js/vendor.js', 'public/js/vendor-bundle.js', 'public/js/bundle.js'])
+    .pipe(concat('combined.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('public/js'));
+});
+
+gulp.task('default', ['browserify-app', 'browserify-vendor', 'vendor', 'watch']);
