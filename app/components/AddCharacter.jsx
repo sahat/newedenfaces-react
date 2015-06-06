@@ -28,15 +28,17 @@ var AddCharacter = React.createClass({
     var gender = this.state.gender;
 
     if (!name) {
+      AddCharacterActions.invalidName();
       this.refs.nameTextField.getDOMNode().focus();
-      return AddCharacterActions.invalidName();
     }
 
     if (!gender) {
-      return AddCharacterActions.invalidGender();
+      AddCharacterActions.invalidGender();
     }
 
-    AddCharacterActions.addCharacter(name, gender);
+    if (name && gender) {
+      AddCharacterActions.addCharacter(name, gender);
+    }
   },
 
   render: function() {

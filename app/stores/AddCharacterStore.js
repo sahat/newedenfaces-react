@@ -17,7 +17,10 @@ var AddCharacterStore = {
   bindListeners: {
     onAddCharacterSuccess: AddCharacterActions.addCharacterSuccess,
     onAddCharacterFail: AddCharacterActions.addCharacterFail,
-    onUpdateCharacterName: AddCharacterActions.updateCharacterName
+    onUpdateCharacterName: AddCharacterActions.updateCharacterName,
+    onUpdateGender: AddCharacterActions.updateGender,
+    onInvalidName: AddCharacterActions.invalidName,
+    onInvalidGender: AddCharacterActions.invalidGender
   },
 
   onAddCharacterSuccess: function(successMessage) {
@@ -35,6 +38,26 @@ var AddCharacterStore = {
       name: name,
       nameValidationState: '',
       helpBlock: ''
+    });
+  },
+
+  onUpdateGender: function(gender) {
+    this.setState({
+      gender: gender,
+      genderValidationState: ''
+    });
+  },
+
+  onInvalidName: function() {
+    this.setState({
+      nameValidationState: 'has-error',
+      helpBlock: 'Please enter a character name.'
+    })
+  },
+
+  onInvalidGender: function() {
+    this.setState({
+      genderValidationState: 'has-error'
     });
   }
 
