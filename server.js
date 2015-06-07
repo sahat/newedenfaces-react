@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var colors = require('colors');
 var express = require('express');
 var path = require('path');
 var swig  = require('swig');
@@ -490,6 +491,7 @@ app.use(function(req, res) {
 });
 
 app.use(function(err, req, res, next) {
+  console.log(err.stack.red);
   res.status(err.status || 500);
   res.send({ message: err.message });
 });
