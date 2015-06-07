@@ -1,5 +1,3 @@
-require('node-jsx').install({ extension: '.jsx' });
-
 var _ = require('underscore');
 var express = require('express');
 var path = require('path');
