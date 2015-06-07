@@ -12,6 +12,7 @@ var cssmin = require('gulp-cssmin');
 var merge = require('merge-stream');
 var less = require('gulp-less');
 var concat = require('gulp-concat');
+var babelify = require('babelify');
 
 var plumber = require('gulp-plumber'); // rremove
 var imagemin = require('gulp-imagemin');
@@ -30,8 +31,9 @@ var dependencies = [
 gulp.task('vendor', function() {
   gulp.src([
     'bower_components/jquery/dist/jquery.js',
+    'bower_components/toastr/toastr.js',
     'bower_components/bootstrap/dist/js/bootstrap.js',
-    'bower_components/magnific-popup/dist/js/jquery.magnific-popup.js'
+    'bower_components/magnific-popup/dist/jquery.magnific-popup.js'
   ])
     .pipe(concat('vendor.js'))
     .pipe(gulpif(production, streamify(uglify())))
@@ -40,7 +42,7 @@ gulp.task('vendor', function() {
 
 gulp.task('browserify-app', function() {
   var bundler = browserify('app/main.js', watchify.args);
-  bundler.transform(reactify);
+  bundler.transform(babelify);
   bundler.external(dependencies);
 
   var rebundle = function() {
@@ -94,7 +96,7 @@ gulp.task('styles', function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch('./app/styles/**/*.less', ['less']);
+  gulp.watch('./app/stylesheets/**/*.less', ['styles']);
 });
 
 gulp.task('images', function() {
@@ -110,4 +112,4 @@ gulp.task('production', ['vendor', 'browserify-app', 'browserify-vendor'], funct
     .pipe(gulp.dest('public/js'));
 });
 
-gulp.task('default', ['browserify-app', 'browserify-vendor', 'vendor', 'watch']);
+gulp.task('default', ['styles', 'browserify-app', 'browserify-vendor', 'vendor', 'watch']);

@@ -438,7 +438,7 @@ app.post('/api/subscribe', function(req, res, next) {
   var characterId = req.body.characterId;
 
   if (!validator.isEmail(email)) {
-    return res.status(400).send({ message: 'Invalid email address.' });
+    return res.status(400).send('Invalid email address.');
   }
 
   if (!characterId) {

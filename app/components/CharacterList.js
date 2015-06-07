@@ -23,10 +23,6 @@ class CharacterList extends React.Component {
     CharacterListStore.unlisten(this.onChange);
   }
 
-  onChange() {
-    this.setState(CharacterListStore.getState());
-  }
-
   componentDidUpdate() {
     if (this.state.prevPath !== this.context.router.getCurrentPath()) {
       CharacterListActions.getCharacters({
@@ -34,6 +30,10 @@ class CharacterList extends React.Component {
         path: this.context.router.getCurrentPath()
       });
     }
+  }
+
+  onChange() {
+    this.setState(CharacterListStore.getState());
   }
 
   render() {
