@@ -1,64 +1,55 @@
 import React from 'react';
 import {Link} from 'react-router';
+import NavbarStore from '../stores/NavbarStore'
+import NavbarActions from '../actions/NavbarActions';
 
 class Navbar extends React.Component {
-
   constructor(props) {
     super(props);
-    this.state = {};
-    this.state.totalCharacters = 0;
-    this.state.onlineUsers = 0;
-    this.state.searchQuery = '';
-    this.state.ajaxAnimation = '';
+    this.state = NavbarStore.getState();
+    this.onChange = this.onChange.bind(this);
   }
 
   componentDidMount() {
-    var socket = io.connect();
+    NavbarStore.listen(this.onChange);
+    NavbarActions.getCharacterCount();
+
+    let socket = io.connect();
 
     socket.on('onlineUsers', (data) => {
-      this.setState({ onlineUsers: data.onlineUsers });
+      NavbarActions.updateOnlineUsers(data);
     });
 
     $(document).ajaxStart(() => {
-      this.setState({ ajaxAnimation: 'fadeIn' });
+      NavbarActions.updateAjaxAnimation('fadeIn');
     });
 
     $(document).ajaxComplete(() => {
       setTimeout(() => {
-        this.setState({ ajaxAnimation: 'fadeOut' });
+        NavbarActions.updateAjaxAnimation('fadeOut');
       }, 750);
     });
-
-    $.ajax({ url: '/api/characters/count' })
-      .done((data) => {
-        this.setState({ totalCharacters: data.count });
-      });
   }
 
-  handleSearchChange(event) {
-    this.setState({ searchQuery: event.target.value });
+  componentWillUnmount() {
+    NavbarStore.unlisten(this.onChange);
+  }
+
+  onChange() {
+    this.setState(NavbarStore.getState());
   }
 
   handleSubmit(event) {
     event.preventDefault();
 
-    if (this.state.searchQuery) {
-      $.ajax({
-        url: '/api/characters/search',
-        data: { name: this.state.searchQuery }
-      }).done(function(data) {
-        if (data) {
-          this.context.router.transitionTo('/characters/' + data.characterId);
-          this.setState({ searchQuery: '' });
-        }
-      }.bind(this))
-        .fail(function() {
-          this.refs.searchForm.getDOMNode().classList.add('shake');
+    let searchQuery = this.state.searchQuery.trim();
 
-          setTimeout(function() {
-            this.refs.searchForm.getDOMNode().classList.remove('shake');
-          }.bind(this), 1000)
-        }.bind(this));
+    if (searchQuery) {
+      NavbarActions.findCharacter({
+        searchQuery: searchQuery,
+        searchFormNode: this.refs.searchForm.getDOMNode(),
+        router: this.context.router
+      });
     }
   }
 
@@ -91,7 +82,7 @@ class Navbar extends React.Component {
         <div id='navbar' className='navbar-collapse collapse'>
           <form ref='searchForm' className='navbar-form navbar-left animated' onSubmit={this.handleSubmit}>
             <div className='input-group'>
-              <input type='text' className='form-control' placeholder={this.state.totalCharacters + ' characters'} value={this.state.searchQuery} onChange={this.handleSearchChange} />
+              <input type='text' className='form-control' placeholder={this.state.totalCharacters + ' characters'} value={this.state.searchQuery} onChange={NavbarActions.updateSearchQuery} />
               <span className='input-group-btn'>
                 <button className='btn btn-default' onClick={this.handleSubmit}><span className='glyphicon glyphicon-search'></span></button>
               </span>
