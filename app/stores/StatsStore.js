@@ -22,7 +22,7 @@ class StatsStore {
   }
 
   onGetStatsFail(jqXhr) {
-    toastr.error(jqXhr.responseText || jqXhr.statusText);
+    toastr.error(jqXhr.responseJSON && jqXhr.responseJSON.message || jqXhr.responseText || jqXhr.statusText);
   }
 }
 
