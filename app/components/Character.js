@@ -1,203 +1,57 @@
 import React from 'react';
+import CharacterStore from '../stores/CharacterStore';
+import CharacterActions from '../actions/CharacterActions'
 
 class Character extends React.Component {
 
   constructor(props) {
     super(props);
-    this.email = '';
-    this.characterId = 0;
-    this.name = 'TBD';
-    this.race = 'TBD';
-    this.bloodline = 'TBD';
-    this.gender = 'TBD';
-    this.wins = 0;
-    this.losses = 0;
-    this.winLossRatio = 0;
+    this.state = CharacterStore.getState();
+    this.onChange = this.onChange.bind(this);
   }
 
   componentDidMount() {
-    this.setState({ path: this.context.router.getCurrentPath() });
-
-    this.getCharacter()
-      .done(function(data) {
-        document.body.classList.add('profile');
-        document.body.classList.add('profile-' + data.race.toLowerCase());
-
-        var reported = false;
-        var subscribed = false;
-        var localData = localStorage.getItem('newedenfaces');
-
-        if (localData) {
-          var json = JSON.parse(localData);
-
-          if (json.reports && json.reports.indexOf(data.characterId) > -1) {
-            reported = true;
-          }
-
-          if (json.subscribed && json.subscribed.indexOf(data.characterId) > -1) {
-            subscribed = true;
-          }
-        }
-
-        this.setState({
-          characterId: data.characterId,
-          name: data.name,
-          race: data.race,
-          bloodline: data.bloodline,
-          gender: data.gender.charAt(0).toUpperCase() + data.gender.substring(1),
-          wins: data.wins,
-          losses: data.losses,
-          winLossRatio: data.winLossRatio,
-          reported: reported,
-          subscribed: subscribed
-        });
-
-        $('.magnific-popup').magnificPopup({
-          type: 'image',
-          mainClass: 'mfp-zoom-in',
-          closeOnContentClick: true,
-          midClick: true,
-          zoom: {
-            enabled: true,
-            duration: 300
-          }
-        });
-      }.bind(this));
+    CharacterStore.listen(this.onChange);
+    CharacterActions.getCharacter({ router: this.context.router });
   }
 
   componentWillUnmount() {
-    document.body.classList.remove('profile');
-    document.body.classList.remove('profile-' + this.state.race.toLowerCase());
+    CharacterStore.unlisten(this.onChange);
+    $(document.body).removeClass();
   }
 
   componentDidUpdate() {
-    var currentPath = this.context.router.getCurrentPath();
-
-    if (currentPath === this.state.path) {
-      return;
+    if (this.state.prevPath !== this.context.router.getCurrentPath()) {
+      CharacterActions.getCharacter({ router: this.context.router });
     }
-
-    this.setState({ path: currentPath });
-
-    this.refs.container.getDOMNode().classList.remove('fadeIn');
-
-    this.getCharacter()
-      .done(function(data) {
-        document.body.classList.remove('profile-' + this.state.race.toLowerCase());
-        document.body.classList.add('profile-' + data.race.toLowerCase());
-        this.refs.container.getDOMNode().classList.add('fadeIn');
-
-        var reported = false;
-        var subscribed = false;
-        var localData = localStorage.getItem('newedenfaces');
-
-        if (localData) {
-          var json = JSON.parse(localData);
-
-          if (json.reports && json.reports.indexOf(data.characterId) > -1) {
-            reported = true;
-          }
-
-          if (json.subscribed && json.subscribed.indexOf(data.characterId) > -1) {
-            subscribed = true;
-          }
-        }
-
-        this.setState({
-          characterId: data.characterId,
-          name: data.name,
-          race: data.race,
-          bloodline: data.bloodline,
-          gender: data.gender.charAt(0).toUpperCase() + data.gender.substring(1),
-          wins: data.wins,
-          losses: data.losses,
-          winLossRatio: data.winLossRatio,
-          reported: reported,
-          subscribed: subscribed
-        });
-
-        $('.magnific-popup').magnificPopup({
-          type: 'image',
-          mainClass: 'mfp-zoom-in',
-          closeOnContentClick: true,
-          midClick: true,
-          zoom: {
-            enabled: true,
-            duration: 300
-          }
-        });
-      }.bind(this));
   }
 
-  getCharacter() {
-    return $.ajax({ url: '/api/characters/' + this.context.router.getCurrentParams().id })
-  }
-
-  handleReportCharacter() {
-    $.ajax({
-      type: 'POST',
-      url: '/api/report',
-      data: { characterId: this.state.characterId }
-    })
-      .done(function() {
-        var localData = localStorage.getItem('newedenfaces');
-        var json = JSON.parse(localData) || {};
-
-        json.reports = json.reports || [];
-        json.reports.push(this.state.characterId);
-
-        localStorage.setItem('newedenfaces', JSON.stringify(json));
-
-        this.setState({ reported: true });
-      }.bind(this));
+  onChange() {
+    this.setState(CharacterStore.getState());
   }
 
   handleSubscribeSubmit(event) {
     event.preventDefault();
 
-    if (!this.state.email) {
-      return;
+    var email = this.state.email.trim();
+    if (email) {
+      CharacterActions.subscribe({ email: email, characterId: this.state.characterId });
     }
-
-    $.ajax({
-      type: 'POST',
-      url: '/api/subscribe',
-      data: { email: this.state.email, characterId: this.state.characterId }
-    })
-      .done(function() {
-        var localData = localStorage.getItem('newedenfaces');
-        var json = JSON.parse(localData) || {};
-
-        json.subscribed = json.subscribed || [];
-        json.subscribed.push(this.state.characterId);
-
-        localStorage.setItem('newedenfaces', JSON.stringify(json));
-
-        this.setState({ subscribed: true });
-      }.bind(this))
-      .fail(function(jqXhr) {
-        sweetAlert('Error', jqXhr.responseJSON.message, 'error');
-      })
-  }
-
-  handleSubscribeChange(event) {
-    this.setState({ email: event.target.value });
   }
 
   render() {
-
-    var subscribeField = this.state.subscribed ? (
+    var subscribeField = this.state.isSubscribed ? (
       <div className='text-center animated fadeIn'>
         Thank you for subscribing!
       </div>
     ) : (
       <div className='row'>
         <div className='col-sm-6 col-sm-offset-3'>
-          <form onSubmit={this.handleSubscribeSubmit}>
+          <form onSubmit={this.handleSubscribeSubmit.bind(this)}>
             <div className='input-group'>
-              <input type='text' className='form-control' placeholder='Email' onChange={this.handleSubscribeChange}/>
+              <input type='text' className='form-control' placeholder='Email' onChange={CharacterActions.updateEmail}/>
                 <span className='input-group-btn'>
-                  <button className='btn btn-default' onClick={this.handleSubscribeSubmit}>
+                  <button className='btn btn-default' onClick={this.handleSubscribeSubmit.bind(this)}>
                     Subscribe
                   </button>
                 </span>
@@ -207,16 +61,11 @@ class Character extends React.Component {
       </div>
     );
 
-    var reportButton = this.state.reported ? (
-      <button className='btn btn-transparent' disabled>Reported</button>
-    ) : (
-      <button className='btn btn-transparent' onClick={this.handleReportCharacter}>Report Character</button>
-    );
-
     return (
       <div ref='container' className='container animated fadeIn'>
         <div className='profile-img'>
-          <a className='magnific-popup' href={'https://image.eveonline.com/Character/' + this.state.characterId + '_1024.jpg'}>
+          <a ref='avatar' className='magnific-popup'
+             href={'https://image.eveonline.com/Character/' + this.state.characterId + '_1024.jpg'}>
             <img src={'https://image.eveonline.com/Character/' + this.state.characterId + '_256.jpg'}/>
           </a>
         </div>
@@ -225,7 +74,8 @@ class Character extends React.Component {
           <h4 className='lead'>Race: <strong>{this.state.race}</strong></h4>
           <h4 className='lead'>Bloodline: <strong>{this.state.bloodline}</strong></h4>
           <h4 className='lead'>Gender: <strong>{this.state.gender}</strong></h4>
-          {reportButton}
+          <button className='btn btn-transparent' onClick={CharacterActions.report.bind(this, this.state.characterId)}
+                  disabled={this.state.isReported}>{this.state.isReported ? 'Reported' : 'Report Character'}</button>
         </div>
         <div className='profile-stats clearfix'>
           <ul>
