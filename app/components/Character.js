@@ -13,6 +13,10 @@ class Character extends React.Component {
   componentDidMount() {
     CharacterStore.listen(this.onChange);
     CharacterActions.getCharacter({ router: this.context.router });
+
+    setTimeout(() => {
+      $(this.refs.container.getDOMNode()).removeClass('fadeIn');
+    }, 750);
   }
 
   componentWillUnmount() {
@@ -23,6 +27,11 @@ class Character extends React.Component {
   componentDidUpdate() {
     if (this.state.prevPath !== this.context.router.getCurrentPath()) {
       CharacterActions.getCharacter({ router: this.context.router });
+
+      $(this.refs.container.getDOMNode()).addClass('fadeIn');
+      setTimeout(() => {
+        $(this.refs.container.getDOMNode()).removeClass('fadeIn');
+      }, 750);
     }
   }
 
@@ -40,27 +49,6 @@ class Character extends React.Component {
   }
 
   render() {
-    var subscribeField = this.state.isSubscribed ? (
-      <div className='text-center animated fadeIn'>
-        Thank you for subscribing!
-      </div>
-    ) : (
-      <div className='row'>
-        <div className='col-sm-6 col-sm-offset-3'>
-          <form onSubmit={this.handleSubscribeSubmit.bind(this)}>
-            <div className='input-group'>
-              <input type='text' className='form-control' placeholder='Email' onChange={CharacterActions.updateEmail}/>
-                <span className='input-group-btn'>
-                  <button className='btn btn-default' onClick={this.handleSubscribeSubmit.bind(this)}>
-                    Subscribe
-                  </button>
-                </span>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-
     return (
       <div ref='container' className='container animated fadeIn'>
         <div className='profile-img'>
@@ -84,12 +72,7 @@ class Character extends React.Component {
             <li><span className='stats-number'>{this.state.losses}</span> Losses</li>
           </ul>
         </div>
-        <div className='row'>
-          <div className='col-sm-12 text-center'>
-            <h4 className='lead'> Subscribe for weekly statistics on <strong>{this.state.name}</strong></h4>
-          </div>
-        </div>
-        {subscribeField}
+
       </div>
     );
   }
