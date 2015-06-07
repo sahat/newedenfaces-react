@@ -227,8 +227,6 @@ app.get('/api/characters/:id', function(req, res, next) {
       return res.status(404).send({ message: 'Character not found.' });
     }
 
-    character.winLossRatio = (character.wins / (character.wins + character.losses) * 100).toFixed(1);
-
     res.send(character);
   });
 });
