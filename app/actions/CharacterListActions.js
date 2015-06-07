@@ -9,28 +9,25 @@ class CharacterListActions {
   }
 
   getCharacters(payload) {
-    let params = payload.router.getCurrentParams();
-    let path = payload.router.getCurrentPath();
-
     var options = {
-      race: params.race,
-      bloodline: params.bloodline
+      race: payload.params.race,
+      bloodline: payload.params.bloodline
     };
 
-    if (path.includes('female')) {
+    if (payload.path.includes('female')) {
       options.gender = 'female';
     }
 
-    if (path.includes('male')) {
+    if (payload.path.includes('male')) {
       options.gender = 'male';
     }
 
-    let ajaxOptions = path.includes('shame') ? { url: '/api/characters/shame' } :
+    let ajaxOptions = payload.path.includes('shame') ? { url: '/api/characters/shame' } :
     { url: '/api/characters/top', data: options };
 
     $.ajax(ajaxOptions)
       .done(data => {
-        this.actions.getCharactersSuccess(data);
+        this.actions.getCharactersSuccess({ data: data, path: payload.path });
       })
       .fail(jqXhr => {
         this.actions.getCharactersFail(jqXhr);

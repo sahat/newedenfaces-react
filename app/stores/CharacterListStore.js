@@ -6,10 +6,12 @@ class CharacterListStore {
   constructor() {
     this.bindActions(CharacterListActions);
     this.characters = [];
+    this.prevPath = null;
   }
 
-  onGetCharactersSuccess(data) {
-    this.characters = data;
+  onGetCharactersSuccess(payload) {
+    this.characters = payload.data;
+    this.prevPath = payload.path;
   }
 
   onGetCharactersFail(jqXhr) {
