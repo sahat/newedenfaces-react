@@ -1,67 +1,39 @@
 import React from 'react';
 import {Link} from 'react-router';
+import {isEqual} from 'underscore';
+import CharacterListStore from '../stores/CharacterListStore';
+import CharacterListActions from '../actions/CharacterListActions';
 
 class CharacterList extends React.Component {
-
   constructor(props) {
     super(props);
-    this.characters = [];
-  }
-
-  fetchCharacters() {
-    var routeParams = this.context.router.getCurrentParams();
-    var currentPath = this.context.router.getCurrentPath();
-    var baseUrl = '/api/characters/top';
-
-    var options = {
-      race: routeParams.race,
-      bloodline: routeParams.bloodline
-    };
-
-    if (currentPath.indexOf('female') > -1) {
-      options.gender = 'female';
-    } else if (currentPath.indexOf('male') > -1) {
-      options.gender = 'male';
-    }
-
-    $.get(baseUrl, options, function(data) {
-      this.setState({ characters: data });
-    }.bind(this));
-  }
-
-  fetchShame() {
-    $.get('/api/characters/shame', function(data) {
-      this.setState({ characters: data });
-    }.bind(this));
+    this.state = CharacterListStore.getState();
+    this.onChange = this.onChange.bind(this);
   }
 
   componentDidMount() {
-    var currentPath = this.context.router.getCurrentPath();
-
-    if (currentPath.indexOf('shame') > -1) {
-      this.fetchShame();
-    } else {
-      this.fetchCharacters();
-    }
-
-    this.setState({ path: currentPath });
+    CharacterListStore.listen(this.onChange);
+    CharacterListActions.getCharacters({
+      params: this.context.router.getCurrentParams(),
+      path: this.context.router.getCurrentPath()
+    });
   }
 
+  componentWillUnmount() {
+    CharacterListStore.unlisten(this.onChange);
+  }
+
+  onChange() {
+    this.setState(CharacterListStore.getState());
+  }
 
   componentDidUpdate() {
-    var currentPath = this.context.router.getCurrentPath();
-
-    if (currentPath === this.state.path) {
-      return;
+    if (this.state.prevPath !== this.context.router.getCurrentPath()) {
+      CharacterListActions.getCharacters({
+        params: this.context.router.getCurrentParams(),
+        path: this.context.router.getCurrentPath()
+      });
     }
-
-    if (currentPath.indexOf('shame') > -1) {
-      this.fetchShame();
-    } else {
-      this.fetchCharacters();
-    }
-
-    this.setState({ path: currentPath });
   }
 
   render() {
