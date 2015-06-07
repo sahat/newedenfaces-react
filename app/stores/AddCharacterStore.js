@@ -1,5 +1,5 @@
 import alt from '../alt';
-import WebAPAddCharacterActionsIUtils from '../actions/AddCharacterActions';
+import AddCharacterActions from '../actions/AddCharacterActions';
 
 class AddCharacterStore {
   constructor() {
@@ -12,41 +12,33 @@ class AddCharacterStore {
   }
 
   onAddCharacterSuccess(successMessage) {
-    this.state.nameValidationState = 'has-success';
-    this.state.helpBlock = successMessage;
+    this.nameValidationState = 'has-success';
+    this.helpBlock = successMessage;
   }
 
   onAddCharacterFail(errorMessage) {
-    this.state.nameValidationState = 'has-error';
-    this.state.helpBlock = errorMessage;
+    this.nameValidationState = 'has-error';
+    this.helpBlock = errorMessage;
   }
 
-  onUpdateName(name) {
-    this.setState({
-      name: name,
-      nameValidationState: '',
-      helpBlock: ''
-    });
+  onUpdateName(event) {
+    this.name = event.target.value;
+    this.nameValidationState = '';
+    this.helpBlock = '';
   }
 
-  onUpdateGender(gender) {
-    this.setState({
-      gender: gender,
-      genderValidationState: ''
-    });
+  onUpdateGender(event) {
+    this.gender = event.target.value;
+    this.genderValidationState = '';
   }
 
   onInvalidName() {
-    this.setState({
-      nameValidationState: 'has-error',
-      helpBlock: 'Please enter a character name.'
-    })
+    this.nameValidationState = 'has-error';
+    this.helpBlock = 'Please enter a character name.';
   }
 
   onInvalidGender() {
-    this.setState({
-      genderValidationState: 'has-error'
-    });
+    this.genderValidationState = 'has-error';
   }
 }
 
