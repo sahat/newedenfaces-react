@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var colors = require('colors');
+var compression = require('compression');
 var express = require('express');
 var path = require('path');
 var swig  = require('swig');
@@ -27,6 +28,7 @@ var Character = require('./models/character');
 var Subscriber = require('./models/subscriber');
 
 app.set('port', process.env.PORT || 3000);
+app.use(compression());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -476,19 +478,16 @@ app.post('/api/unsubscribe', function(req, res, next) {
 });
 
 app.use(function(req, res) {
-  alt.bootstrap(JSON.stringify(res.locals.data || {}));
-
-  var iso = new Iso();
-
   Router.run(routes, req.path, function(Handler) {
     var html = React.renderToString(React.createElement(Handler));
-    iso.add(html, alt.flush());
-    //var page = swig.renderFile('views/index.html', { html: html });
-    //res.send(page);
-    res.send(html);
-
+    var page = swig.renderFile('views/index.html', {
+      html: html,
+      production: process.env.NODE_ENV === 'production'
+    });
+    res.send(page);
   });
 });
+
 
 app.use(function(err, req, res, next) {
   console.log(err.stack.red);
@@ -501,7 +500,6 @@ app.use(function(err, req, res, next) {
  */
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
-
 var onlineUsers = 0;
 
 io.sockets.on('connection', function(socket) {
