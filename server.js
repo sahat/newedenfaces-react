@@ -10,14 +10,12 @@ var async = require('async');
 var mongoose = require('mongoose');
 var request = require('request');
 var xml2js = require('xml2js');
-var Iso = require('iso');
 var React = require('react');
 var Router = require('react-router');
 var config = require('./config');
 var agenda = require('agenda')({db: { address: config.database }});
 var validator = require('validator');
 
-var alt = require('./app/alt');
 var routes = require('./app/routes');
 
 var app = express();
