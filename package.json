@@ -14,6 +14,7 @@
   "dependencies": {
     "alt": "^0.16.10",
     "async": "^1.2.1",
+    "babel": "^5.5.8",
     "body-parser": "^1.13.1",
     "colors": "^1.1.2",
     "compression": "^1.5.0",
