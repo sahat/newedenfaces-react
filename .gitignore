@@ -31,3 +31,7 @@ node_modules
 .idea
 *.iml
 .DS_Store
+
+# Compiled files
+public/css/*
+public/js/*
