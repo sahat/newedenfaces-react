@@ -1,23 +1,22 @@
-var _ = require('underscore');
-var colors = require('colors');
-var compression = require('compression');
-var express = require('express');
-var favicon = require('serve-favicon');
 var path = require('path');
-var swig  = require('swig');
-var logger = require('morgan');
+var express = require('express');
 var bodyParser = require('body-parser');
+var compression = require('compression');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
 var async = require('async');
+var colors = require('colors');
 var mongoose = require('mongoose');
 var request = require('request');
-var xml2js = require('xml2js');
 var React = require('react');
 var Router = require('react-router');
-var config = require('./config');
-var agenda = require('agenda')({db: { address: config.database }});
-var validator = require('validator');
+var swig  = require('swig');
+var xml2js = require('xml2js');
+var _ = require('underscore');
 
+var config = require('./config');
 var routes = require('./app/routes');
+
 var app = express();
 
 mongoose.connect(config.database);
@@ -515,32 +514,3 @@ io.sockets.on('connection', function(socket) {
 server.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });
-
-/**
- * Agenda task.
- */
-agenda.define('send weekly report', function(job, done) {
-  var data = job.attrs.data;
-
-  Character.findOne({ characterId: data.characterId }, function(err, character) {
-    var htmlTemplate = swig.renderFile('templates/email.html', {
-      name: character.name,
-      characterId: character.characterId,
-      wins: character.wins,
-      losses: character.losses,
-      winningPercentage: (character.wins / (character.wins + character.losses) * 100).toFixed(1)
-  });
-    //
-    //var email = new sendgrid.Email();
-    //email.addTo(data.email);
-    //email.setFrom('support@newedenfaces.com');
-    //email.setSubject('New Eden Faces Weekly - ' + character.name);
-    //email.setHtml(htmlTemplate);
-
-    //sendgrid.send(email, function(err, json) {
-    //  if (err) return next(err);
-    //  done();
-    //});
-  });
-});
-
