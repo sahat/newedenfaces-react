@@ -480,10 +480,7 @@ app.post('/api/unsubscribe', function(req, res, next) {
 app.use(function(req, res) {
   Router.run(routes, req.path, function(Handler) {
     var html = React.renderToString(React.createElement(Handler));
-    var page = swig.renderFile('views/index.html', {
-      html: html,
-      production: process.env.NODE_ENV === 'production'
-    });
+    var page = swig.renderFile('views/index.html', { html: html });
     res.send(page);
   });
 });
