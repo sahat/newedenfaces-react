@@ -17,10 +17,12 @@ var agenda = require('agenda')({db: { address: config.database }});
 var validator = require('validator');
 
 var routes = require('./app/routes');
-
 var app = express();
 
 mongoose.connect(config.database);
+mongoose.connection.on('error', function() {
+  console.info('Error: Could not connect to MongoDB. Did you forget to run `mongod`?'.red);
+});
 
 var Character = require('./models/character');
 var Subscriber = require('./models/subscriber');
