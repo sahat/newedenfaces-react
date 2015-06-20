@@ -1,23 +1,22 @@
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var gulpif = require('gulp-if');
-var source = require('vinyl-source-stream');
-var browserify = require('browserify');
 var streamify = require('gulp-streamify');
-var watchify = require('watchify');
-var reactify = require('reactify');
-var uglify = require('gulp-uglify');
 var autoprefixer = require('gulp-autoprefixer');
 var cssmin = require('gulp-cssmin');
-var merge = require('merge-stream');
 var less = require('gulp-less');
 var concat = require('gulp-concat');
-var babelify = require('babelify');
 var plumber = require('gulp-plumber');
+var source = require('vinyl-source-stream');
+var babelify = require('babelify');
+var browserify = require('browserify');
+var watchify = require('watchify');
+var uglify = require('gulp-uglify');
 
 var production = process.env.NODE_ENV === 'production';
 
 var dependencies = [
+  'alt',
   'react',
   'react-router',
   'underscore'
