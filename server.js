@@ -2,6 +2,7 @@ var _ = require('underscore');
 var colors = require('colors');
 var compression = require('compression');
 var express = require('express');
+var favicon = require('serve-favicon');
 var path = require('path');
 var swig  = require('swig');
 var logger = require('morgan');
@@ -32,6 +33,7 @@ app.use(compression());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 /**
