@@ -1,6 +1,11 @@
 {
   "name": "newedenfaces",
+  "description": "Hot or Not for EVE Online",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sahat/newedenfaces-react"
+  },
   "main": "server.js",
   "scripts": {
     "start": "babel-node --stage 0 --ignore='node_modules' server.js",
@@ -39,5 +44,6 @@
     "gulp-util": "^3.0.5",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.2.2"
-  }
+  },
+  "license": "MIT"
 }
