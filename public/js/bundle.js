@@ -501,11 +501,6 @@ var AddCharacter = (function (_React$Component) {
               { className: 'panel panel-default' },
               _react2['default'].createElement(
                 'div',
-                { className: 'panel-heading' },
-                'Add Character'
-              ),
-              _react2['default'].createElement(
-                'div',
                 { className: 'panel-body' },
                 _react2['default'].createElement(
                   'form',
@@ -533,12 +528,7 @@ var AddCharacter = (function (_React$Component) {
                       'div',
                       { className: 'radio radio-inline' },
                       _react2['default'].createElement('input', { type: 'radio', name: 'gender', id: 'female', value: 'Female', checked: this.state.gender === 'Female',
-                        onChange: _actionsAddCharacterActions2['default'].updateGender }),
-                      _react2['default'].createElement(
-                        'label',
-                        { htmlFor: 'female' },
-                        'Female'
-                      )
+                        onChange: _actionsAddCharacterActions2['default'].updateGender })
                     ),
                     _react2['default'].createElement(
                       'div',
@@ -601,10 +591,6 @@ var _Footer = require('./Footer');
 
 var _Footer2 = _interopRequireDefault(_Footer);
 
-var _storesCharacterStore = require('../stores/CharacterStore');
-
-var _storesCharacterStore2 = _interopRequireDefault(_storesCharacterStore);
-
 var App = (function (_React$Component) {
   function App() {
     _classCallCheck(this, App);
@@ -620,34 +606,11 @@ var App = (function (_React$Component) {
     key: 'render',
     value: function render() {
       return _react2['default'].createElement(
-        'html',
+        'div',
         null,
-        _react2['default'].createElement(
-          'head',
-          null,
-          _react2['default'].createElement('meta', { charSet: 'utf-8' }),
-          _react2['default'].createElement('meta', { httpEquiv: 'X-UA-Compatible', content: 'IE=edge' }),
-          _react2['default'].createElement('meta', { name: 'viewport', content: 'width=device-width, initial-scale=1' }),
-          _react2['default'].createElement(
-            'title',
-            null,
-            'New Eden Faces'
-          ),
-          _react2['default'].createElement('link', { rel: 'shortcut icon', href: '/favicon.png' }),
-          _react2['default'].createElement('link', { rel: 'stylesheet', href: 'http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900' }),
-          _react2['default'].createElement('link', { rel: 'stylesheet', href: '/css/main.css' })
-        ),
-        _react2['default'].createElement(
-          'body',
-          null,
-          _react2['default'].createElement(_Navbar2['default'], null),
-          _react2['default'].createElement(_reactRouter.RouteHandler, null),
-          _react2['default'].createElement(_Footer2['default'], null),
-          _react2['default'].createElement('script', { src: '/socket.io/socket.io.js' }),
-          _react2['default'].createElement('script', { src: '/js/vendor.js' }),
-          _react2['default'].createElement('script', { src: '/js/bundle-vendor.js' }),
-          _react2['default'].createElement('script', { src: '/js/bundle.js' })
-        )
+        _react2['default'].createElement(_Navbar2['default'], null),
+        _react2['default'].createElement(_reactRouter.RouteHandler, null),
+        _react2['default'].createElement(_Footer2['default'], null)
       );
     }
   }]);
@@ -658,7 +621,7 @@ var App = (function (_React$Component) {
 exports['default'] = App;
 module.exports = exports['default'];
 
-},{"../stores/CharacterStore":20,"./Footer":13,"./Navbar":15,"react":"react","react-router":"react-router"}],11:[function(require,module,exports){
+},{"./Footer":13,"./Navbar":15,"react":"react","react-router":"react-router"}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -701,8 +664,14 @@ var Character = (function (_React$Component) {
   _createClass(Character, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
+      var _this = this;
+
       _storesCharacterStore2['default'].listen(this.onChange);
       _actionsCharacterActions2['default'].getCharacter({ router: this.context.router });
+
+      setTimeout(function () {
+        $(_this.refs.container.getDOMNode()).removeClass('fadeIn');
+      }, 750);
     }
   }, {
     key: 'componentWillUnmount',
@@ -713,8 +682,15 @@ var Character = (function (_React$Component) {
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate() {
+      var _this2 = this;
+
       if (this.state.prevPath !== this.context.router.getCurrentPath()) {
         _actionsCharacterActions2['default'].getCharacter({ router: this.context.router });
+
+        $(this.refs.container.getDOMNode()).addClass('fadeIn');
+        setTimeout(function () {
+          $(_this2.refs.container.getDOMNode()).removeClass('fadeIn');
+        }, 750);
       }
     }
   }, {
@@ -735,37 +711,6 @@ var Character = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var subscribeField = this.state.isSubscribed ? _react2['default'].createElement(
-        'div',
-        { className: 'text-center animated fadeIn' },
-        'Thank you for subscribing!'
-      ) : _react2['default'].createElement(
-        'div',
-        { className: 'row' },
-        _react2['default'].createElement(
-          'div',
-          { className: 'col-sm-6 col-sm-offset-3' },
-          _react2['default'].createElement(
-            'form',
-            { onSubmit: this.handleSubscribeSubmit.bind(this) },
-            _react2['default'].createElement(
-              'div',
-              { className: 'input-group' },
-              _react2['default'].createElement('input', { type: 'text', className: 'form-control', placeholder: 'Email', onChange: _actionsCharacterActions2['default'].updateEmail }),
-              _react2['default'].createElement(
-                'span',
-                { className: 'input-group-btn' },
-                _react2['default'].createElement(
-                  'button',
-                  { className: 'btn btn-default', onClick: this.handleSubscribeSubmit.bind(this) },
-                  'Subscribe'
-                )
-              )
-            )
-          )
-        )
-      );
-
       return _react2['default'].createElement(
         'div',
         { ref: 'container', className: 'container animated fadeIn' },
@@ -865,26 +810,7 @@ var Character = (function (_React$Component) {
               ' Losses'
             )
           )
-        ),
-        _react2['default'].createElement(
-          'div',
-          { className: 'row' },
-          _react2['default'].createElement(
-            'div',
-            { className: 'col-sm-12 text-center' },
-            _react2['default'].createElement(
-              'h4',
-              { className: 'lead' },
-              ' Subscribe for weekly statistics on ',
-              _react2['default'].createElement(
-                'strong',
-                null,
-                this.state.name
-              )
-            )
-          )
-        ),
-        subscribeField
+        )
       );
     }
   }]);
@@ -4703,7 +4629,7 @@ var _routes = require('./routes');
 var _routes2 = _interopRequireDefault(_routes);
 
 _reactRouter2['default'].run(_routes2['default'], _reactRouter2['default'].HistoryLocation, function (Handler) {
-  _react2['default'].render(_react2['default'].createElement(Handler, null), document);
+  _react2['default'].render(_react2['default'].createElement(Handler, null), document.getElementById('app'));
 });
 
 },{"./routes":17,"react":"react","react-router":"react-router"}]},{},[39]);

@@ -7878,3 +7878,61 @@ label {
   -webkit-animation-delay: -500ms;
           animation-delay: -500ms;
 }
+.react-star-rating__star {
+  width: 25px;
+}
+.react-star-rating__star #star-flat {
+  fill: #C6C6C6;
+}
+.react-star-rating__star #star-flat:hover {
+  fill: #FFA91B;
+}
+.react-star-rating__root {
+  font-size: 2em;
+  vertical-align: middle;
+  display: inline-block;
+}
+.react-star-rating__root.rating-editing:hover {
+  cursor: pointer;
+}
+.rating-container {
+  position: relative;
+  vertical-align: middle;
+  display: inline-block;
+  color: #e3e3e3;
+  overflow: hidden;
+}
+.rating-container:before {
+  content: attr(data-content);
+}
+.rating-container .rating-stars {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #F5A71B;
+  -webkit-transition: all 0.01s;
+  transition: all 0.01s;
+  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(#fdbd47), to(#f5a71b));
+}
+.rating-container .rating-stars:before {
+  content: attr(data-content);
+}
+.react-rating-caption {
+  font-size: 1.25em;
+  vertical-align: middle;
+  margin-right: 0.5em;
+}
+.rating-disabled .rating-container:hover {
+  cursor: not-allowed;
+}
+.react-star-rating__size--sm {
+  font-size: 1em;
+}
+.react-star-rating__size--md {
+  font-size: 2em;
+}
+.react-star-rating__size--lg {
+  font-size: 2.5em;
+}
