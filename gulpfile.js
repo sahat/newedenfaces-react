@@ -29,10 +29,10 @@ var dependencies = [
  */
 gulp.task('vendor', function() {
   return gulp.src([
-    'app/vendor/jquery.js',
-    'app/vendor/bootstrap.js',
-    'app/vendor/jquery.magnific-popup.js',
-    'app/vendor/toastr.js'
+    'bower_components/jquery/dist/jquery.js',
+    'bower_components/bootstrap/dist/js/bootstrap.js',
+    'bower_components/magnific-popup/dist/jquery.magnific-popup.js',
+    'bower_components/toastr/toastr.js'
   ]).pipe(concat('vendor.js'))
     .pipe(gulpif(production, uglify({ mangle: false })))
     .pipe(gulp.dest('public/js'));
@@ -104,7 +104,7 @@ gulp.task('styles', function() {
     .pipe(less())
     .pipe(autoprefixer())
     .pipe(gulpif(production, cssmin()))
-    .pipe(gulp.dest('./public/css'));
+    .pipe(gulp.dest('public/css'));
 });
 
 gulp.task('watch', function() {
