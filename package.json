@@ -8,7 +8,7 @@
   },
   "main": "server.js",
   "scripts": {
-    "start": "babel-node --stage 0 --ignore='node_modules' server.js",
+    "start": "babel-node server.js",
     "watch": "nodemon --exec babel-node -- server.js"
   },
   "dependencies": {
