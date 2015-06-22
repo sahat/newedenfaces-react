@@ -63,7 +63,7 @@ class AddCharacter extends React.Component {
                       <label htmlFor='female'>Female</label>
                     </div>
                     <div className='radio radio-inline'>
-                      <input type='radio' name='gender' id='male' value='Male' checked={this.state.gender === 'male'}
+                      <input type='radio' name='gender' id='male' value='Male' checked={this.state.gender === 'Male'}
                              onChange={AddCharacterActions.updateGender}/>
                       <label htmlFor='male'>Male</label>
                     </div>
