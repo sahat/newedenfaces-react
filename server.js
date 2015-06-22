@@ -16,6 +16,8 @@ var _ = require('underscore');
 
 var config = require('./config');
 var routes = require('./app/routes');
+var Character = require('./models/character');
+var Subscriber = require('./models/subscriber');
 
 var app = express();
 
@@ -23,9 +25,6 @@ mongoose.connect(config.database);
 mongoose.connection.on('error', function() {
   console.info('Error: Could not connect to MongoDB. Did you forget to run `mongod`?'.red);
 });
-
-var Character = require('./models/character');
-var Subscriber = require('./models/subscriber');
 
 app.set('port', process.env.PORT || 3000);
 app.use(compression());
@@ -40,7 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
  * Returns 2 random characters of the same gender that have not been voted yet.
  */
 app.get('/api/characters', function(req, res, next) {
-  var choices = ['female', 'male'];
+  var choices = ['Female', 'Male'];
   var randomGender = _.sample(choices);
 
   Character
@@ -336,12 +335,12 @@ app.get('/api/stats', function(req, res, next) {
         });
       },
       function(callback) {
-        Character.count({ gender: 'male' }, function(err, maleCount) {
+        Character.count({ gender: 'Male' }, function(err, maleCount) {
           callback(err, maleCount);
         });
       },
       function(callback) {
-        Character.count({ gender: 'female' }, function(err, femaleCount) {
+        Character.count({ gender: 'Female' }, function(err, femaleCount) {
           callback(err, femaleCount);
         });
       },
