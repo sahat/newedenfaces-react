@@ -1,5 +1,4 @@
 import alt from '../alt';
-import WebAPIUtils from '../utils/WebAPIUtils';
 
 class AddCharacterActions {
   constructor() {
@@ -14,13 +13,17 @@ class AddCharacterActions {
   }
 
   addCharacter(name, gender) {
-    WebAPIUtils.addCharacter(name, gender)
-      .done(function(data) {
-        this.actions.addCharacterSuccess(data.message);
-      }.bind(this))
-      .fail(function(jqXHR) {
-        this.actions.addCharacterFail(jqXHR.responseJSON.message);
-      }.bind(this));
+    $.ajax({
+      type: 'POST',
+      url: '/api/characters',
+      data: { name: name, gender: gender }
+    })
+      .done(() => {
+        this.actions.addCharacterSuccess();
+      })
+      .fail((jqXhr) => {
+        this.actions.addCharacterFail(jqXhr);
+      });
   }
 }
 
