@@ -8,7 +8,7 @@ import CharacterList from './components/CharacterList';
 import AddCharacter from './components/AddCharacter';
 import NotFound from './components/404';
 
-module.exports = (
+export default (
   <Route handler={App}>
     <NotFoundRoute handler={NotFound}/>
     <Route path='/' handler={Home} />
