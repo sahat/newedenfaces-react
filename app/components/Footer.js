@@ -1,19 +1,27 @@
 import React from 'react';
 import {Link} from 'react-router';
+import FooterStore from '../stores/FooterStore'
+import FooterActions from '../actions/FooterActions';
 
 class Footer extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      characters: []
-    };
+    this.state = FooterStore.getState();
+    this.onChange = this.onChange.bind(this);
   }
 
   componentDidMount() {
-    $.get('/api/characters/top', function(data) {
-      this.setState({ characters: data.slice(0,5) });
-    }.bind(this));
+    FooterStore.listen(this.onChange);
+    FooterActions.getTopCharacters();
+  }
+
+  componentWillUnmount() {
+    FooterStore.unlisten(this.onChange);
+  }
+
+  onChange() {
+    this.setState(FooterStore.getState());
   }
 
   render() {
