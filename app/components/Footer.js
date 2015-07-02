@@ -20,19 +20,19 @@ class Footer extends React.Component {
     FooterStore.unlisten(this.onChange);
   }
 
-  onChange() {
-    this.setState(FooterStore.getState());
+  onChange(state) {
+    this.setState(state);
   }
 
   render() {
-    var leaderboardCharacters = this.state.characters.map(function(character) {
+    let leaderboardCharacters = this.state.characters.map(function(character) {
       return (
         <li key={character.characterId}>
           <Link to={'/characters/' + character.characterId}>
             <img className='thumb-md' src={'http://image.eveonline.com/Character/' + character.characterId + '_128.jpg'} />
           </Link>
         </li>
-      )
+      );
     });
 
     return (
