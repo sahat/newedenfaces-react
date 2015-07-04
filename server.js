@@ -477,14 +477,13 @@ app.post('/api/unsubscribe', function(req, res, next) {
 
 });
 
-app.use(function(req, res) {
+app.use(/^\/(?!api).*/, function(req, res) {
   Router.run(routes, req.path, function(Handler) {
     var html = React.renderToString(React.createElement(Handler));
     var page = swig.renderFile('views/index.html', { html: html });
     res.send(page);
   });
 });
-
 
 app.use(function(err, req, res, next) {
   console.log(err.stack.red);
