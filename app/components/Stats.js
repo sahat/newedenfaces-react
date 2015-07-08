@@ -18,8 +18,8 @@ class Stats extends React.Component {
     StatsStore.unlisten(this.onChange);
   }
 
-  onChange() {
-    this.setState(StatsStore.getState());
+  onChange(state) {
+    this.setState(state);
   }
 
   render() {

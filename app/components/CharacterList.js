@@ -32,8 +32,8 @@ class CharacterList extends React.Component {
     }
   }
 
-  onChange() {
-    this.setState(CharacterListStore.getState());
+  onChange(state) {
+    this.setState(state);
   }
 
   render() {

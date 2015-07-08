@@ -17,8 +17,8 @@ class AddCharacter extends React.Component {
     AddCharacterStore.unlisten(this.onChange);
   }
 
-  onChange() {
-    this.setState(AddCharacterStore.getState());
+  onChange(state) {
+    this.setState(state);
   }
 
   handleSubmit(event) {

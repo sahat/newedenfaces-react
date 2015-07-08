@@ -35,8 +35,8 @@ class Navbar extends React.Component {
     NavbarStore.unlisten(this.onChange);
   }
 
-  onChange() {
-    this.setState(NavbarStore.getState());
+  onChange(state) {
+    this.setState(state);
   }
 
   handleSubmit(event) {

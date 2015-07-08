@@ -20,8 +20,8 @@ class Home extends React.Component {
     HomeStore.unlisten(this.onChange);
   }
 
-  onChange() {
-    this.setState(HomeStore.getState());
+  onChange(state) {
+    this.setState(state);
   }
 
   handleClick(character) {

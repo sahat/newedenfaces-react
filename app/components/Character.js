@@ -35,8 +35,8 @@ class Character extends React.Component {
     }
   }
 
-  onChange() {
-    this.setState(CharacterStore.getState());
+  onChange(state) {
+    this.setState(state);
   }
 
   handleSubscribeSubmit(event) {
