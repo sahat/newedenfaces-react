@@ -295,7 +295,7 @@ app.post('/api/characters', function(req, res, next) {
               res.send({ message: characterName + ' has been added successfully!' });
             });
           } catch (e) {
-            res.send(404, { message: characterName + ' is not a registered citizen of New Eden.' });
+            res.status(404).send({ message: characterName + ' is not a registered citizen of New Eden.' });
           }
         });
       });
@@ -484,6 +484,7 @@ app.use(/^\/(?!api).*/, function(req, res) {
     res.send(page);
   });
 });
+
 
 app.use(function(err, req, res, next) {
   console.log(err.stack.red);
