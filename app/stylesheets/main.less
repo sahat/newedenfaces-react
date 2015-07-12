@@ -94,8 +94,14 @@ footer .thumb-md {
   padding: 2px 5px;
 }
 
-.navbar-form .input-group-btn .btn-default {
-  padding: 9px 12px;
+//.navbar-form .input-group-btn .btn-default {
+//  padding: 9px 12px;
+//}
+
+.input-group-btn:last-child > .btn,
+.input-group-btn:last-child > .btn-group {
+  margin-left: 0;
+  border-left: 0;
 }
 
 /*
@@ -722,9 +728,9 @@ label {
   animation-name: shake;
 }
 
-  @tricolor: @link-color;
-  @triw: 10px;
-  @trih: @triw*0.9;
+@tricolor: @link-color;
+@triw: 10px;
+@trih: @triw*0.9;
 
 .triangles {
   position: absolute;
