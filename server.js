@@ -17,7 +17,6 @@ var _ = require('underscore');
 var config = require('./config');
 var routes = require('./app/routes');
 var Character = require('./models/character');
-var Subscriber = require('./models/subscriber');
 
 var app = express();
 
@@ -42,8 +41,7 @@ app.get('/api/characters', function(req, res, next) {
   var choices = ['Female', 'Male'];
   var randomGender = _.sample(choices);
 
-  Character
-    .find({ random: { $near: [Math.random(), 0] } })
+  Character.find({ random: { $near: [Math.random(), 0] } })
     .where('voted', false)
     .where('gender', randomGender)
     .limit(2)
