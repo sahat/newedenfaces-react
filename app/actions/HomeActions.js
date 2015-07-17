@@ -15,7 +15,7 @@ class HomeActions {
         this.actions.getTwoCharactersSuccess(data);
       })
       .fail(jqXhr => {
-        this.actions.getTwoCharactersFail(jqXhr);
+        this.actions.getTwoCharactersFail(jqXhr.responseJSON.message);
       });
   }
 
@@ -29,7 +29,7 @@ class HomeActions {
         this.actions.getTwoCharacters();
       })
       .fail((jqXhr) => {
-        this.actions.voteFail(jqXhr);
+        this.actions.voteFail(jqXhr.responseJSON.message);
       });
   }
 }
