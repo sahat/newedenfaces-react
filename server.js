@@ -221,7 +221,7 @@ app.get('/api/characters/search', function(req, res, next) {
 app.get('/api/characters/:id', function(req, res, next) {
   var id = req.params.id;
 
-  Character.findOne({ characterId: id }).lean().exec(function(err, character) {
+  Character.findOne({ characterId: id }, function(err, character) {
     if (err) return next(err);
 
     if (!character) {
