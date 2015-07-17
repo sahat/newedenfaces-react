@@ -1,4 +1,3 @@
-import {assign} from 'underscore';
 import alt from '../alt';
 import HomeActions from '../actions/HomeActions';
 
@@ -12,12 +11,12 @@ class HomeStore {
     this.characters = data;
   }
 
-  onGetTwoCharactersFail(jqXhr) {
-    toastr.error(jqXhr.responseJSON && jqXhr.responseJSON.message || jqXhr.responseText || jqXhr.statusText);
+  onGetTwoCharactersFail(errorMessage) {
+    toastr.error(errorMessage);
   }
 
-  onVoteFail(jqXhr) {
-    toastr.error(jqXhr.responseJSON && jqXhr.responseJSON.message || jqXhr.responseText || jqXhr.statusText);
+  onVoteFail(errorMessage) {
+    toastr.error(errorMessage);
   }
 }
 

@@ -23,7 +23,7 @@ class HomeActions {
     $.ajax({
       type: 'PUT',
       url: '/api/characters' ,
-      data: { winner: winner.characterId, loser: loser.characterId }
+      data: { winner: winner, loser: loser }
     })
       .done(() => {
         this.actions.getTwoCharacters();
