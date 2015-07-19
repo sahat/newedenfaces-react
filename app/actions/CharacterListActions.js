@@ -25,7 +25,6 @@ class CharacterListActions {
       url = '/api/characters/shame';
     }
 
-    console.log('payload')
     $.ajax({ url: url, data: params })
       .done((data) => {
         this.actions.getCharactersSuccess(data);
