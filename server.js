@@ -475,7 +475,7 @@ app.post('/api/unsubscribe', function(req, res, next) {
 
 });
 
-app.use(/^\/(?!api).*/, function(req, res) {
+app.use(function(req, res) {
   Router.run(routes, req.path, function(Handler) {
     var html = React.renderToString(React.createElement(Handler));
     var page = swig.renderFile('views/index.html', { html: html });
