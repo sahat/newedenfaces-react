@@ -13,22 +13,16 @@ class CharacterList extends React.Component {
 
   componentDidMount() {
     CharacterListStore.listen(this.onChange);
-    CharacterListActions.getCharacters({
-      params: this.context.router.getCurrentParams(),
-      path: this.context.router.getCurrentPath()
-    });
+    CharacterListActions.getCharacters(this.props.params);
   }
 
   componentWillUnmount() {
     CharacterListStore.unlisten(this.onChange);
   }
 
-  componentDidUpdate() {
-    if (this.state.prevPath !== this.context.router.getCurrentPath()) {
-      CharacterListActions.getCharacters({
-        params: this.context.router.getCurrentParams(),
-        path: this.context.router.getCurrentPath()
-      });
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.params, this.props.params)) {
+      CharacterListActions.getCharacters(this.props.params);
     }
   }
 
@@ -37,15 +31,14 @@ class CharacterList extends React.Component {
   }
 
   render() {
-    var characterList = this.state.characters.map(function(character, index) {
+    let charactersList = this.state.characters.map((character, index) => {
       return (
         <div key={character.characterId} className='list-group-item animated fadeIn'>
           <div className='media'>
             <span className='position pull-left'>{index + 1}</span>
-
             <div className='pull-left thumb-lg'>
               <Link to={'/characters/' + character.characterId}>
-                <img className='media-object' src={'http://image.eveonline.com/Character/' + character.characterId + '_128.jpg'}/>
+                <img className='media-object' src={'http://image.eveonline.com/Character/' + character.characterId + '_128.jpg'} />
               </Link>
             </div>
             <div className='media-body'>
@@ -66,7 +59,7 @@ class CharacterList extends React.Component {
     return (
       <div className='container'>
         <div className='list-group'>
-          {characterList}
+          {charactersList}
         </div>
       </div>
     );
