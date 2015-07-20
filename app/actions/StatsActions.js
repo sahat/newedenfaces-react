@@ -10,10 +10,10 @@ class StatsActions {
 
   getStats() {
     $.ajax({ url: '/api/stats' })
-      .done(data => {
+      .done((data) => {
         this.actions.getStatsSuccess(data);
       })
-      .fail(jqXhr => {
+      .fail((jqXhr) => {
         this.actions.getStatsFail(jqXhr);
       });
   }
