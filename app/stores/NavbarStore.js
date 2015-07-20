@@ -10,6 +10,17 @@ class NavbarStore {
     this.ajaxAnimationClass = '';
   }
 
+  onFindCharacterSuccess(payload) {
+    payload.router.transitionTo('/characters/' + payload.characterId);
+  }
+
+  onFindCharacterFail(payload) {
+    payload.searchForm.classList.add('shake');
+    setTimeout(() => {
+      payload.searchForm.classList.remove('shake');
+    }, 1000);
+  }
+
   onUpdateOnlineUsers(data) {
     this.onlineUsers = data.onlineUsers;
   }

@@ -47,7 +47,7 @@ class Navbar extends React.Component {
     if (searchQuery) {
       NavbarActions.findCharacter({
         searchQuery: searchQuery,
-        searchFormNode: this.refs.searchForm.getDOMNode(),
+        searchForm: this.refs.searchForm.getDOMNode(),
         router: this.context.router
       });
     }
@@ -80,7 +80,7 @@ class Navbar extends React.Component {
           </Link>
         </div>
         <div id='navbar' className='navbar-collapse collapse'>
-          <form ref='searchForm' className='navbar-form navbar-left shake' onSubmit={this.handleSubmit.bind(this)}>
+          <form ref='searchForm' className='navbar-form navbar-left animated' onSubmit={this.handleSubmit.bind(this)}>
             <div className='input-group'>
               <input type='text' className='form-control' placeholder={this.state.totalCharacters + ' characters'} value={this.state.searchQuery} onChange={NavbarActions.updateSearchQuery} />
               <span className='input-group-btn'>

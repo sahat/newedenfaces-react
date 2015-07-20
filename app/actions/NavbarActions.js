@@ -1,4 +1,5 @@
 import alt from '../alt';
+import {assign} from 'underscore';
 
 class NavbarActions {
   constructor() {
@@ -7,7 +8,9 @@ class NavbarActions {
       'updateAjaxAnimation',
       'updateSearchQuery',
       'getCharacterCountSuccess',
-      'getCharacterCountFail'
+      'getCharacterCountFail',
+      'findCharacterSuccess',
+      'findCharacterFail'
     );
   }
 
@@ -17,13 +20,11 @@ class NavbarActions {
       data: { name: payload.searchQuery }
     })
       .done((data) => {
-        payload.router.transitionTo('/characters/' + data.characterId);
+        assign(payload, data);
+        this.actions.findCharacterSuccess(payload);
       })
       .fail(() => {
-        payload.searchFormNode.classList.add('animated');
-        setTimeout(() => {
-          payload.searchFormNode.classList.remove('animated');
-        }, 1000);
+        this.actions.findCharacterFail(payload);
       });
   }
 
