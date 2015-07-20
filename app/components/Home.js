@@ -4,7 +4,6 @@ import HomeStore from '../stores/HomeStore'
 import HomeActions from '../actions/HomeActions';
 
 class Home extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = HomeStore.getState();

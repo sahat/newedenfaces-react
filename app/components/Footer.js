@@ -4,7 +4,6 @@ import FooterStore from '../stores/FooterStore'
 import FooterActions from '../actions/FooterActions';
 
 class Footer extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = FooterStore.getState();
