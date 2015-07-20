@@ -3,25 +3,19 @@ import alt from '../alt';
 class CharacterActions {
   constructor() {
     this.generateActions(
-      'updateEmail',
       'reportSuccess',
       'reportFail',
-      'subscribeSuccess',
-      'subscribeFail',
       'getCharacterSuccess',
       'getCharacterFail'
     );
   }
 
-  getCharacter(payload) {
-    let characterId = payload.router.getCurrentParams().id;
-    let path = payload.router.getCurrentPath();
-
+  getCharacter(characterId) {
     $.ajax({ url: '/api/characters/' + characterId })
-      .done(data => {
-        this.actions.getCharacterSuccess({ data: data, path: path });
+      .done((data) => {
+        this.actions.getCharacterSuccess(data);
       })
-      .fail(jqXhr => {
+      .fail((jqXhr) => {
         this.actions.getCharacterFail(jqXhr);
       });
   }
@@ -38,20 +32,6 @@ class CharacterActions {
       .fail((jqXhr) => {
         this.actions.reportFail(jqXhr);
       });
-  }
-
-  subscribe(payload) {
-    $.ajax({
-      type: 'POST',
-      url: '/api/subscribe',
-      data: { email: payload.email, characterId: payload.characterId }
-    })
-      .done(() => {
-        this.actions.subscribeSuccess();
-      })
-      .fail((jqXhr) => {
-        this.actions.subscribeFail(jqXhr);
-      })
   }
 }
 

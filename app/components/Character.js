@@ -3,7 +3,6 @@ import CharacterStore from '../stores/CharacterStore';
 import CharacterActions from '../actions/CharacterActions'
 
 class Character extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = CharacterStore.getState();
@@ -12,11 +11,18 @@ class Character extends React.Component {
 
   componentDidMount() {
     CharacterStore.listen(this.onChange);
-    CharacterActions.getCharacter({ router: this.context.router });
+    CharacterActions.getCharacter(this.props.params.id);
 
-    setTimeout(() => {
-      $(this.refs.container.getDOMNode()).removeClass('fadeIn');
-    }, 750);
+    $('.magnific-popup').magnificPopup({
+      type: 'image',
+      mainClass: 'mfp-zoom-in',
+      closeOnContentClick: true,
+      midClick: true,
+      zoom: {
+        enabled: true,
+        duration: 300
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -24,14 +30,9 @@ class Character extends React.Component {
     $(document.body).removeClass();
   }
 
-  componentDidUpdate() {
-    if (this.state.prevPath !== this.context.router.getCurrentPath()) {
-      CharacterActions.getCharacter({ router: this.context.router });
-
-      $(this.refs.container.getDOMNode()).addClass('fadeIn');
-      setTimeout(() => {
-        $(this.refs.container.getDOMNode()).removeClass('fadeIn');
-      }, 750);
+  componentDidUpdate(prevProps) {
+    if (prevProps.params.id !== this.props.params.id) {
+      CharacterActions.getCharacter(this.props.params.id);
     }
   }
 
@@ -39,22 +40,12 @@ class Character extends React.Component {
     this.setState(state);
   }
 
-  handleSubscribeSubmit(event) {
-    event.preventDefault();
-
-    var email = this.state.email.trim();
-    if (email) {
-      CharacterActions.subscribe({ email: email, characterId: this.state.characterId });
-    }
-  }
-
   render() {
     return (
-      <div ref='container' className='container animated fadeIn'>
+      <div className='container'>
         <div className='profile-img'>
-          <a ref='avatar' className='magnific-popup'
-             href={'https://image.eveonline.com/Character/' + this.state.characterId + '_1024.jpg'}>
-            <img src={'https://image.eveonline.com/Character/' + this.state.characterId + '_256.jpg'}/>
+          <a ref='magnificPopup' className='magnific-popup' href={'https://image.eveonline.com/Character/' + this.state.characterId + '_1024.jpg'}>
+            <img src={'https://image.eveonline.com/Character/' + this.state.characterId + '_256.jpg'} />
           </a>
         </div>
         <div className='profile-info clearfix'>
@@ -62,8 +53,11 @@ class Character extends React.Component {
           <h4 className='lead'>Race: <strong>{this.state.race}</strong></h4>
           <h4 className='lead'>Bloodline: <strong>{this.state.bloodline}</strong></h4>
           <h4 className='lead'>Gender: <strong>{this.state.gender}</strong></h4>
-          <button className='btn btn-transparent' onClick={CharacterActions.report.bind(this, this.state.characterId)}
-                  disabled={this.state.isReported}>{this.state.isReported ? 'Reported' : 'Report Character'}</button>
+          <button className='btn btn-transparent'
+                  onClick={CharacterActions.report.bind(this, this.state.characterId)}
+                  disabled={this.state.isReported}>
+            {this.state.isReported ? 'Reported' : 'Report Character'}
+          </button>
         </div>
         <div className='profile-stats clearfix'>
           <ul>
@@ -72,7 +66,6 @@ class Character extends React.Component {
             <li><span className='stats-number'>{this.state.losses}</span> Losses</li>
           </ul>
         </div>
-
       </div>
     );
   }
