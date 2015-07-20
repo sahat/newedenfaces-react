@@ -20,9 +20,9 @@ class NavbarActions {
         payload.router.transitionTo('/characters/' + data.characterId);
       })
       .fail(() => {
-        payload.searchFormNode.classList.add('shake');
+        payload.searchFormNode.classList.add('animated');
         setTimeout(() => {
-          payload.searchFormNode.classList.remove('shake');
+          payload.searchFormNode.classList.remove('animated');
         }, 1000);
       });
   }
