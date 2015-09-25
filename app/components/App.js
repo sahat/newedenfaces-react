@@ -8,7 +8,7 @@ class App extends React.Component {
     return (
       <div>
         <Navbar />
-        <RouteHandler />
+        <RouteHandler {...this.props}/>
         <Footer />
       </div>
     );
