@@ -29,7 +29,7 @@ class AddCharacter extends React.Component {
 
     if (!name) {
       AddCharacterActions.invalidName();
-      this.refs.nameTextField.getDOMNode().focus();
+      this.refs.nameTextField.focus();
     }
 
     if (!gender) {
