@@ -9,8 +9,9 @@ var colors = require('colors');
 var mongoose = require('mongoose');
 var request = require('request');
 var React = require('react');
-var ReactDOM = require('react-dom');
+var ReactDOM = require('react-dom/server');
 var Router = require('react-router');
+var RoutingContext = Router.RoutingContext;
 var swig  = require('swig');
 var xml2js = require('xml2js');
 var _ = require('underscore');
@@ -435,10 +436,18 @@ app.post('/api/report', function(req, res, next) {
 });
 
 app.use(function(req, res) {
-  Router.run(routes, req.path, function(Handler) {
-    var html = React.renderToString(React.createElement(Handler));
-    var page = swig.renderFile('views/index.html', { html: html });
-    res.send(page);
+  Router.match({ routes: routes, location: req.url }, function(err, redirectLocation, renderProps) {
+    if (err) {
+      res.send(500, err.message)
+    } else if (redirectLocation) {
+      res.redirect(302, redirectLocation.pathname + redirectLocation.search)
+    } else if (renderProps) {
+      var html = ReactDOM.renderToString(<RoutingContext {...renderProps} />);
+      var page = swig.renderFile('views/index.html', { html: html });
+      res.send(200, page);
+    } else {
+      res.send(404, 'Page Not Found')
+    }
   });
 });
 
