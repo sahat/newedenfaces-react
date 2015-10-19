@@ -9,6 +9,7 @@ var colors = require('colors');
 var mongoose = require('mongoose');
 var request = require('request');
 var React = require('react');
+var ReactDOM = require('react-dom');
 var Router = require('react-router');
 var swig  = require('swig');
 var xml2js = require('xml2js');
@@ -431,48 +432,6 @@ app.post('/api/report', function(req, res, next) {
       res.send({ message: character.name + ' has been reported.' });
     });
   });
-});
-
-app.post('/api/subscribe', function(req, res, next) {
-  var email = req.body.email;
-  var characterId = req.body.characterId;
-
-  if (!validator.isEmail(email)) {
-    return res.status(400).send('Invalid email address.');
-  }
-
-  if (!characterId) {
-    return res.status(400).send({ message: 'Character ID is missing.' });
-  }
-
-  Subscriber.findOne({ email: email }, function(err, subscriber) {
-    if (err) return next(err);
-
-    if (!subscriber) {
-      subscriber = new Subscriber();
-      subscriber.email = email;
-    }
-
-    if (_.contains(subscriber.characters, characterId)) {
-      return res.status(409).send({ message: 'You are already subscribed to this character.' });
-    }
-
-    subscriber.characters.push(characterId);
-
-    subscriber.save(function(err) {
-      if (err) return next(err);
-
-      var weeklyReport = agenda.schedule('Sunday at noon', 'send weekly report', { email: email, characterId: characterId });
-      weeklyReport.repeatEvery('1 week').save();
-      agenda.start();
-
-      res.status(200).end();
-    });
-  });
-});
-
-app.post('/api/unsubscribe', function(req, res, next) {
-
 });
 
 app.use(function(req, res) {
