@@ -47,7 +47,7 @@ class Navbar extends React.Component {
     if (searchQuery) {
       NavbarActions.findCharacter({
         searchQuery: searchQuery,
-        searchForm: this.refs.searchForm.getDOMNode(),
+        searchForm: this.refs.searchForm,
         router: this.context.router
       });
     }
@@ -64,7 +64,7 @@ class Navbar extends React.Component {
             <span className='icon-bar'></span>
           </button>
           <Link to='/' className='navbar-brand'>
-            <span ref='triangles' className={'triangles animated ' + this.state.ajaxAnimationClass}>
+            <span className={'triangles animated ' + this.state.ajaxAnimationClass}>
               <div className='tri invert'></div>
               <div className='tri invert'></div>
               <div className='tri'></div>
@@ -214,9 +214,5 @@ class Navbar extends React.Component {
     );
   }
 }
-
-Navbar.contextTypes = {
-  router: React.PropTypes.func.isRequired
-};
 
 export default Navbar;
