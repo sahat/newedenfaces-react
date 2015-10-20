@@ -48,7 +48,7 @@ class Navbar extends React.Component {
       NavbarActions.findCharacter({
         searchQuery: searchQuery,
         searchForm: this.refs.searchForm,
-        router: this.context.router
+        history: this.props.history
       });
     }
   }

@@ -7,7 +7,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Navbar />
+        <Navbar history={this.props.history} />
         {this.props.children}
         <Footer />
       </div>
