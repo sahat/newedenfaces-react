@@ -438,19 +438,18 @@ app.post('/api/report', function(req, res, next) {
 app.use(function(req, res) {
   Router.match({ routes: routes, location: req.url }, function(err, redirectLocation, renderProps) {
     if (err) {
-      res.send(500, err.message)
+      res.status(500).send(err.message)
     } else if (redirectLocation) {
-      res.redirect(302, redirectLocation.pathname + redirectLocation.search)
+      res.status(302).redirect(redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps) {
       var html = ReactDOM.renderToString(<RoutingContext {...renderProps} />);
       var page = swig.renderFile('views/index.html', { html: html });
-      res.send(200, page);
+      res.status(200).send(page);
     } else {
-      res.send(404, 'Page Not Found')
+      res.status(404).send('Page Not Found')
     }
   });
 });
-
 
 app.use(function(err, req, res, next) {
   console.log(err.stack.red);
