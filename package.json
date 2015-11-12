@@ -15,7 +15,6 @@
   "dependencies": {
     "alt": "^0.17.8",
     "async": "^1.5.0",
-    "babel": "^6.1.18",
     "body-parser": "^1.14.1",
     "colors": "^1.1.2",
     "compression": "^1.6.0",
@@ -34,6 +33,8 @@
     "xml2js": "^0.4.15"
   },
   "devDependencies": {
+    "babel-preset-es2015": "^6.1.18",
+    "babel-preset-react": "^6.1.18",
     "babelify": "^7.2.0",
     "bower": "^1.6.5",
     "browserify": "^12.0.1",
