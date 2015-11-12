@@ -8,9 +8,12 @@
   },
   "main": "server.js",
   "scripts": {
-    "start": "babel-node server.js",
+    "start": "node server.js",
     "watch": "nodemon --exec babel-node -- server.js",
     "postinstall": "bower install && gulp build"
+  },
+  "babel": {
+    "presets": ["es2015", "react"]
   },
   "dependencies": {
     "alt": "^0.17.8",
@@ -33,6 +36,8 @@
     "xml2js": "^0.4.15"
   },
   "devDependencies": {
+    "babel-loader": "^6.1.0",
+    "babel-core": "^6.1.19",
     "babel-preset-es2015": "^6.1.18",
     "babel-preset-react": "^6.1.18",
     "babelify": "^7.2.0",
