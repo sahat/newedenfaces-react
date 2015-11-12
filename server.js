@@ -8,7 +8,6 @@ var async = require('async');
 var colors = require('colors');
 var mongoose = require('mongoose');
 var request = require('request');
-var React = require('react');
 var ReactDOM = require('react-dom/server');
 var Router = require('react-router');
 var RoutingContext = Router.RoutingContext;
