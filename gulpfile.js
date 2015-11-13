@@ -76,7 +76,7 @@ gulp.task('browserify', ['browserify-vendor'], function() {
 gulp.task('browserify-watch', ['browserify-vendor'], function() {
   var bundler = watchify(browserify('app/main.js', watchify.args));
   bundler.external(dependencies);
-  bundler.transform(babelify);
+  bundler.transform(babelify, { presets: ['es2015', 'react'] });
   bundler.on('update', rebundle);
   return rebundle();
 
