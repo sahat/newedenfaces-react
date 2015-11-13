@@ -1,3 +1,6 @@
+// Babel ES6/JSX Compiler
+require('babel-core/register');
+
 var path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -8,9 +11,9 @@ var async = require('async');
 var colors = require('colors');
 var mongoose = require('mongoose');
 var request = require('request');
+var React = require('react');
 var ReactDOM = require('react-dom/server');
 var Router = require('react-router');
-var RoutingContext = Router.RoutingContext;
 var swig  = require('swig');
 var xml2js = require('xml2js');
 var _ = require('underscore');
@@ -74,7 +77,6 @@ app.get('/api/characters', function(req, res, next) {
         });
     });
 });
-
 
 /**
  * PUT /api/characters
@@ -435,15 +437,15 @@ app.post('/api/report', function(req, res, next) {
 });
 
 app.use(function(req, res) {
-  Router.match({ routes: routes, location: req.url }, function(err, redirectLocation, renderProps) {
+  Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {
     if (err) {
       res.status(500).send(err.message)
     } else if (redirectLocation) {
       res.status(302).redirect(redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps) {
-      var html = ReactDOM.renderToString(<RoutingContext {...renderProps} />);
-      var page = swig.renderFile('views/index.html', { html: html });
-      res.status(200).send(page);
+        var html = ReactDOM.renderToString(React.createElement(Router.RoutingContext, renderProps));
+        var page = swig.renderFile('views/index.html', { html: html });
+        res.status(200).send(page);
     } else {
       res.status(404).send('Page Not Found')
     }
