@@ -1,5 +1,5 @@
 // Babel ES6/JSX Compiler
-require('babel-core/register');
+require('babel-register');
 
 var path = require('path');
 var express = require('express');
