@@ -12,6 +12,7 @@ var babelify = require('babelify');
 var browserify = require('browserify');
 var watchify = require('watchify');
 var uglify = require('gulp-uglify');
+var sourcemaps = require('gulp-sourcemaps');
 
 var production = process.env.NODE_ENV === 'production';
 
@@ -59,12 +60,14 @@ gulp.task('browserify-vendor', function() {
  |--------------------------------------------------------------------------
  */
 gulp.task('browserify', ['browserify-vendor'], function() {
-  return browserify('app/main.js')
+  return browserify({ entries: 'app/main.js', debug: true })
     .external(dependencies)
     .transform(babelify, { presets: ['es2015', 'react'] })
     .bundle()
+    .pipe(streamify(sourcemaps.init({ loadMaps: true })))
     .pipe(source('bundle.js'))
     .pipe(gulpif(production, streamify(uglify({ mangle: false }))))
+    .pipe(streamify(sourcemaps.write('.')))
     .pipe(gulp.dest('public/js'));
 });
 
@@ -74,7 +77,7 @@ gulp.task('browserify', ['browserify-vendor'], function() {
  |--------------------------------------------------------------------------
  */
 gulp.task('browserify-watch', ['browserify-vendor'], function() {
-  var bundler = watchify(browserify('app/main.js', watchify.args));
+  var bundler = watchify(browserify({ entries: 'app/main.js', debug: true }, watchify.args));
   bundler.external(dependencies);
   bundler.transform(babelify, { presets: ['es2015', 'react'] });
   bundler.on('update', rebundle);
@@ -90,6 +93,8 @@ gulp.task('browserify-watch', ['browserify-vendor'], function() {
         gutil.log(gutil.colors.green('Finished rebundling in', (Date.now() - start) + 'ms.'));
       })
       .pipe(source('bundle.js'))
+      .pipe(streamify(sourcemaps.init({ loadMaps: true })))
+      .pipe(streamify(sourcemaps.write('.')))
       .pipe(gulp.dest('public/js/'));
   }
 });
