@@ -13,4 +13,4 @@ var characterSchema = new mongoose.Schema({
   voted: { type: Boolean, default: false }
 });
 
-module.exports = mongoose.model('Character', characterSchema);
+module.exports = mongoose.model('test', characterSchema);
