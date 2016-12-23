@@ -8,6 +8,7 @@ class FooterStore {
   }
 
   onGetTopCharactersSuccess(data) {
+      toastr.success('Have fun storming the castle!', 'Miracle Max Says')
     this.characters = data.slice(0, 5);
   }
 
